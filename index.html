@@ -10,32 +10,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
-    
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-
-    <script>
-        // Kendi Firebase proje bilgilerinizi buraya yapıştırın
-        const firebaseConfig = {
-            apiKey: "SENIN_API_KEY", // <--- BURAYI KENDİ BİLGİNİZLE DEĞİŞTİRİN
-            authDomain: "kobi-proje-takip.firebaseapp.com",
-            databaseURL: "https://kobi-proje-takip-default-rtdb.europe-west1.firebasedatabase.app", // Doğru avrupa sunucunuz
-            projectId: "kobi-proje-takip",
-            storageBucket: "kobi-proje-takip.appspot.com",
-            messagingSenderId: "123456789", // <--- BURAYI KENDİ BİLGİNİZLE DEĞİŞTİRİN
-            appId: "1:123456789:web:abcdef" // <--- BURAYI KENDİ BİLGİNİZLE DEĞİŞTİRİN
-        };
-
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
-        window.firebaseDB = firebase.database();
-        window.firebaseRef = (db, path) => db.ref(path);
-        window.firebaseOnValue = (ref, callback) => { ref.on('value', callback); return callback; };
-        window.firebaseOff = (ref, callback) => ref.off('value', callback);
-        window.firebaseSet = (ref, data) => ref.set(data);
-    </script>
-
     <style>
         :root { --glass-bg: #ffffff; --glass-border: rgba(226, 232, 240, 0.8); }
         body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #1e293b; min-height: 100vh; overflow-x: hidden; font-size: 0.9rem; }
@@ -82,12 +56,17 @@
         25% { transform: translateX(-10px); }
         75% { transform: translateX(10px); }
         }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
         .animate-shake { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
         #firmaListesiBody tr { transition: all 0.2s ease; border-bottom: 1px solid #e2e8f0; }
         #firmaListesiBody tr:nth-child(even) { background-color: #f8fafc; }
         #firmaListesiBody tr:nth-child(odd) { background-color: #ffffff; }
-        #firmaListesiBody tr:hover { background-color: #e2e8f0; transform: translateY(-1px); box-shadow: inset 3px 0 0 0 #6366f1; }
-        .master-tr.dragging { opacity: 0.4; background-color: #cbd5e1 !important; }
+        #firmaListesiBody tr:hover { background-color: #f1f5f9; transform: translateY(-1px); }
+        .master-tr.dragging { opacity: 0.4; background-color: #e2e8f0 !important; }
         
         select.badge-select { appearance: none; padding-right: 20px !important; text-align: center; text-align-last: center; font-weight: 700; transition: all 0.3s; border: 1px solid transparent; cursor: pointer; border-radius: 8px;}
         select.badge-select:focus { outline: none; box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2); }
@@ -95,6 +74,7 @@
         .dash-input { border-bottom: 1px dashed transparent; transition: border-color 0.2s; }
         .dash-input:focus { border-bottom: 1px dashed currentColor; outline: none; }
         
+        /* MODERN, FERAH TABLO GÖRÜNÜMÜ (YENİ) */
         #detailView table { width: 100%; margin-bottom: 0; background-color: #ffffff; border-collapse: separate; border-spacing: 0; border-radius: 12px; }
         #detailView table thead th { background-color: #f8fafc !important; color: #64748b !important; border-bottom: 2px solid #e2e8f0 !important; padding: 16px 12px !important; font-size: 11px !important; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 800; text-align: center; }
         #detailView table tbody tr { transition: background-color 0.2s; }
@@ -106,6 +86,7 @@
         #detailView table input:focus { background-color: #ffffff; box-shadow: inset 0 0 0 2px #818cf8; border-radius: 8px; z-index: 10; position: relative; }
         #detailView table tfoot td { padding: 18px 16px; font-size: 15px !important; font-weight: 900 !important; border-top: 2px solid #e2e8f0 !important; background-color: #f8fafc; border-bottom: none !important; }
         
+        /* Tablo Özel Sütun Renkleri (Daha Soft) */
         .col-fatura { background-color: rgba(16, 185, 129, 0.04) !important; }
         .col-fatura input { color: #047857 !important; font-weight: 900 !important; text-align: right; }
         .col-hesaplanan { background-color: rgba(99, 102, 241, 0.04) !important; color: #4338ca !important; font-weight: 900 !important; text-align: right; padding-right: 16px !important; }
@@ -124,6 +105,7 @@
             color: white !important;
         }
 
+        /* YENİ EKLENEN BÜYÜTÜLMÜŞ BAŞLIK STİLLERİ */
         .detay-baslik-onemli { font-size: 14px !important; font-weight: 900 !important; color: #1e293b !important; }
         .detay-baslik-kritik-tarih { font-size: 16px !important; font-weight: 900 !important; color: #e11d48 !important; letter-spacing: 0.5px; text-transform: uppercase; }
         
@@ -145,46 +127,40 @@
 
     <div id="loginView" class="login-bg">
         <div class="bg-slate-800/50 backdrop-blur-2xl border border-slate-700 p-10 sm:p-12 rounded-[2rem] shadow-2xl w-full max-w-md relative z-10 mx-4">
-            <div class="text-center mb-10"><div class="w-16 h-16 bg-gradient-to-tr from-indigo-500 to-indigo-400 rounded-2xl mx-auto flex items-center justify-center mb-6 shadow-lg shadow-indigo-500/20"><i class="fa-solid fa-infinity text-3xl text-white"></i></div><h1 class="text-3xl font-black tracking-tighter text-white mb-2">KOBİ <span class="text-blue-600">Proje Takip Paneli</span></h1></div>
+            <div class="text-center mb-10"><div class="w-16 h-16 bg-gradient-to-tr from-indigo-500 to-indigo-400 rounded-2xl mx-auto flex items-center justify-center mb-6 shadow-lg shadow-indigo-500/20"><i class="fa-solid fa-infinity text-3xl text-white"></i></div><h1 class="text-3xl font-black tracking-tighter text-white mb-2">KOBİ <span class="text-blue-600">Proje Takip Paneli</span></h1><p class="text-[10px] font-black tracking-[0.18em] uppercase text-slate-400 mt-3"><i class="fa-solid fa-shield-halved mr-1.5 text-emerald-400"></i>Firebase güvenli eşitleme</p></div>
             <div class="space-y-6">
                 <div>
-                    <input type="password" id="sysPassword" placeholder="Sistem Şifresi" class="w-full px-5 py-4 rounded-xl bg-slate-900 border border-slate-700 text-white font-mono tracking-widest text-center focus:border-indigo-500 transition-colors" onkeypress="if(event.key === 'Enter') girisYap()" oninput="sifreHataTemizle()">
-                    <p id="loginErrorMsg" class="text-rose-500 text-xs font-bold text-center mt-2 h-4 opacity-0 transition-opacity">Hatalı şifre girdiniz!</p>
+                    <input type="password" id="sysPassword" aria-label="Ortak sistem şifresi" autocomplete="current-password" placeholder="Ortak Sistem Şifresi" class="w-full px-5 py-4 rounded-xl bg-slate-900 border border-slate-700 text-white font-mono tracking-widest text-center focus:border-indigo-500 transition-colors" onkeydown="if(event.key === 'Enter') { event.preventDefault(); girisYap(); }" oninput="sifreHataTemizle()">
+                    <p id="loginErrorMsg" role="alert" class="text-rose-500 text-xs font-bold text-center mt-2 min-h-4 opacity-0 transition-opacity leading-relaxed"></p>
                 </div>
-                <button onclick="girisYap()" class="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-black py-4 rounded-xl shadow-lg transition transform hover:-translate-y-0.5">GİRİŞ YAP <i class="fa-solid fa-arrow-right ml-2"></i></button>
+                <button id="girisButonu" onclick="girisYap()" class="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-black py-4 rounded-xl shadow-lg transition transform hover:-translate-y-0.5 disabled:opacity-50">GİRİŞ YAP <i class="fa-solid fa-arrow-right ml-2"></i></button>
+                <p class="text-xs text-slate-400 text-center leading-relaxed">Ortak şifreyle aynı firma kayıtlarına erişilir. Şifre Firebase tarafından doğrulanır; Google girişi gerekmez.</p>
             </div>
         </div>
     </div>
 
-    <div id="portfolioView" style="display: none;">
-        <header class="flex flex-col lg:flex-row justify-between items-center mb-8 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm gap-4">
-            <div class="mb-5 lg:mb-0"><h1 class="text-2xl font-black tracking-tight text-slate-800 flex items-center"><div class="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center mr-3"><i class="fa-solid fa-infinity text-indigo-600 text-sm"></i></div>KOBİ<span class="font-light text-slate-500 ml-1">Proje Takip Paneli</span></h1></div>
-            <div class="flex flex-wrap justify-center gap-3">
-                <button onclick="cikisYap()" class="text-slate-400 hover:text-rose-500 bg-slate-50 hover:bg-rose-50 font-bold py-2.5 px-4 rounded-lg transition text-sm border border-slate-200"><i class="fa-solid fa-power-off mr-2"></i>Çıkış</button>
-                <div class="flex bg-slate-50 border border-slate-200 rounded-lg p-1">
-                    <button onclick="verileriYenile()" class="text-slate-500 hover:text-indigo-600 px-3 py-1.5 rounded transition text-sm font-bold flex items-center" title="Buluttan Çek"><i class="fa-solid fa-cloud-arrow-down mr-1.5"></i> Senkronize Et</button>
-                    <div class="w-px bg-slate-200 mx-1"></div>
-                    <input type="file" id="jsonYukleBtn" class="hidden" accept=".json" onchange="jsonDosyasindanAktar(event)">
-                    <button onclick="document.getElementById('jsonYukleBtn').click()" class="text-slate-500 hover:text-amber-600 px-3 py-1.5 rounded transition text-sm font-bold flex items-center" title="Eski Yedeği Yükle"><i class="fa-solid fa-file-import mr-1.5"></i> JSON Yükle</button>
-                </div>
-                <button onclick="yeniAnaProjeEkle()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-2.5 px-5 rounded-lg shadow-sm transition flex items-center text-sm"><i class="fa-solid fa-folder-plus mr-2 text-slate-300"></i> Yeni Proje Klasörü</button>
+    <aside id="gunlukYedekPaneli" style="display:none;" class="mb-4 rounded-xl border border-indigo-100 bg-indigo-50 px-4 py-3 text-xs text-indigo-900 print:hidden" aria-label="Günlük JSON yedeği">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+            <div><strong>Günlük JSON yedeği</strong><p id="gunlukYedekDurumu" role="status" class="mt-1"></p></div>
+            <div class="flex flex-wrap items-center gap-2">
+                <a id="gunlukYedekLink" style="display:none;" class="rounded-lg bg-indigo-600 px-3 py-2 font-bold text-white" download>Hazır yedeği indir</a>
+                <button onclick="jsonIndir()" class="rounded-lg border border-indigo-200 bg-white px-3 py-2 font-bold">Güncel yedeği hazırla</button>
             </div>
+        </div>
+        <p class="mt-2 text-indigo-700">Her tarayıcıda, giriş yapılmışken Türkiye tarihine göre günde bir otomatik indirme denemesi. Dosyanın kaydedildiğini İndirilenler klasöründen kontrol edin. Tarayıcı kapalıyken indirme yapılmaz.</p>
+    </aside>
+
+    <div id="portfolioView" style="display: none;">
+        <header class="flex flex-col lg:flex-row justify-between items-center mb-8 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+            <div class="mb-5 lg:mb-0"><h1 class="text-2xl font-black tracking-tight text-slate-800 flex items-center"><div class="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center mr-3"><i class="fa-solid fa-infinity text-indigo-600 text-sm"></i></div>KOBİ<span class="font-light text-slate-500 ml-1">Proje Takip Paneli</span></h1></div>
+            <div class="flex flex-wrap justify-center gap-2"><button onclick="cikisYap()" class="text-slate-400 hover:text-rose-500 bg-slate-50 hover:bg-rose-50 font-bold py-2.5 px-4 rounded-lg transition text-sm border border-slate-200"><i class="fa-solid fa-power-off mr-2"></i>Çıkış</button><button onclick="verileriYenile()" class="text-slate-500 hover:text-indigo-600 bg-slate-50 hover:bg-indigo-50 font-bold py-2.5 px-4 rounded-lg border border-slate-200 transition" title="Buluttan yeniden yükle"><i class="fa-solid fa-cloud-arrow-down text-base"></i></button><button onclick="jsonIndir()" class="text-indigo-600 bg-indigo-50 hover:bg-indigo-100 border border-indigo-100 font-bold py-2.5 px-4 rounded-lg transition text-xs"><i class="fa-solid fa-download mr-2"></i>JSON İndir</button><input type="file" id="jsonDosyaSec" class="hidden" accept=".json,application/json" onchange="jsonYukle(event)"><button onclick="document.getElementById('jsonDosyaSec').click()" class="text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-100 font-bold py-2.5 px-4 rounded-lg transition text-xs"><i class="fa-solid fa-upload mr-2"></i>JSON Yükle</button><button onclick="yeniAnaProjeEkle()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-2.5 px-5 rounded-lg shadow-sm transition flex items-center text-sm"><i class="fa-solid fa-folder-plus mr-2 text-slate-300"></i> Yeni Proje Klasörü</button></div>
         </header>
         <div id="projeKartlariKapsayici" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"></div>
     </div>
 
     <div id="masterView" style="display: none;">
         <header class="flex flex-col lg:flex-row justify-between items-center mb-6 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm gap-4">
-            <div class="flex items-center w-full lg:w-auto">
-                <button onclick="portfoyEkranaDon()" class="bg-slate-50 hover:bg-slate-100 text-slate-600 border border-slate-200 py-2.5 px-4 rounded-lg transition mr-4 shrink-0"><i class="fa-solid fa-house text-sm"></i></button>
-                <div>
-                    <h1 class="text-xl font-black tracking-tight text-slate-800" id="aktifProjeBaslik">Proje Adı</h1>
-                    <div class="flex items-center gap-2 mt-0.5">
-                        <p class="text-[10px] text-slate-500 font-bold tracking-widest uppercase bg-slate-100 px-2 py-0.5 rounded" id="projeTipEtiketi"></p>
-                        <p id="siralamaIpucu" class="text-[10px] text-indigo-600 font-bold tracking-widest uppercase bg-indigo-50 px-2 py-0.5 rounded border border-indigo-100"><i class="fa-solid fa-arrows-up-down mr-1"></i>Sıralamak için satır başından sürükleyin</p>
-                    </div>
-                </div>
-            </div>
+            <div class="flex items-center w-full lg:w-auto"><button onclick="portfoyEkranaDon()" class="bg-slate-50 hover:bg-slate-100 text-slate-600 border border-slate-200 py-2.5 px-4 rounded-lg transition mr-4 shrink-0"><i class="fa-solid fa-house text-sm"></i></button><div><h1 class="text-xl font-black tracking-tight text-slate-800" id="aktifProjeBaslik">Proje Adı</h1><p class="text-[10px] text-slate-400 font-bold tracking-widest uppercase mt-0.5" id="projeTipEtiketi"></p></div></div>
             <div class="flex flex-wrap justify-center lg:justify-end gap-2 w-full lg:w-auto"><button onclick="excelAl()" class="text-emerald-600 bg-emerald-50 hover:bg-emerald-100 border border-emerald-100 px-4 py-2 rounded-lg font-bold transition flex items-center text-xs"><i class="fa-solid fa-file-excel mr-2 text-sm"></i> Excel'e Aktar</button><div class="relative group"><i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i><input type="text" id="firmaAra" onkeyup="tabloFiltrele()" placeholder="Arama yap..." class="pl-8 pr-3 py-2 bg-slate-50 border-slate-200 text-slate-700 w-full sm:w-48 rounded-lg text-xs font-bold"></div><div class="flex bg-slate-50 rounded-lg p-1 border border-slate-200"><button onclick="sutunMenusuAc('master')" class="text-slate-500 hover:text-indigo-600 px-3 py-1.5 rounded transition text-xs font-bold flex items-center"><i class="fa-solid fa-sliders mr-1.5"></i> Görünüm</button><div class="w-px bg-slate-200 mx-1"></div><button onclick="sutunlariSifirla()" class="text-slate-400 hover:text-rose-500 px-2 py-1.5 rounded transition text-xs"><i class="fa-solid fa-rotate-left"></i></button></div><button onclick="yeniFirmaEkle()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg shadow-sm transition flex items-center text-xs"><i class="fa-solid fa-plus mr-1.5"></i> Yeni Firma</button></div>
         </header>
         <div class="glass-card p-0 overflow-hidden shadow-sm"><div class="overflow-x-auto max-h-[75vh]"><table class="min-w-full text-sm text-left border-collapse" id="masterTable"><thead class="table-sticky"><tr id="tableHeaderRow"></tr></thead><tbody id="firmaListesiBody"></tbody></table></div></div>
@@ -201,7 +177,8 @@
 
             <div id="istihdamModulu" style="display: none;"><div id="istihdamTablolariKapsayici" class="space-y-6 mb-10"></div></div>
 
-            <div id="standartOzetKartlari" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4"></div>
+            <div id="standartOzetKartlari" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                </div>
 
             <div id="alarmPaneli" class="mb-6 space-y-2"></div>
 
@@ -237,15 +214,35 @@
 
     <div id="sutunModal" class="fixed inset-0 z-[6000] hidden items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4"><div class="bg-white border border-slate-200 rounded-2xl shadow-xl p-6 w-[400px] max-w-full"><div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-3"><h3 class="text-sm font-black text-slate-800 uppercase tracking-widest">Sütun Yönetimi</h3><button onclick="document.getElementById('sutunModal').style.display='none'" class="text-slate-400 hover:text-rose-500 transition w-8 h-8 flex items-center justify-center rounded-full hover:bg-rose-50"><i class="fa-solid fa-xmark"></i></button></div><div id="sutunListesi" class="space-y-1.5 max-h-[50vh] overflow-y-auto pr-1"></div><div class="mt-5 pt-4 border-t border-slate-100 flex justify-between items-center"><div id="yeniSutunBtnAlani"></div><button onclick="sutunDegisiklikleriniUygula()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg font-bold shadow-sm text-sm transition">Uygula</button></div></div></div>
     
-    <div id="editModal" class="fixed inset-0 z-[5000] hidden overflow-y-auto p-4 items-center justify-center bg-slate-900/40 backdrop-blur-sm"><div class="bg-white w-full max-w-4xl rounded-2xl shadow-xl overflow-hidden flex flex-col mx-auto my-auto border border-slate-200"><div class="p-5 bg-slate-50 flex justify-between items-center border-b border-slate-200"><h2 class="text-sm font-black tracking-widest text-slate-700 uppercase"><i class="fa-solid fa-server mr-2 text-indigo-400"></i> Proje Kimliği</h2><div class="flex gap-2"><button id="btnKimlikKilit" onclick="toggleKimlikKilit()" class="bg-white border border-slate-200 text-slate-600 px-3 py-1.5 rounded-lg font-bold text-xs shadow-sm hover:bg-slate-50"><i class="fa-solid fa-lock-open mr-1.5 text-emerald-500"></i> Açık</button><button onclick="modalKapat()" class="text-slate-400 hover:text-rose-500 bg-white border border-slate-200 hover:border-rose-200 p-1.5 rounded-lg w-8 h-8 flex justify-center items-center"><i class="fa-solid fa-xmark"></i></button></div></div><div class="p-6 overflow-y-auto max-h-[70vh] bg-white"><div id="dinamikAlanlarKapsayici" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div><div id="yeniAlanBolgesi" class="mt-8 pt-6 border-t border-slate-100 flex justify-center"><button onclick="yeniSutunIcatEt()" class="bg-slate-50 text-slate-600 border border-slate-200 border-dashed hover:border-indigo-300 hover:text-indigo-600 font-bold py-2 px-5 rounded-xl transition text-xs flex items-center"><i class="fa-solid fa-plus mr-1.5"></i> Yeni Veri Alanı Ekle</button></div></div><div class="p-5 bg-slate-50 border-t border-slate-200 flex justify-end gap-3 items-center"><button id="btnProjeSil" onclick="sirketTamamenSil()" class="px-4 py-2 rounded-lg font-bold text-rose-600 bg-white border border-rose-200 transition hover:bg-rose-50 mr-auto text-xs flex items-center"><i class="fa-solid fa-trash-can mr-1.5"></i> Projeyi Sil</button><button onclick="modalKapat()" class="px-4 py-2 rounded-lg font-bold text-slate-500 bg-white border border-slate-200 text-sm hover:bg-slate-100 transition">İptal</button><button id="btnProjeKaydet" onclick="firmaKartiKaydet()" class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-bold shadow-sm hover:bg-indigo-700 transition text-sm">Kaydet</button></div></div></div>
+    <div id="editModal" class="fixed inset-0 z-[5000] hidden overflow-y-auto p-4 items-center justify-center bg-slate-900/40 backdrop-blur-sm"><div class="bg-white w-full max-w-4xl rounded-2xl shadow-xl overflow-hidden flex flex-col mx-auto my-auto border border-slate-200"><div class="p-5 bg-slate-50 flex justify-between items-center border-b border-slate-200"><h2 class="text-sm font-black tracking-widest text-slate-700 uppercase"><i class="fa-solid fa-server mr-2 text-indigo-400"></i> Firma Kimliği</h2><div class="flex gap-2"><button id="btnKimlikKilit" onclick="toggleKimlikKilit()" class="bg-white border border-slate-200 text-slate-600 px-3 py-1.5 rounded-lg font-bold text-xs shadow-sm hover:bg-slate-50"><i class="fa-solid fa-lock-open mr-1.5 text-emerald-500"></i> Açık</button><button onclick="modalKapat()" class="text-slate-400 hover:text-rose-500 bg-white border border-slate-200 hover:border-rose-200 p-1.5 rounded-lg w-8 h-8 flex justify-center items-center"><i class="fa-solid fa-xmark"></i></button></div></div><div class="p-6 overflow-y-auto max-h-[70vh] bg-white"><div id="dinamikAlanlarKapsayici" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div><div id="yeniAlanBolgesi" class="mt-8 pt-6 border-t border-slate-100 flex justify-center"><button onclick="yeniSutunIcatEt()" class="bg-slate-50 text-slate-600 border border-slate-200 border-dashed hover:border-indigo-300 hover:text-indigo-600 font-bold py-2 px-5 rounded-xl transition text-xs flex items-center"><i class="fa-solid fa-plus mr-1.5"></i> Yeni Veri Alanı Ekle</button></div></div><div class="p-5 bg-slate-50 border-t border-slate-200 flex justify-end gap-3 items-center"><button id="btnProjeSil" onclick="sirketTamamenSil()" class="px-4 py-2 rounded-lg font-bold text-rose-600 bg-white border border-rose-200 transition hover:bg-rose-50 mr-auto text-xs flex items-center"><i class="fa-solid fa-trash-can mr-1.5"></i> Firmayı Sil</button><button onclick="modalKapat()" class="px-4 py-2 rounded-lg font-bold text-slate-500 bg-white border border-slate-200 text-sm hover:bg-slate-100 transition">İptal</button><button id="btnProjeKaydet" onclick="firmaKartiKaydet()" class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-bold shadow-sm hover:bg-indigo-700 transition text-sm">Kaydet</button></div></div></div>
 
     <script>
-        const GOOGLE_API_URL = "https://script.google.com/macros/s/AKfycbw6HT8bkGw95vEydlRfk2kuesZJoQ0IcuMKj7nUBg1oh_0DsacF_wQbFk8Sp5GsukC-1Q/exec";
-        
+        const FIREBASE_CONFIG = {
+            apiKey: "AIzaSyAiiLEURC9-qkVmSK8__NFt3BZNV1eH3dA",
+            authDomain: "kobi-proje-takip.firebaseapp.com",
+            databaseURL: "https://kobi-proje-takip-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "kobi-proje-takip",
+            storageBucket: "kobi-proje-takip.firebasestorage.app",
+            messagingSenderId: "586468914531",
+            appId: "1:586468914531:web:57522d71110191381e4f56",
+            measurementId: "G-RYC4JZBDZS"
+        };
+        const FIREBASE_SDK_VERSION = "12.18.0";
+        const DATA_ROOT = "kobiPanel";
+        const APP_VERSION = "2026.09.03-ortak1";
+        // Bunlar uygulamaya özel ortak Firebase hesabının AÇIK kimlik bilgileridir.
+        // Ortak şifre burada veya başka bir uygulama dosyasında ASLA tutulmaz.
+        // configure-shared-login.js ile doldurulur; boşken giriş güvenli biçimde kapalıdır.
+        const SHARED_LOGIN_EMAIL = "enginsumengen@gmail.com";
+        const SHARED_LOGIN_UID = "Qt1aaZYKIHUvgNUcH4zl4gXp7QJ2";
+
         let MASTER_DATA = { projeler: {} }, guncelProjeID = null, guncelFirmaID = null, myChart, kayitZamanlayici = null;
-        let windowIsUserEditing = false; 
-        let firebaseListener = null; // YENİ: Firebase listener'ı tekil tutmak için
-        
+        let firebaseContextPromise = null;
+        let firebaseWriteQueue = Promise.resolve();
+        let oturumAcik = false, oturumNesli = 0, girisDevamEdiyor = false;
+        let gunlukYedekZamanlayici = null, yedekObjectUrl = null;
+        let gunlukYedekCalisiyor = false, yedekIstekNesli = 0;
+        let kayitHatasiVar = false;
         const uID = () => Math.random().toString(36).substr(2, 9);
         const formatMoney = (n) => new Intl.NumberFormat('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n);
         const unformat = (str) => { if(!str) return 0; return parseFloat(str.toString().split('.').join('').replace(',', '.')) || 0; };
@@ -269,50 +266,233 @@
         let DINAMIK_SUTUNLAR = [], sortKolon = null, sortArtan = true, aktifSutunTablosu = 'master';
         let suruklenenFirmaID = null;
 
-        document.addEventListener('focusin', (e) => {
-            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
-                windowIsUserEditing = true;
+        const cloneData = (value) => value === undefined ? null : JSON.parse(JSON.stringify(value));
+        const firebaseKey = () => `${Date.now()}_${uID()}`;
+
+        function getFirebaseContext() {
+            if(firebaseContextPromise) return firebaseContextPromise;
+
+            firebaseContextPromise = Promise.all([
+                import(`https://www.gstatic.com/firebasejs/${FIREBASE_SDK_VERSION}/firebase-app.js`),
+                import(`https://www.gstatic.com/firebasejs/${FIREBASE_SDK_VERSION}/firebase-auth.js`),
+                import(`https://www.gstatic.com/firebasejs/${FIREBASE_SDK_VERSION}/firebase-database.js`),
+                import(`https://www.gstatic.com/firebasejs/${FIREBASE_SDK_VERSION}/firebase-storage.js`)
+            ]).then(async ([appSdk, authSdk, databaseSdk, storageSdk]) => {
+                const app = appSdk.getApps().length ? appSdk.getApp() : appSdk.initializeApp(FIREBASE_CONFIG);
+                const auth = authSdk.getAuth(app);
+                await authSdk.setPersistence(auth, authSdk.browserSessionPersistence);
+                await auth.authStateReady();
+                authSdk.onAuthStateChanged(auth, user => {
+                    if(oturumAcik && !ortakKullaniciMi(user)) oturumuTemizle();
+                });
+
+                return {
+                    auth,
+                    authSdk,
+                    db: databaseSdk.getDatabase(app),
+                    databaseSdk,
+                    storage: storageSdk.getStorage(app),
+                    storageSdk
+                };
+            }).catch(error => {
+                firebaseContextPromise = null;
+                throw error;
+            });
+
+            return firebaseContextPromise;
+        }
+
+        function ortakKullaniciMi(user) {
+            return Boolean(SHARED_LOGIN_EMAIL && SHARED_LOGIN_UID && user &&
+                user.uid === SHARED_LOGIN_UID && !user.isAnonymous &&
+                user.email?.toLowerCase() === SHARED_LOGIN_EMAIL.toLowerCase());
+        }
+
+        async function ortakOturumuDogrula(context, nesil = oturumNesli) {
+            if(!oturumAcik || nesil !== oturumNesli || !ortakKullaniciMi(context.auth.currentUser)) {
+                throw Object.assign(new Error('Ortak şifreyle yeniden giriş yapın.'), { code: 'auth/session-ended' });
             }
-        });
-        document.addEventListener('focusout', () => {
-            setTimeout(() => { windowIsUserEditing = false; }, 800); 
-        });
+            const token = await context.authSdk.getIdTokenResult(context.auth.currentUser);
+            if(token.claims?.firebase?.sign_in_provider !== 'password' ||
+                !oturumAcik || nesil !== oturumNesli || !ortakKullaniciMi(context.auth.currentUser)) {
+                throw Object.assign(new Error('Şifreli oturum doğrulanamadı.'), { code: 'auth/session-ended' });
+            }
+        }
 
-        function jsonDosyasindanAktar(event) {
-            const file = event.target.files[0];
-            if (!file) return;
+        function oturumuTemizle() {
+            oturumAcik = false;
+            oturumNesli++;
+            yedekIstekNesli++;
+            clearTimeout(kayitZamanlayici);
+            kayitZamanlayici = null;
+            clearInterval(gunlukYedekZamanlayici);
+            gunlukYedekZamanlayici = null;
+            if(yedekObjectUrl) URL.revokeObjectURL(yedekObjectUrl);
+            yedekObjectUrl = null;
+            const yedekLink = document.getElementById('gunlukYedekLink');
+            if(yedekLink) { yedekLink.removeAttribute('href'); yedekLink.style.display = 'none'; }
+            const yedekPanel = document.getElementById('gunlukYedekPaneli');
+            if(yedekPanel) yedekPanel.style.display = 'none';
+            MASTER_DATA = { projeler: {} };
+            guncelProjeID = null; guncelFirmaID = null;
+            DINAMIK_SUTUNLAR = [];
+            if(myChart) { myChart.destroy(); myChart = null; }
+            ['portfolioView', 'masterView', 'detailView', 'editModal', 'sutunModal'].forEach(id => {
+                const el = document.getElementById(id);
+                if(el) el.style.display = 'none';
+            });
+            ['projeKartlariKapsayici', 'firmaListesiBody', 'dinamikAlanlarKapsayici',
+                'giderTableBody', 'raporTableBody', 'krediTablolariKapsayici', 'tableHeaderRow'].forEach(id => {
+                const el = document.getElementById(id);
+                if(el) el.replaceChildren();
+            });
+            document.getElementById('sysPassword').value = '';
+            document.getElementById('loginView').style.display = 'flex';
+        }
 
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const icerik = JSON.parse(e.target.result);
-                    if (icerik && icerik.projeler) {
-                        const onay = confirm("Dikkat: Eski yedeğinizi yüklüyorsunuz.\n\nEğer Firebase'de hali hazırda verileriniz varsa, eski yedekteki verilerle BİRLEŞTİRİLECEKTİR.\n\nDevam etmek istiyor musunuz?");
-                        if (onay) {
-                            document.getElementById('loader').style.display = 'flex';
-                            document.getElementById('loaderText').innerText = "Veriler Birleştiriliyor...";
-                            if (!MASTER_DATA.projeler) MASTER_DATA.projeler = {};
-                            Object.keys(icerik.projeler).forEach(projeID => {
-                                if (MASTER_DATA.projeler[projeID]) {
-                                    Object.keys(icerik.projeler[projeID].firmalar || {}).forEach(firmaID => {
-                                        MASTER_DATA.projeler[projeID].firmalar[firmaID] = icerik.projeler[projeID].firmalar[firmaID];
-                                    });
-                                } else { MASTER_DATA.projeler[projeID] = icerik.projeler[projeID]; }
-                            });
-                            veriYapilandir();
-                            bulutaGonder(true, false); 
-                            setTimeout(() => {
-                                document.getElementById('loader').style.display = 'none';
-                                document.getElementById('loaderText').innerText = "Sistem Başlatılıyor";
-                                renderPortfoyView();
-                                showToast("JSON yedeği başarıyla yüklendi!", "success");
-                            }, 1000);
-                        }
-                    } else { showToast("Geçersiz yedek dosyası formatı!", "error"); }
-                } catch (error) { showToast("Dosya okunamadı! Geçerli bir JSON olduğundan emin olun.", "error"); }
-            };
-            reader.readAsText(file);
-            event.target.value = '';
+        function yerelGuvenlikYedegiAl(neden) {
+            if(!oturumAcik) return;
+            try {
+                const anahtar = `kobiPanelBackup_${Date.now()}`;
+                localStorage.setItem(anahtar, JSON.stringify({ neden, tarih: new Date().toISOString(), data: MASTER_DATA }));
+                Object.keys(localStorage)
+                    .filter(key => key.startsWith('kobiPanelBackup_'))
+                    .sort()
+                    .slice(0, -5)
+                    .forEach(key => localStorage.removeItem(key));
+            } catch(error) {
+                console.warn("Yerel güvenlik yedeği oluşturulamadı", error);
+            }
+        }
+
+        function kuyrugaEkle(islemAdi, islem) {
+            const nesil = oturumNesli;
+            if(!oturumAcik) return Promise.reject(new Error('Önce ortak şifreyle giriş yapın.'));
+            setSyncStatus('bekliyor');
+            firebaseWriteQueue = firebaseWriteQueue
+                .catch(() => undefined)
+                .then(async () => {
+                    setSyncStatus('bekliyor');
+                    const context = await getFirebaseContext();
+                    await ortakOturumuDogrula(context, nesil);
+                    await islem(context);
+                    if(nesil !== oturumNesli) return;
+                    kayitHatasiVar = false;
+                    setSyncStatus('esitlendi');
+                })
+                .catch(error => {
+                    if(nesil !== oturumNesli) throw error;
+                    kayitHatasiVar = true;
+                    console.error(`${islemAdi} başarısız`, error);
+                    setSyncStatus('hata');
+                    showToast("Kayıt yapılamadı. İnternet ve Firebase yetkilerini kontrol edin.", "error");
+                    throw error;
+                });
+            return firebaseWriteQueue;
+        }
+
+        async function buluttanVeriOku() {
+            const nesil = oturumNesli;
+            const context = await getFirebaseContext();
+            await ortakOturumuDogrula(context, nesil);
+            const { db, databaseSdk } = context;
+            const snapshot = await databaseSdk.get(databaseSdk.ref(db, `${DATA_ROOT}/projeler`));
+            await ortakOturumuDogrula(context, nesil);
+            return { projeler: snapshot.exists() ? snapshot.val() : {} };
+        }
+
+        function firmaKaydet(projeID = guncelProjeID, firmaID = guncelFirmaID) {
+            const firma = MASTER_DATA.projeler?.[projeID]?.firmalar?.[firmaID];
+            if(!firma) return Promise.reject(new Error("Kaydedilecek firma bulunamadı"));
+            const payload = cloneData(firma);
+            return kuyrugaEkle("Firma kaydı", ({ db, databaseSdk }) =>
+                databaseSdk.set(databaseSdk.ref(db, `${DATA_ROOT}/projeler/${projeID}/firmalar/${firmaID}`), payload)
+            );
+        }
+
+        function projeAyarlariKaydet(projeID = guncelProjeID) {
+            const proje = MASTER_DATA.projeler?.[projeID];
+            if(!proje) return Promise.reject(new Error("Kaydedilecek proje bulunamadı"));
+            const patch = cloneData({
+                ad: proje.ad,
+                tip: proje.tip,
+                sutunlar: proje.sutunlar || [],
+                giderSutunlari: proje.giderSutunlari || []
+            });
+            return kuyrugaEkle("Proje ayarları", ({ db, databaseSdk }) =>
+                databaseSdk.update(databaseSdk.ref(db, `${DATA_ROOT}/projeler/${projeID}`), patch)
+            );
+        }
+
+        function yeniProjeKaydet(projeID) {
+            const proje = MASTER_DATA.projeler?.[projeID];
+            if(!proje) return Promise.reject(new Error("Kaydedilecek proje bulunamadı"));
+            return kuyrugaEkle("Yeni proje", ({ db, databaseSdk }) =>
+                databaseSdk.set(databaseSdk.ref(db, `${DATA_ROOT}/projeler/${projeID}`), cloneData(proje))
+            );
+        }
+
+        function firmaSiralariniKaydet(projeID = guncelProjeID) {
+            const firmalar = MASTER_DATA.projeler?.[projeID]?.firmalar || {};
+            const updates = {};
+            Object.entries(firmalar).forEach(([firmaID, firma]) => {
+                updates[`${DATA_ROOT}/projeler/${projeID}/firmalar/${firmaID}/bilgi/sira`] = firma.bilgi?.sira || 0;
+            });
+            return kuyrugaEkle("Firma sıralaması", ({ db, databaseSdk }) =>
+                databaseSdk.update(databaseSdk.ref(db), updates)
+            );
+        }
+
+        function projeyiGuvenliSil(projeID) {
+            const proje = MASTER_DATA.projeler?.[projeID];
+            if(!proje) return Promise.reject(new Error("Silinecek proje bulunamadı"));
+            yerelGuvenlikYedegiAl(`Proje silinmeden önce: ${proje.ad}`);
+            const trashID = firebaseKey();
+            const updates = {};
+            updates[`${DATA_ROOT}/_trash/projeler/${trashID}`] = cloneData({
+                deletedAt: new Date().toISOString(),
+                originalID: projeID,
+                proje
+            });
+            updates[`${DATA_ROOT}/projeler/${projeID}`] = null;
+            return kuyrugaEkle("Proje silme", ({ db, databaseSdk }) =>
+                databaseSdk.update(databaseSdk.ref(db), updates)
+            );
+        }
+
+        function firmayiGuvenliSil(projeID, firmaID) {
+            const firma = MASTER_DATA.projeler?.[projeID]?.firmalar?.[firmaID];
+            if(!firma) return Promise.reject(new Error("Silinecek firma bulunamadı"));
+            yerelGuvenlikYedegiAl(`Firma silinmeden önce: ${firma.bilgi?.adi || firmaID}`);
+            const trashID = firebaseKey();
+            const updates = {};
+            updates[`${DATA_ROOT}/_trash/firmalar/${trashID}`] = cloneData({
+                deletedAt: new Date().toISOString(),
+                projeID,
+                originalID: firmaID,
+                firma
+            });
+            updates[`${DATA_ROOT}/projeler/${projeID}/firmalar/${firmaID}`] = null;
+            return kuyrugaEkle("Firma silme", ({ db, databaseSdk }) =>
+                databaseSdk.update(databaseSdk.ref(db), updates)
+            );
+        }
+
+        function finansmanTablosunuGuvenliSil(projeID, firmaID, tabloID, silinenTablo, kalanTablolar) {
+            yerelGuvenlikYedegiAl(`Finansman tablosu silinmeden önce: ${silinenTablo?.baslik || tabloID}`);
+            const trashID = firebaseKey();
+            const updates = {};
+            updates[`${DATA_ROOT}/_trash/finansmanTablolari/${trashID}`] = cloneData({
+                deletedAt: new Date().toISOString(),
+                projeID,
+                firmaID,
+                originalID: tabloID,
+                tablo: silinenTablo
+            });
+            updates[`${DATA_ROOT}/projeler/${projeID}/firmalar/${firmaID}/krediTablolar`] = cloneData(kalanTablolar);
+            return kuyrugaEkle("Finansman tablosu silme", ({ db, databaseSdk }) =>
+                databaseSdk.update(databaseSdk.ref(db), updates)
+            );
         }
 
         function showToast(msg, type='success') {
@@ -325,6 +505,7 @@
             setTimeout(()=>{toast.classList.remove('toast-enter-active');toast.classList.add('toast-exit');setTimeout(()=>toast.remove(),300);},3500);
         }
 
+        // --- YENİ DURUM RENKLERİ ---
         const getPillCSS = (status) => {
             const s = (status || '').toString().toUpperCase();
             if (s === 'AKTİF') return 'bg-emerald-100 text-emerald-700 border-emerald-400';
@@ -332,6 +513,8 @@
             if (s === 'DEĞERLENDİRME AŞAMASINDA') return 'bg-orange-100 text-orange-700 border-orange-400';
             if (s === 'TAMAMLANDI') return 'bg-green-800 text-white border-green-900';
             if (s === 'YENİDEN BAŞVURU YAPILACAK') return 'bg-yellow-200 text-yellow-800 border-yellow-500';
+            
+            // Mevcut fallback durumlar
             if(['ÖDENDİ','ALINDI'].includes(s)) return 'bg-emerald-100 text-emerald-700 border-emerald-400';
             if(['KISMİ'].includes(s)) return 'bg-amber-100 text-amber-700 border-amber-400';
             if(['ÖDENMEDİ', 'EKSİK', 'YENİ KAYIT'].includes(s)) return 'bg-rose-100 text-rose-700 border-rose-400';
@@ -339,39 +522,52 @@
         };
 
         function limitDurumRenkGuncelle(el) {
+            // Tailwind class yapısına uygun temizlik
             let classArray = el.className.split(' ').filter(c => !c.startsWith('bg-') && !c.startsWith('text-') && !c.startsWith('border-'));
             el.className = classArray.join(' ') + ' ' + getPillCSS(el.value);
         }
         
         function hizliDurumGuncelle(id, yeniDurum) {
             MASTER_DATA.projeler[guncelProjeID].firmalar[id].bilgi.durum = yeniDurum;
-            renderMasterView(); bulutaGonder(true, true); showToast("Durum: " + yeniDurum, "info");
+            renderMasterView();
+            firmaKaydet(guncelProjeID, id).catch(() => undefined);
+            showToast("Durum: " + yeniDurum, "info");
         }
 
         function setSyncStatus(durum) {
             const el=document.getElementById('floatingSync');
             if(durum==='bekliyor'){el.classList.add('visible');document.getElementById('syncIcon').className="fa-solid fa-spinner animate-spin text-amber-500";document.getElementById('syncText').innerText="KAYDEDİLİYOR...";}
+            else if(durum==='hata'){el.classList.add('visible');document.getElementById('syncIcon').className="fa-solid fa-triangle-exclamation text-rose-500";document.getElementById('syncText').innerText="KAYIT HATASI";}
             else {document.getElementById('syncIcon').className="fa-solid fa-cloud-check text-emerald-500";document.getElementById('syncText').innerText="EŞİTLENDİ";setTimeout(()=>el.classList.remove('visible'),2000);}
         }
 
         function bulutaGonder(sessiz=false, parcali=false) {
-            setSyncStatus('bekliyor');
-            if(typeof window.firebaseSet !== 'function' || !window.firebaseDB) { setTimeout(() => setSyncStatus('esitlendi'), 500); return; }
-            window.firebaseSet(window.firebaseRef(window.firebaseDB, 'kobi_data'), MASTER_DATA)
-                .then(() => { setSyncStatus('esitlendi'); if(!sessiz && !parcali) showToast("Tüm Ekranlara İletildi"); })
-                .catch((error) => { setSyncStatus('hata'); showToast("Bağlantı Hatası!", "error"); console.error(error); });
+            const detayAcik = document.getElementById('detailView').style.display !== 'none';
+            let istek;
+
+            if(detayAcik && guncelProjeID && guncelFirmaID) istek = firmaKaydet(guncelProjeID, guncelFirmaID);
+            else if(guncelProjeID) istek = projeAyarlariKaydet(guncelProjeID);
+            else return Promise.resolve();
+
+            if(!sessiz && !parcali) istek.then(() => showToast("Kaydedildi")).catch(() => undefined);
+            return istek;
         }
 
         function otomatikKaydet(force = false) {
+            if(!oturumAcik) return;
             if(!guncelProjeID || !guncelFirmaID) return; 
-            const f = MASTER_DATA.projeler[guncelProjeID].firmalar[guncelFirmaID]; if(f.bilgi.kilitli) return;
+            const p = MASTER_DATA.projeler?.[guncelProjeID];
+            const f = p?.firmalar?.[guncelFirmaID];
+            if(!p || !f || !f.bilgi) return;
+            if(f.bilgi.kilitli) return;
 
-            if (document.getElementById('detailView').style.display !== 'none') {
+            if (p.tip !== 'istihdam' && document.getElementById('detailView').style.display !== 'none') {
                 const gBody = document.getElementById('giderTableBody');
                 if(gBody) {
                     f.giderler = Array.from(gBody.querySelectorAll('tr')).map(r => {
                         let data={ id: r.dataset.id, ad: r.querySelector('.g-ad')?.value||'', miktar: r.querySelector('.g-miktar')?.value||'', birim: r.querySelector('.g-birim')?.value||'', tutar: unformat(r.querySelector('.g-tutar')?.value), fatura: unformat(r.querySelector('.g-fatura')?.value), gerceklesme: r.querySelector('.g-gerceklesme')?.value||'Bekliyor', oran: parseFloat(r.querySelector('.g-oran')?.value)||75 };
                         r.querySelectorAll('.dyn-input').forEach(inp => data[inp.dataset.col]=inp.value);
+                        // Doğru KOSGEB Kuralı Otomatik Kaydet (Canlı Önizleme) Entegrasyonu:
                         let dH = Math.min(data.fatura, data.tutar) * (data.oran/100); let hesapHucre=r.querySelector('.g-hesaplanan-hucre'); if(hesapHucre) hesapHucre.innerText=formatMoney(dH); return data;
                     });
                 }
@@ -379,10 +575,18 @@
                 if(rBody) f.raporlar = Array.from(rBody.querySelectorAll('tr')).map(r => ({ id: r.dataset.id, no: r.querySelector('.r-no')?.value||'', aciklama: r.querySelector('.r-aciklama')?.value||'', tarih: r.querySelector('.r-tarih')?.value||'', durum: r.querySelector('.r-durum')?.value||'Bekliyor' }));
                 
                 const kKapsayici = document.getElementById('krediTablolariKapsayici'); 
-                if(kKapsayici) f.krediTablolar = Array.from(kKapsayici.querySelectorAll('[data-tabloid]')).map(div => ({ id: div.dataset.tabloid, baslik: div.querySelector('.k-baslik')?.value||'', veriler: Array.from(div.querySelectorAll('.kredi-body tr')).map(r => { let ana=unformat(r.querySelector('.k-ana')?.value), faiz=unformat(r.querySelector('.k-faiz')?.value); if(r.querySelector('.row-toplam')) r.querySelector('.row-toplam').innerText=formatMoney(ana+faiz); return { id: r.dataset.id, tarih: r.querySelector('.k-tarih')?.value||'', anapara: ana, faiz: faiz, destek: unformat(r.querySelector('.k-destek')?.value), not: r.querySelector('.k-not')?.value||'', durum: r.querySelector('.k-durum')?.value||'Ödenmedi' }; }) }));
+                if(kKapsayici) {
+                    const bloklar = Array.from(kKapsayici.querySelectorAll(':scope > [data-tabloid]'));
+                    if(bloklar.length > 0 || (f.krediTablolar || []).length === 0) {
+                        f.krediTablolar = bloklar.map(div => ({ id: div.dataset.tabloid, baslik: div.querySelector('.k-baslik')?.value||'', veriler: Array.from(div.querySelectorAll('.kredi-body tr')).map(r => { let ana=unformat(r.querySelector('.k-ana')?.value), faiz=unformat(r.querySelector('.k-faiz')?.value); if(r.querySelector('.row-toplam')) r.querySelector('.row-toplam').innerText=formatMoney(ana+faiz); return { id: r.dataset.id, tarih: r.querySelector('.k-tarih')?.value||'', anapara: ana, faiz: faiz, destek: unformat(r.querySelector('.k-destek')?.value), not: r.querySelector('.k-not')?.value||'', durum: r.querySelector('.k-durum')?.value||'Ödenmedi' }; }) }));
+                    }
+                }
             }
-            hesaplamalariYap(); clearTimeout(kayitZamanlayici); 
-            if (force) bulutaGonder(true, true); else kayitZamanlayici = setTimeout(()=>bulutaGonder(true,true), 800);
+            hesaplamalariYap(); 
+            clearTimeout(kayitZamanlayici); 
+            kayitZamanlayici = null;
+            if (force) bulutaGonder(true, true);
+            else kayitZamanlayici = setTimeout(()=>{ kayitZamanlayici = null; bulutaGonder(true,true).catch(()=>undefined); }, 800);
         }
 
         function anaEkranaDon() { 
@@ -392,90 +596,337 @@
                     else otomatikKaydet(true); 
                 }
             } catch(error) { console.error("Kayıt hatası atlatıldı", error); }
+            
             document.getElementById('detailView').style.display='none';
             document.getElementById('masterView').style.display='block';
             renderMasterView(); 
         }
 
+        // Şifre kutusuna yeni bir şey yazılmaya başlandığında kırmızı uyarıyı temizler
         function sifreHataTemizle() {
-            const inp = document.getElementById('sysPassword'); const msg = document.getElementById('loginErrorMsg');
-            inp.classList.remove('border-rose-500', 'text-rose-400'); inp.classList.add('border-slate-700', 'text-white');
+            const inp = document.getElementById('sysPassword');
+            const msg = document.getElementById('loginErrorMsg');
+            inp.classList.remove('border-rose-500', 'text-rose-400');
+            inp.classList.add('border-slate-700', 'text-white');
             msg.classList.replace('opacity-100', 'opacity-0');
         }
 
-        // YENİ: Firebase OnValue Problemi Giderildi! Ekranların üst üste binmesi çözüldü.
-        function girisYap() {
+        async function girisYap() {
+            if(girisDevamEdiyor) return;
             const sifreInput = document.getElementById('sysPassword');
             const sifre = sifreInput.value; 
             const loader = document.getElementById('loader');
+            const girisButonu = document.getElementById('girisButonu');
             
+            // Hata anında çalışacak görsel uyarı animasyonu
             function hataGoster(mesaj) {
-                if(loader) loader.style.display = 'none'; sifreInput.value = ''; sifreInput.focus();
+                if(loader) loader.style.display = 'none';
+                sifreInput.value = '';
+                sifreInput.focus();
                 sifreInput.classList.remove('border-slate-700', 'text-white');
                 sifreInput.classList.add('border-rose-500', 'text-rose-400', 'animate-shake');
+                
                 const msgEl = document.getElementById('loginErrorMsg');
-                msgEl.innerText = mesaj; msgEl.classList.replace('opacity-0', 'opacity-100');
+                msgEl.innerText = mesaj;
+                msgEl.classList.replace('opacity-0', 'opacity-100');
+                
                 setTimeout(() => sifreInput.classList.remove('animate-shake'), 500);
             }
 
-            if(!sifre) { hataGoster("Lütfen bir şifre girin!"); return; }
-            if(loader) loader.style.display = 'flex';
-
-            let ilkYukleme = true;
-
-            if (sifre === '2002') { 
-                if(typeof window.firebaseOnValue === 'function' && window.firebaseDB) {
-                    const dbRef = window.firebaseRef(window.firebaseDB, 'kobi_data');
-                    
-                    if(!firebaseListener) {
-                        firebaseListener = window.firebaseOnValue(dbRef, (snapshot) => {
-                            const data = snapshot.val();
-                            MASTER_DATA = data ? data : { projeler: {} };
-                            veriYapilandir();
-                            
-                            // YENİ MANTIK: Sadece ilk açılışta Portfolio ekranını zorla aç.
-                            // Diğer zamanlarda kullanıcı hangi ekrandaysa sadece onu arka planda yenile!
-                            if (ilkYukleme) {
-                                if(loader) loader.style.display = 'none';
-                                document.getElementById('loginView').style.display = 'none';
-                                document.getElementById('portfolioView').style.display = 'block';
-                                document.getElementById('masterView').style.display = 'none';
-                                document.getElementById('detailView').style.display = 'none';
-                                renderPortfoyView();
-                                ilkYukleme = false;
-                                showToast("Sisteme Giriş Yapıldı (Canlı Mod Aktif)");
-                            } else if (!windowIsUserEditing) {
-                                if (document.getElementById('portfolioView').style.display === 'block') renderPortfoyView();
-                                if (document.getElementById('masterView').style.display === 'block') renderMasterView();
-                                if (document.getElementById('detailView').style.display === 'block') renderTables();
-                            }
-                        });
-                    }
-                } else { hataGoster("Firebase bağlantısı kurulamadı!"); }
-            } else { setTimeout(() => hataGoster("HATALI ŞİFRE!"), 800); }
-        }
-
-        function cikisYap() { 
-            document.getElementById('sysPassword').value = '';
-            MASTER_DATA = { projeler: {} };
-            guncelProjeID = null; guncelFirmaID = null;
-            if(window.firebaseDB && firebaseListener) {
-                window.firebaseOff(window.firebaseRef(window.firebaseDB, 'kobi_data'), firebaseListener);
-                firebaseListener = null;
+            if(!sifre) {
+                hataGoster("Lütfen bir şifre girin!");
+                return;
             }
-            document.getElementById('portfolioView').style.display = 'none';
-            document.getElementById('masterView').style.display = 'none';
-            document.getElementById('detailView').style.display = 'none';
-            document.getElementById('loginView').style.display = 'flex'; 
-            showToast("Güvenli çıkış yapıldı", "info");
+
+            if(!SHARED_LOGIN_EMAIL || !SHARED_LOGIN_UID) {
+                hataGoster("Ortak uygulama hesabının kurulumu henüz tamamlanmamış. Yöneticiyle iletişime geçin.");
+                return;
+            }
+
+            if(location.protocol === 'file:') {
+                hataGoster("Firebase bağlantısı için dosyayı doğrudan açmayın. Paketteki BASLAT.command dosyasını çalıştırıp http://localhost:4173 adresini kullanın.");
+                return;
+            }
+
+            girisDevamEdiyor = true;
+            if(girisButonu) girisButonu.disabled = true;
+            if(loader) loader.style.display = 'flex';
+            document.getElementById('loaderText').innerText = 'Ortak şifre doğrulanıyor';
+            sifreInput.value = '';
+
+            try {
+                const context = await getFirebaseContext();
+                const sonuc = await context.authSdk.signInWithEmailAndPassword(context.auth, SHARED_LOGIN_EMAIL, sifre);
+                if(!ortakKullaniciMi(sonuc.user)) {
+                    throw Object.assign(new Error('Ortak hesap kimliği eşleşmedi.'), { code: 'auth/wrong-shared-account' });
+                }
+                const token = await context.authSdk.getIdTokenResult(sonuc.user);
+                if(token.claims?.firebase?.sign_in_provider !== 'password') {
+                    throw Object.assign(new Error('Şifreli giriş gerekli.'), { code: 'auth/wrong-shared-account' });
+                }
+                oturumNesli++;
+                oturumAcik = true;
+                kayitHatasiVar = false;
+                // Önceki oturumun bitmemiş kuyruğunu yeni oturuma taşımayın.
+                firebaseWriteQueue = Promise.resolve();
+                MASTER_DATA = await buluttanVeriOku();
+                if(!MASTER_DATA || typeof MASTER_DATA !== 'object') MASTER_DATA = { projeler: {} };
+                if(!MASTER_DATA.projeler) MASTER_DATA.projeler = {};
+                veriYapilandir();
+                document.getElementById('loginView').style.display = 'none';
+                document.getElementById('portfolioView').style.display = 'block';
+                document.getElementById('masterView').style.display = 'none';
+                document.getElementById('detailView').style.display = 'none';
+                renderPortfoyView();
+                showToast("Ortak şifreyle giriş yapıldı");
+                gunlukYedegiBaslat();
+            } catch(error) {
+                oturumuTemizle();
+                if(firebaseContextPromise) {
+                    try { const context = await firebaseContextPromise; await context.authSdk.signOut(context.auth); }
+                    catch(_) { /* Arayüz ve bekleyen işlemler zaten kapatıldı. */ }
+                }
+                console.error("Giriş hatası", error);
+                const kod = (error?.code || '').toString().toLowerCase();
+                const mesaj = (error?.message || '').toString().toLowerCase();
+                if(kod.includes('invalid-credential') || kod.includes('wrong-password') || kod.includes('user-not-found')) hataGoster("Şifre doğrulanamadı. Ortak sistem şifresini kontrol edin.");
+                else if(kod.includes('too-many-requests')) hataGoster("Çok fazla giriş denemesi yapıldı. Bir süre sonra yeniden deneyin.");
+                else if(kod.includes('user-disabled')) hataGoster("Ortak uygulama hesabı yönetici tarafından kapatılmış.");
+                else if(kod.includes('wrong-shared-account')) hataGoster("Ortak hesap kurulumu eşleşmiyor. Yönetici UID ve e-posta ayarını kontrol etmeli.");
+                else if(kod.includes('configuration-not-found') || mesaj.includes('configuration_not_found') || kod.includes('operation-not-allowed')) hataGoster("Yönetici Firebase Authentication içinde Email/Password girişini etkinleştirmeli.");
+                else if(kod.includes('unauthorized-domain')) hataGoster("Yönetici bu yayın alan adını Firebase Authentication izinli alanlarına eklemeli.");
+                else if(kod.includes('invalid-api-key') || mesaj.includes('api key not valid')) hataGoster("Firebase API anahtarı geçersiz. Project settings > Your apps bölümündeki güncel yapılandırmayı kontrol edin.");
+                else if(kod.includes('permission-denied') || mesaj.includes('permission_denied')) hataGoster("Ortak hesabın firma kayıtlarına erişim yetkisi yok. Yönetici güvenlik kurallarını kontrol etmeli.");
+                else if(kod.includes('network-request-failed')) hataGoster("Firebase ağına ulaşılamadı. İnternet bağlantısını ve güvenlik duvarını kontrol edin.");
+                else hataGoster("Giriş tamamlanamadı. Bağlantıyı ve ortak hesap kurulumunu kontrol edin.");
+            } finally {
+                girisDevamEdiyor = false;
+                if(girisButonu) girisButonu.disabled = false;
+                if(loader) loader.style.display = 'none';
+                document.getElementById('loaderText').innerText = 'Sistem Başlatılıyor';
+            }
         }
 
-        function verileriYenile() { showToast("Sisteminiz şu an canlı senkronize çalışıyor.", "info"); }
+        async function cikisYap() { 
+            const bekleyenVardi = Boolean(kayitZamanlayici);
+            oturumuTemizle();
+            try {
+                const context = await getFirebaseContext();
+                await context.authSdk.signOut(context.auth);
+            } catch(error) {
+                console.warn("Firebase oturumu kapatılamadı", error);
+            }
+            showToast(bekleyenVardi ? "Çıkış yapıldı; henüz gönderilmemiş son değişiklik iptal edildi." : "Çıkış yapıldı", "info");
+        }
+
+        async function verileriYenile() {
+            const loader = document.getElementById('loader');
+            loader.style.display = 'flex';
+            document.getElementById('loaderText').innerText = 'Buluttan güncelleniyor';
+            try {
+                await bekleyenKaydiTamamla();
+                MASTER_DATA = await buluttanVeriOku();
+                kayitHatasiVar = false;
+                veriYapilandir();
+                renderPortfoyView();
+                showToast("Firebase verileri yenilendi");
+            } catch(error) {
+                console.error("Yenileme hatası", error);
+                showToast("Veriler yenilenemedi", "error");
+            } finally {
+                loader.style.display = 'none';
+                document.getElementById('loaderText').innerText = 'Sistem Başlatılıyor';
+            }
+        }
+
+        function turkiyeGunu(tarih = new Date()) {
+            const bolumler = new Intl.DateTimeFormat('en-CA', {
+                timeZone: 'Europe/Istanbul', year: 'numeric', month: '2-digit', day: '2-digit'
+            }).formatToParts(tarih);
+            const al = tur => bolumler.find(bolum => bolum.type === tur).value;
+            return `${al('year')}-${al('month')}-${al('day')}`;
+        }
+
+        function yedekKayitAnahtari() {
+            return `kobiDailyBackup:${FIREBASE_CONFIG.projectId}:${SHARED_LOGIN_UID}:Europe/Istanbul`;
+        }
+
+        function yedekDurumu(mesaj) {
+            if(!oturumAcik) return;
+            document.getElementById('gunlukYedekPaneli').style.display = 'block';
+            document.getElementById('gunlukYedekDurumu').innerText = mesaj;
+        }
+
+        async function bekleyenKaydiTamamla() {
+            if(!oturumAcik) throw new Error('Önce giriş yapın.');
+            if(kayitZamanlayici) {
+                clearTimeout(kayitZamanlayici);
+                kayitZamanlayici = null;
+                await bulutaGonder(true, true);
+            }
+            await firebaseWriteQueue;
+            if(kayitHatasiVar) throw new Error('Önce kayıt hatasını giderin.');
+        }
+
+        function yedekDosyasiniHazirla(veri, gun) {
+            if(!oturumAcik) throw new Error('Oturum kapalı.');
+            const blob = new Blob([JSON.stringify(veri, null, 2)], { type: 'application/json;charset=utf-8' });
+            const yeniUrl = URL.createObjectURL(blob);
+            if(yedekObjectUrl) URL.revokeObjectURL(yedekObjectUrl);
+            yedekObjectUrl = yeniUrl;
+            const link = document.getElementById('gunlukYedekLink');
+            link.href = yeniUrl;
+            link.download = `KOBI_Yedek_${gun}.json`;
+            link.style.display = 'inline-flex';
+            // Bağlantı ekranda kalır: kullanıcı tıklaması indirme engeline karşı güvenli geri dönüş yoludur.
+            return link;
+        }
+
+        async function jsonIndir() {
+            if(!oturumAcik) return;
+            const nesil = oturumNesli, istek = ++yedekIstekNesli;
+            try {
+                yedekDurumu('Bulutta kaydedilmiş güncel kayıtlar yedeğe hazırlanıyor…');
+                await bekleyenKaydiTamamla();
+                if(navigator.onLine === false) throw new Error('offline');
+                const veri = await buluttanVeriOku();
+                if(!oturumAcik || nesil !== oturumNesli || istek !== yedekIstekNesli) return;
+                const gun = turkiyeGunu();
+                const link = yedekDosyasiniHazirla(veri, gun);
+                try {
+                    localStorage.setItem(yedekKayitAnahtari(), JSON.stringify({ gun, istekZamani: new Date().toISOString(), tur: 'elle', sonuc: 'dogrulanmadi' }));
+                } catch(_) { /* Elle indirme, cihaz kayıt izni olmadan da çalışır. */ }
+                link.click();
+                yedekDurumu(`${gun}: indirme isteği gönderildi. Dosyayı İndirilenler'den kontrol edin; görünmüyorsa “Hazır yedeği indir” bağlantısına tıklayın.`);
+            } catch(error) {
+                yedekDurumu('Yedek hazırlanamadı veya indirme başlatılamadı. İnternet/kayıt hatasını kontrol edin; hazır bağlantı varsa elle indirin.');
+                console.warn('Yedek işlemi tamamlanamadı', error);
+            }
+        }
+
+        async function gunlukYedegiKontrolEt() {
+            if(!oturumAcik || gunlukYedekCalisiyor || document.visibilityState === 'hidden') return;
+            if(navigator.onLine === false) { yedekDurumu('Çevrimdışı: günlük yedek için internet bağlantısı bekleniyor.'); return; }
+            if(!navigator.locks?.request) {
+                yedekDurumu('Bu tarayıcı sekmeler arası otomatik yedek kilidini desteklemiyor. “Güncel yedeği hazırla” ile elle indirin.');
+                return;
+            }
+            const nesil = oturumNesli;
+            gunlukYedekCalisiyor = true;
+            try {
+                await navigator.locks.request(yedekKayitAnahtari(), { ifAvailable: true }, async kilit => {
+                    if(!kilit || !oturumAcik || nesil !== oturumNesli) return;
+                    const onceki = JSON.parse(localStorage.getItem(yedekKayitAnahtari()) || 'null');
+                    if(onceki?.gun === turkiyeGunu()) {
+                        yedekDurumu(`${onceki.gun}: bu tarayıcıda indirme isteği daha önce gönderildi. Kaydedildiğini İndirilenler klasöründen kontrol edin.`);
+                        return;
+                    }
+                    yedekDurumu('Günlük yedek hazırlanıyor…');
+                    await bekleyenKaydiTamamla();
+                    const veri = await buluttanVeriOku();
+                    if(!oturumAcik || nesil !== oturumNesli || document.visibilityState === 'hidden') return;
+                    // Ağ isteği gece yarısını geçtiyse dosya ve günlük işaret aynı Türkiye tarihini kullanır.
+                    const gun = turkiyeGunu();
+                    const sonKayit = JSON.parse(localStorage.getItem(yedekKayitAnahtari()) || 'null');
+                    if(sonKayit?.gun === gun) return;
+                    const link = yedekDosyasiniHazirla(veri, gun);
+                    // Kilit + önce kalıcı işaret: aynı origin'deki iki sekme aynı gün otomatik indirme başlatamaz.
+                    // Bu kayıt dosyanın diske yazıldığını DEĞİL, indirme denendiğini ifade eder.
+                    localStorage.setItem(yedekKayitAnahtari(), JSON.stringify({ gun, istekZamani: new Date().toISOString(), tur: 'otomatik', sonuc: 'dogrulanmadi' }));
+                    link.click();
+                    yedekDurumu(`${gun}: otomatik indirme isteği gönderildi. Dosya görünmüyorsa “Hazır yedeği indir” bağlantısına tıklayın.`);
+                });
+            } catch(error) {
+                yedekDurumu('Otomatik yedek tamamlanamadı. Tarayıcının kayıt/indirme iznini ve internet bağlantısını kontrol edin; elle indirme düğmesini kullanabilirsiniz.');
+                console.warn('Günlük yedek tamamlanamadı', error);
+            } finally {
+                gunlukYedekCalisiyor = false;
+            }
+        }
+
+        function gunlukYedegiBaslat() {
+            clearInterval(gunlukYedekZamanlayici);
+            gunlukYedegiKontrolEt();
+            gunlukYedekZamanlayici = setInterval(gunlukYedegiKontrolEt, 60000);
+        }
+
+        async function jsonYukle(event) {
+            if(!oturumAcik) return;
+            const nesil = oturumNesli;
+            const file = event.target.files?.[0];
+            event.target.value = '';
+            if(!file) return;
+
+            try {
+                const parsed = JSON.parse(await file.text());
+                if(!oturumAcik || nesil !== oturumNesli) return;
+                const yeniData = parsed?.projeler ? parsed : parsed?.data?.projeler ? parsed.data : null;
+                if(!yeniData || typeof yeniData.projeler !== 'object') throw new Error("Geçersiz veri yapısı");
+
+                const adet = Object.values(yeniData.projeler).reduce((toplam, proje) => toplam + Object.keys(proje?.firmalar || {}).length, 0);
+                const onay = prompt(`Bu dosyada ${adet} firma bulundu. Firebase'deki proje verilerinin tamamı bu dosyayla değiştirilecek. Devam etmek için AKTAR yazın:`);
+                if((onay || '').trim().toUpperCase() !== 'AKTAR') {
+                    showToast("JSON aktarımı iptal edildi", "info");
+                    return;
+                }
+
+                yerelGuvenlikYedegiAl("JSON aktarımından önce");
+                await bekleyenKaydiTamamla();
+                const eskiData = await buluttanVeriOku();
+                if(!oturumAcik || nesil !== oturumNesli) return;
+                const backupID = firebaseKey();
+                await kuyrugaEkle("JSON geri yükleme", ({ db, databaseSdk }) => {
+                    const updates = {};
+                    updates[`${DATA_ROOT}/_backups/${backupID}`] = cloneData({
+                        createdAt: new Date().toISOString(),
+                        reason: 'JSON aktarımından önce otomatik yedek',
+                        data: eskiData
+                    });
+                    updates[`${DATA_ROOT}/projeler`] = cloneData(yeniData.projeler);
+                    return databaseSdk.update(databaseSdk.ref(db), updates);
+                });
+
+                if(!oturumAcik || nesil !== oturumNesli) return;
+                MASTER_DATA = cloneData(yeniData);
+                veriYapilandir();
+                renderPortfoyView();
+                showToast(`${adet} firma Firebase'e aktarıldı`);
+            } catch(error) {
+                console.error("JSON yükleme hatası", error);
+                showToast("JSON dosyası okunamadı veya geçersiz", "error");
+            }
+        }
+
+        function guvenliNesneDizisi(deger) {
+            const adaylar = Array.isArray(deger)
+                ? deger
+                : (deger && typeof deger === 'object' ? Object.values(deger) : []);
+            return adaylar.filter(item => item && typeof item === 'object');
+        }
 
         function veriYapilandir() {
-            if(!MASTER_DATA.projeler) return;
             Object.values(MASTER_DATA.projeler).forEach(p => {
-                if(!p.tip) p.tip="standart"; if(!p.firmalar) p.firmalar={}; if(!p.sutunlar) p.sutunlar=JSON.parse(JSON.stringify(varsayilanSutunlar));
+                if(!p || typeof p !== 'object') return;
+                if(!p.tip) p.tip="standart";
+                if(!p.firmalar || typeof p.firmalar !== 'object') p.firmalar={};
+                p.sutunlar = guvenliNesneDizisi(p.sutunlar);
+                if(p.sutunlar.length === 0) p.sutunlar=JSON.parse(JSON.stringify(varsayilanSutunlar));
+
+                Object.entries(p.firmalar).forEach(([firmaID, mevcutFirma]) => {
+                    let f = mevcutFirma;
+                    if(!f || typeof f !== 'object') {
+                        f = { bilgi: { adi: 'İsimsiz Firma', durum: 'AKTİF' } };
+                        p.firmalar[firmaID] = f;
+                    }
+                    if(!f.bilgi || typeof f.bilgi !== 'object') f.bilgi = { adi: 'İsimsiz Firma', durum: 'AKTİF' };
+                    f.dosyalar = guvenliNesneDizisi(f.dosyalar);
+                    f.giderler = guvenliNesneDizisi(f.giderler);
+                    f.raporlar = guvenliNesneDizisi(f.raporlar);
+                    f.istihdam = guvenliNesneDizisi(f.istihdam);
+                    f.istihdam.forEach(donem => { donem.aylar = guvenliNesneDizisi(donem.aylar); });
+                    f.krediTablolar = guvenliNesneDizisi(f.krediTablolar);
+                    f.krediTablolar.forEach(tablo => { tablo.veriler = guvenliNesneDizisi(tablo.veriler); });
+                });
                 
                 const getterSutunlar = [
                     { id: 'get_gider_tutar', ad: 'ONAYLANAN GİDER (TOPLAM)', width: '150px', calc: true, gizli: true },
@@ -497,6 +948,7 @@
                     
                     Object.values(p.firmalar).forEach(f => {
                         if(!f.istihdam) f.istihdam = [];
+                        
                         f.istihdam.forEach(d => {
                             if (d.ad === "1. DÖNEM" || d.id === "ist_1") {
                                 if (d.aylar[0] && d.aylar[0].ay === "Ay 1") d.aylar[0].ay = "Şubat";
@@ -505,6 +957,7 @@
                                 if (d.aylar[3] && d.aylar[3].ay === "Ay 4") d.aylar[3].ay = "Mayıs";
                             }
                         });
+
                         for(let i = f.istihdam.length; i < 4; i++) {
                             let ayIsimleri = ["Ay 1", "Ay 2", "Ay 3", "Ay 4"];
                             if (i === 0) ayIsimleri = ["Şubat", "Mart", "Nisan", "Mayıs"]; 
@@ -514,9 +967,17 @@
                 }
                 else { if(!p.sutunlar.find(s=>s.id==='alinan_destek')) p.sutunlar.splice(2,0,{id:'alinan_destek',ad:'ALINAN DESTEK ₺',width:'150px',calc:true}); }
                 
-                if(!p.giderSutunlari) { let ig = p.ad.includes("İŞ GELİŞTİRME"); p.giderSutunlari=[{id:'no',ad:'NO',width:'60px'},{id:'ad',ad:'GİDER ADI',width:'250px'},{id:'miktar',ad:'MİKTAR',width:'90px'},{id:'birim',ad:'BİRİM',width:'90px'},{id:'tutar',ad:'KURUL ONAY',width:'150px'},{id:'fatura',ad:'FATURA TUTARI',width:'150px'},{id:'gerceklesme',ad:'DURUM',width:'130px'},{id:'oran',ad:'ORAN %',width:'90px',gizli:!ig},{id:'hesaplanan',ad:'HESAPLANAN',width:'150px',gizli:!ig}]; }
+                p.giderSutunlari = guvenliNesneDizisi(p.giderSutunlari);
+                if(p.giderSutunlari.length === 0) { let ig = p.ad.includes("İŞ GELİŞTİRME"); p.giderSutunlari=[{id:'no',ad:'NO',width:'60px'},{id:'ad',ad:'GİDER ADI',width:'250px'},{id:'miktar',ad:'MİKTAR',width:'90px'},{id:'birim',ad:'BİRİM',width:'90px'},{id:'tutar',ad:'KURUL ONAY',width:'150px'},{id:'fatura',ad:'FATURA TUTARI',width:'150px'},{id:'gerceklesme',ad:'DURUM',width:'130px'},{id:'oran',ad:'ORAN %',width:'90px',gizli:!ig},{id:'hesaplanan',ad:'HESAPLANAN',width:'150px',gizli:!ig}]; }
                 Object.values(p.firmalar).forEach((f, idx) => { 
-                    if(!f.dosyalar) f.dosyalar=[]; 
+                    if(p.tip === 'istihdam') {
+                        f.istihdam = guvenliNesneDizisi(f.istihdam);
+                    } else {
+                        f.giderler = guvenliNesneDizisi(f.giderler);
+                        f.raporlar = guvenliNesneDizisi(f.raporlar);
+                        f.krediTablolar = guvenliNesneDizisi(f.krediTablolar);
+                        f.krediTablolar.forEach(tablo => { tablo.veriler = guvenliNesneDizisi(tablo.veriler); });
+                    }
                     if(f.bilgi.kilitli===undefined) f.bilgi.kilitli=false; 
                     if(f.bilgi.kimlikKilit===undefined) f.bilgi.kimlikKilit=false; 
                     if(f.bilgi.erkenOdeme!==undefined&&f.bilgi.erken_odeme===undefined) f.bilgi.erken_odeme=f.bilgi.erkenOdeme; 
@@ -526,14 +987,14 @@
             });
         }
 
-        function sutunlariSifirla() { if(confirm("Sıfırlanacak?")) { let p=MASTER_DATA.projeler[guncelProjeID]; p.sutunlar=JSON.parse(JSON.stringify(varsayilanSutunlar)); if(p.tip==="istihdam"){p.sutunlar.splice(3,0,{id:'ist_hedef',ad:'HEDEF',width:'150px',calc:true});p.sutunlar.splice(4,0,{id:'ist_gerceklesme',ad:'GERÇEKLEŞEN',width:'150px',calc:true});} DINAMIK_SUTUNLAR=p.sutunlar; let ig=p.ad.includes("İŞ GELİŞTİRME"); p.giderSutunlari=[{id:'no',ad:'NO',width:'60px'},{id:'ad',ad:'GİDER ADI',width:'250px'},{id:'miktar',ad:'MİKTAR',width:'90px'},{id:'birim',ad:'BİRİM',width:'90px'},{id:'tutar',ad:'KURUL ONAY',width:'150px'},{id:'fatura',ad:'FATURA TUTARI',width:'150px'},{id:'gerceklesme',ad:'DURUM',width:'130px'},{id:'oran',ad:'ORAN %',width:'90px',gizli:!ig},{id:'hesaplanan',ad:'HESAPLANAN',width:'150px',gizli:!ig}]; bulutaGonder(true,true); renderMasterView(); renderTables(); showToast("Sıfırlandı"); } }
+        function sutunlariSifirla() { if(confirm("Sıfırlanacak?")) { let p=MASTER_DATA.projeler[guncelProjeID]; p.sutunlar=JSON.parse(JSON.stringify(varsayilanSutunlar)); if(p.tip==="istihdam"){p.sutunlar.splice(3,0,{id:'ist_hedef',ad:'HEDEF',width:'150px',calc:true});p.sutunlar.splice(4,0,{id:'ist_gerceklesme',ad:'GERÇEKLEŞEN',width:'150px',calc:true});} DINAMIK_SUTUNLAR=p.sutunlar; let ig=p.ad.includes("İŞ GELİŞTİRME"); p.giderSutunlari=[{id:'no',ad:'NO',width:'60px'},{id:'ad',ad:'GİDER ADI',width:'250px'},{id:'miktar',ad:'MİKTAR',width:'90px'},{id:'birim',ad:'BİRİM',width:'90px'},{id:'tutar',ad:'KURUL ONAY',width:'150px'},{id:'fatura',ad:'FATURA TUTARI',width:'150px'},{id:'gerceklesme',ad:'DURUM',width:'130px'},{id:'oran',ad:'ORAN %',width:'90px',gizli:!ig},{id:'hesaplanan',ad:'HESAPLANAN',width:'150px',gizli:!ig}]; projeAyarlariKaydet(guncelProjeID).catch(()=>undefined); renderMasterView(); renderTables(); showToast("Sıfırlandı"); } }
         function sutunMenusuAc(t) { aktifSutunTablosu=t; let ref=t==='master'?DINAMIK_SUTUNLAR:MASTER_DATA.projeler[guncelProjeID].giderSutunlari; const div=document.getElementById('sutunListesi'); div.innerHTML=''; ref.forEach((s,i)=>{let checked=s.gizli?'':'checked'; let silBtn=(!s.calc&&(s.id.startsWith('dyn_')||!['no','ad','miktar','birim','tutar','fatura','gerceklesme','oran','hesaplanan'].includes(s.id)))?`<i class="fa-solid fa-trash-can text-slate-300 cursor-pointer ml-2 hover:text-rose-500" onclick="sutunSilKalici(${i}, '${t}')"></i>`:''; div.innerHTML+=`<div class="flex items-center space-x-3 p-1.5 hover:bg-slate-50 rounded-lg" draggable="true" ondragstart="dragStart(event,${i},'${t}')" ondragover="dragOver(event)" ondrop="drop(event,${i},'${t}')"><i class="fa-solid fa-grip-vertical text-slate-300 cursor-grab px-1"></i><input type="checkbox" class="w-4 h-4 text-indigo-600 rounded" ${checked} onchange="sutunGizleGoster(${i},'${t}')"><input type="text" value="${s.ad}" class="input-transparent py-1 px-2 text-xs font-bold w-full" onchange="sutunAdiDuzenle(${i},this.value,'${t}')">${silBtn}</div>`;}); document.getElementById('yeniSutunBtnAlani').innerHTML=t==='gider'?`<button onclick="yeniSutunModalEkle('${t}')" class="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-lg">Yeni Sütun</button>`:''; document.getElementById('sutunModal').style.display='flex'; }
         function sutunGizleGoster(i,t){let arr=t==='master'?DINAMIK_SUTUNLAR:MASTER_DATA.projeler[guncelProjeID].giderSutunlari;arr[i].gizli=!arr[i].gizli;}
         function sutunAdiDuzenle(i,v,t){let arr=t==='master'?DINAMIK_SUTUNLAR:MASTER_DATA.projeler[guncelProjeID].giderSutunlari;arr[i].ad=v.toUpperCase();}
         function yeniSutunModalEkle(t){let ad=prompt("Sütun Adı:");if(ad){let arr=t==='master'?DINAMIK_SUTUNLAR:MASTER_DATA.projeler[guncelProjeID].giderSutunlari;arr.push({id:"dyn_"+Date.now(),ad:ad.toUpperCase(),width:'150px'});sutunMenusuAc(t);}}
         function sutunSilKalici(i,t){if(confirm("Sil?")){let arr=t==='master'?DINAMIK_SUTUNLAR:MASTER_DATA.projeler[guncelProjeID].giderSutunlari;arr.splice(i,1);sutunMenusuAc(t);}}
-        function sutunDegisiklikleriniUygula(){bulutaGonder(true,true);aktifSutunTablosu==='master'?renderMasterView():renderTables();document.getElementById('sutunModal').style.display='none';}
-        let suruklenenIndex=null,suruklenenTablo=null; function dragStart(e,i,t){suruklenenIndex=i;suruklenenTablo=t;e.target.classList.add('opacity-50');} function dragOver(e){e.preventDefault();} function drop(e,h,t){e.preventDefault();document.querySelectorAll('.opacity-50').forEach(el=>el.classList.remove('opacity-50'));if(suruklenenIndex===null||suruklenenIndex===h||suruklenenTablo!==t)return;let arr=t==='master'?DINAMIK_SUTUNLAR:MASTER_DATA.projeler[guncelProjeID].giderSutunlari;arr.splice(h,0,arr.splice(suruklenenIndex,1)[0]);if(document.getElementById('sutunModal').style.display==='flex')sutunMenusuAc(t);else{t==='master'?(MASTER_DATA.projeler[guncelProjeID].sutunlar=arr,renderMasterView()):(MASTER_DATA.projeler[guncelProjeID].giderSutunlari=arr,renderTables());bulutaGonder(true,true);}}
+        function sutunDegisiklikleriniUygula(){projeAyarlariKaydet(guncelProjeID).catch(()=>undefined);aktifSutunTablosu==='master'?renderMasterView():renderTables();document.getElementById('sutunModal').style.display='none';}
+        let suruklenenIndex=null,suruklenenTablo=null; function dragStart(e,i,t){suruklenenIndex=i;suruklenenTablo=t;e.target.classList.add('opacity-50');} function dragOver(e){e.preventDefault();} function drop(e,h,t){e.preventDefault();document.querySelectorAll('.opacity-50').forEach(el=>el.classList.remove('opacity-50'));if(suruklenenIndex===null||suruklenenIndex===h||suruklenenTablo!==t)return;let arr=t==='master'?DINAMIK_SUTUNLAR:MASTER_DATA.projeler[guncelProjeID].giderSutunlari;arr.splice(h,0,arr.splice(suruklenenIndex,1)[0]);if(document.getElementById('sutunModal').style.display==='flex')sutunMenusuAc(t);else{t==='master'?(MASTER_DATA.projeler[guncelProjeID].sutunlar=arr,renderMasterView()):(MASTER_DATA.projeler[guncelProjeID].giderSutunlari=arr,renderTables());projeAyarlariKaydet(guncelProjeID).catch(()=>undefined);}}
         function tabloSirala(k){sortKolon===k?sortArtan=!sortArtan:(sortKolon=k,sortArtan=true);renderMasterView();}
 
         const getYeniFirma=(ad,tip="standart")=>{let tb={adi:ad,durum:"AKTİF",limitKosgeb:0,erken_odeme:0,erkenDurum:'Alınmadı',erkenKilit:true,teminatTutar:0,teminatVade:'',teminatDurum:'Alınmadı',kilitli:false,kimlikKilit:false,projeNotu:"",manuelDestek:0,sira:999};if(tip==="istihdam")return{bilgi:tb,dosyalar:[],istihdam:[{id:"ist_1",ad:"1. DÖNEM",hedef:120,aylar:[{ay:"Şubat",t_gun:0,y_gun:0,f_gun:0},{ay:"Mart",t_gun:0,y_gun:0,f_gun:0},{ay:"Nisan",t_gun:0,y_gun:0,f_gun:0},{ay:"Mayıs",t_gun:0,y_gun:0,f_gun:0}],destekTutar:0},{id:"ist_2",ad:"2. DÖNEM",hedef:120,aylar:[{ay:"Ay 1",t_gun:0,y_gun:0,f_gun:0},{ay:"Ay 2",t_gun:0,y_gun:0,f_gun:0},{ay:"Ay 3",t_gun:0,y_gun:0,f_gun:0},{ay:"Ay 4",t_gun:0,y_gun:0,f_gun:0}],destekTutar:0},{id:"ist_3",ad:"3. DÖNEM",hedef:120,aylar:[{ay:"Ay 1",t_gun:0,y_gun:0,f_gun:0},{ay:"Ay 2",t_gun:0,y_gun:0,f_gun:0},{ay:"Ay 3",t_gun:0,y_gun:0,f_gun:0},{ay:"Ay 4",t_gun:0,y_gun:0,f_gun:0}],destekTutar:0},{id:"ist_4",ad:"4. DÖNEM",hedef:120,aylar:[{ay:"Ay 1",t_gun:0,y_gun:0,f_gun:0},{ay:"Ay 2",t_gun:0,y_gun:0,f_gun:0},{ay:"Ay 3",t_gun:0,y_gun:0,f_gun:0},{ay:"Ay 4",t_gun:0,y_gun:0,f_gun:0}],destekTutar:0}]};else return{bilgi:tb,dosyalar:[],giderler:[{id:uID(),ad:"Yeni Kalem",miktar:"1",birim:"Adet",tutar:0,fatura:0,gerceklesme:"Bekliyor",oran:75}],raporlar:[{id:uID(),no:"Başlangıç",aciklama:"",tarih:new Date().toLocaleDateString('tr-TR'),durum:"Bekliyor"}],krediTablolar:[{id:"kt_"+uID(),baslik:"Finansman Tablosu",veriler:[{id:uID(),tarih:new Date().toLocaleDateString('tr-TR'),anapara:0,faiz:0,destek:0,not:"-",durum:"Ödenmedi"}]}]};};
@@ -565,23 +1026,32 @@
             });
         }
 
-        function yeniAnaProjeEkle(){let ad=prompt("Proje Adı:");if(!ad)return;let tip=prompt("[1] Harcama\n[2] İstihdam");let id="PROJE_"+Date.now();MASTER_DATA.projeler[id]={ad:ad.toUpperCase(),tip:tip==="2"?"istihdam":"standart",firmalar:{},sutunlar:JSON.parse(JSON.stringify(varsayilanSutunlar))};if(tip==="2"){MASTER_DATA.projeler[id].sutunlar.splice(3,0,{id:'ist_hedef',ad:'HEDEF',width:'100px',calc:true});MASTER_DATA.projeler[id].sutunlar.splice(4,0,{id:'ist_gerceklesme',ad:'1. DÖNEM',width:'110px',calc:true});MASTER_DATA.projeler[id].sutunlar.splice(5,0,{id:'ist_g2',ad:'2. DÖNEM',width:'110px',calc:true});MASTER_DATA.projeler[id].sutunlar.splice(6,0,{id:'ist_g3',ad:'3. DÖNEM',width:'110px',calc:true});MASTER_DATA.projeler[id].sutunlar.splice(7,0,{id:'ist_g4',ad:'4. DÖNEM',width:'110px',calc:true});}bulutaGonder(false,false);renderPortfoyView();}
-        function projeAdiDuzenle(id,e){e.stopPropagation();let y=prompt("Yeni ad:",MASTER_DATA.projeler[id].ad);if(y){MASTER_DATA.projeler[id].ad=y.trim().toUpperCase();bulutaGonder(false,false);renderPortfoyView();}}
-        function projeyiSil(id, e) {
+        function yeniAnaProjeEkle(){let ad=prompt("Proje Adı:");if(!ad)return;let tip=prompt("[1] Harcama\n[2] İstihdam");let id="PROJE_"+Date.now();MASTER_DATA.projeler[id]={ad:ad.toUpperCase(),tip:tip==="2"?"istihdam":"standart",firmalar:{},sutunlar:JSON.parse(JSON.stringify(varsayilanSutunlar))};if(tip==="2"){MASTER_DATA.projeler[id].sutunlar.splice(3,0,{id:'ist_hedef',ad:'HEDEF',width:'100px',calc:true});MASTER_DATA.projeler[id].sutunlar.splice(4,0,{id:'ist_gerceklesme',ad:'1. DÖNEM',width:'110px',calc:true});MASTER_DATA.projeler[id].sutunlar.splice(5,0,{id:'ist_g2',ad:'2. DÖNEM',width:'110px',calc:true});MASTER_DATA.projeler[id].sutunlar.splice(6,0,{id:'ist_g3',ad:'3. DÖNEM',width:'110px',calc:true});MASTER_DATA.projeler[id].sutunlar.splice(7,0,{id:'ist_g4',ad:'4. DÖNEM',width:'110px',calc:true});}yeniProjeKaydet(id).then(()=>showToast("Yeni proje oluşturuldu")).catch(()=>{delete MASTER_DATA.projeler[id];renderPortfoyView();});renderPortfoyView();}
+        function projeAdiDuzenle(id,e){e.stopPropagation();let y=prompt("Yeni ad:",MASTER_DATA.projeler[id].ad);if(y){MASTER_DATA.projeler[id].ad=y.trim().toUpperCase();projeAyarlariKaydet(id).catch(()=>undefined);renderPortfoyView();}}
+        async function projeyiSil(id, e) {
             e.stopPropagation();
-            const projeAdi = MASTER_DATA.projeler[id].ad;
-            const onay = prompt(`⚠️ DİKKAT! Bu işlem geri alınamaz.\n\n"${projeAdi}" projesini ve içindeki TÜM firmaları silmek üzeresiniz.\n\nOnaylıyorsanız lütfen kutucuğa tam olarak projenin adını yazın:`);
-            if (onay !== null) { 
-                if (onay.trim().toUpperCase() === projeAdi.toUpperCase()) {
-                    delete MASTER_DATA.projeler[id];
-                    bulutaGonder(false, false); renderPortfoyView();
-                    showToast("Proje ve içindeki tüm veriler kalıcı olarak silindi.", "info");
-                } else { showToast("Hatalı giriş! Proje adı eşleşmediği için silme işlemi iptal edildi.", "error"); }
+            const proje = MASTER_DATA.projeler[id];
+            if(!proje) return;
+            const projeAdi = proje.ad;
+            const firmaSayisi = Object.keys(proje.firmalar || {}).length;
+            const onay = prompt(`⚠️ DİKKAT! "${projeAdi}" projesi ve içindeki ${firmaSayisi} firma çöp alanına taşınacak.\n\nOnay için proje adını eksiksiz yazın:`);
+            if(onay === null) return;
+            if(onay.trim().toUpperCase() !== projeAdi.toUpperCase()) {
+                showToast("Proje adı eşleşmedi; silme iptal edildi.", "error");
+                return;
+            }
+            try {
+                await projeyiGuvenliSil(id);
+                delete MASTER_DATA.projeler[id];
+                renderPortfoyView();
+                showToast("Proje çöp alanına taşındı.", "info");
+            } catch(error) {
+                showToast("Proje silinemedi; yerel veri korunuyor.", "error");
             }
         }
         function portfoyEkranaDon(){guncelProjeID=null;DINAMIK_SUTUNLAR=[];renderPortfoyView();}
 
-        function projeyeGit(id){guncelProjeID=id;DINAMIK_SUTUNLAR=MASTER_DATA.projeler[id].sutunlar;document.getElementById('portfolioView').style.display='none';document.getElementById('masterView').style.display='block';document.getElementById('aktifProjeBaslik').innerText=MASTER_DATA.projeler[id].ad;document.getElementById('projeTipEtiketi').innerText=MASTER_DATA.projeler[id].tip==="istihdam"?"İstihdam (Foster) Yönetimi":"Harcama Yönetimi";renderMasterView();}
+        function projeyeGit(id){guncelProjeID=id;DINAMIK_SUTUNLAR=MASTER_DATA.projeler[id].sutunlar;document.getElementById('portfolioView').style.display='none';document.getElementById('masterView').style.display='block';document.getElementById('aktifProjeBaslik').innerText=MASTER_DATA.projeler[id].ad;document.getElementById('projeTipEtiketi').innerText=MASTER_DATA.projeler[id].tip==="istihdam"?"İstihdam Yönetimi":"Harcama Yönetimi";renderMasterView();}
 
         function firmaDragStart(e, id) { 
             if(sortKolon) return; 
@@ -604,17 +1074,15 @@
                 let movedItem = list.splice(sIdx, 1)[0];
                 list.splice(hIdx, 0, movedItem);
                 list.forEach((item, index) => { item[1].bilgi.sira = index; });
-                bulutaGonder(true, true);
+                firmaSiralariniKaydet(guncelProjeID).catch(() => undefined);
                 renderMasterView();
             }
             suruklenenFirmaID = null;
         }
 
+        // --- YENİLENMİŞ ANA LİSTE GÖRÜNÜMÜ ---
         function renderMasterView() {
             if(!guncelProjeID) return; const p = MASTER_DATA.projeler[guncelProjeID]; const trH=document.getElementById('tableHeaderRow'); const tB=document.getElementById('firmaListesiBody');
-            
-            document.getElementById('siralamaIpucu').style.display = sortKolon ? 'none' : 'block';
-
             trH.innerHTML=`<th class="p-3 text-center w-12 border-r border-slate-200" title="Kendi sıralamanız için basılı tutup sürükleyin"><i class="fa-solid fa-arrows-up-down text-slate-300"></i></th>`;
             DINAMIK_SUTUNLAR.forEach((s,i)=>{if(!s.gizli) trH.innerHTML+=`<th class="border-r border-slate-200" draggable="true" ondragstart="dragStart(event,${i},'master')" ondragover="dragOver(event)" ondrop="drop(event,${i},'master')"><div class="resize-wrapper" style="width:${s.width}"><span class="flex-1 hover:text-indigo-600 cursor-pointer" onclick="tabloSirala('${s.id}')">${s.ad} ${sortKolon===s.id?(sortArtan?'<i class="fa-solid fa-arrow-down"></i>':'<i class="fa-solid fa-arrow-up"></i>'):''}</span></div></th>`;});
             trH.innerHTML+=`<th class="p-3 text-center sticky right-0 bg-white"><i class="fa-solid fa-bolt"></i></th>`; tB.innerHTML='';
@@ -626,8 +1094,9 @@
                 let gt=0, ft=0, k_ana=0, k_oden=0, k_kalan=0, rap_bek=0;
                 if(f.giderler) f.giderler.forEach(g => { gt+=parseFloat(g.tutar)||0; ft+=parseFloat(g.fatura)||0; });
                 
-                if(f.krediTablolar) f.krediTablolar.forEach(kt=>kt.veriler.forEach(v=>{
-                    let d=new Date(v.tarih.split('.').reverse().join('-')).getTime();if(d<minT){minT=d;ilkT=v.tarih;}
+                guvenliNesneDizisi(f.krediTablolar).forEach(kt=>guvenliNesneDizisi(kt.veriler).forEach(v=>{
+                    let tarih = typeof v.tarih === 'string' ? v.tarih : '';
+                    let d=tarih ? new Date(tarih.split('.').reverse().join('-')).getTime() : Infinity;if(d<minT){minT=d;ilkT=tarih;}
                     let ana=parseFloat(v.anapara)||0, fz=parseFloat(v.faiz)||0, top=ana+fz;
                     k_ana += ana;
                     if(v.durum==='Ödendi') k_oden += top;
@@ -642,7 +1111,14 @@
                 return {id, f, b, rp, gn, ilkT, tD, get_gider_tutar:gt, get_fatura_tutar:ft, get_kredi_ana:k_ana, get_odenen_kredi:k_oden, get_kalan_kredi:k_kalan, get_bekleyen_rapor:rap_bek, get_teminat_vade: b.teminatVade || '-'};
             });
 
-            const durumOncelik = { "AKTİF": 1, "YENİDEN BAŞVURU YAPILACAK": 2, "DEĞERLENDİRME AŞAMASINDA": 3, "TAMAMLANDI": 4, "İPTAL": 5 };
+            // DURUM ÖNCELİĞİ (Combobox Sıralaması İçin)
+            const durumOncelik = { 
+                "AKTİF": 1, 
+                "YENİDEN BAŞVURU YAPILACAK": 2, 
+                "DEĞERLENDİRME AŞAMASINDA": 3, 
+                "TAMAMLANDI": 4, 
+                "İPTAL": 5 
+            };
 
             if(sortKolon) {
                 fDizi.sort((a,b)=>{let vA,vB; if(sortKolon==='rapor')vA=a.rp,vB=b.rp; else if(sortKolon==='kalan_gun')vA=a.gn,vB=b.gn; else if(sortKolon==='ilk_taksit')vA=a.ilkT,vB=b.ilkT; else if(sortKolon==='erken_odeme')vA=a.b.erken_odeme||0,vB=b.b.erken_odeme||0; else if(sortKolon==='alinan_destek')vA=a.tD,vB=b.tD; else if(sortKolon.startsWith('get_')) { vA=a[sortKolon]||0; vB=b[sortKolon]||0; } else vA=a.b[sortKolon]||'',vB=b.b[sortKolon]||''; if(!isNaN(vA)&&!isNaN(vB))vA=Number(vA),vB=Number(vB); else vA=vA.toString().toLowerCase(),vB=vB.toString().toLowerCase(); if(vA<vB)return sortArtan?-1:1; if(vA>vB)return sortArtan?1:-1; return 0;});
@@ -683,6 +1159,8 @@
                     }
                 
                     let v=b[col]||''; 
+                    
+                    // DURUM COMBOBOX YAPISI
                     if(col==='durum') {
                         return `<div class="td-content justify-center px-1">
                             <select onchange="hizliDurumGuncelle('${id}', this.value)" class="badge badge-select py-1.5 w-full border border-transparent hover:border-slate-300 cursor-pointer outline-none transition-all duration-300 shadow-sm ${getPillCSS(v)}">
@@ -704,30 +1182,44 @@
                     if(col==='kalan_gun'){
                         if(isIst) return '-'; 
                         if(item.gn === 9999) return `<div class="td-content justify-center">-</div>`;
-                        let gn = item.gn; let cls = "bg-slate-100 text-slate-600"; 
-                        if (gn <= 0) { cls = "bg-rose-700 text-white font-black shadow-inner"; } else if (gn <= 15) { cls = "animate-danger-blink font-black"; } else if (gn <= 30) { cls = "bg-amber-100 text-amber-700 border border-amber-200"; } else if (gn <= 60) { cls = "bg-indigo-50 text-indigo-600 border border-indigo-100"; }
-                        return `<div class="td-content justify-center"><span class="px-3 py-1 rounded-lg text-[11px] font-black transition-all duration-300 ${cls}">${gn < 0 ? 'GECİKTİ: ' + Math.abs(gn) : gn + ' GÜN'}</span></div>`;
+                        
+                        let gn = item.gn;
+                        let isIshGelistirme = p.ad.includes("İŞ GELİŞTİRME");
+                        let cls = "bg-slate-100 text-slate-600"; // Varsayılan renk
+                        
+                        if (gn <= 0) {
+                            cls = "bg-rose-700 text-white font-black shadow-inner"; // Süre doldu
+                        } else if (gn <= 15) {
+                            cls = "animate-danger-blink font-black"; // 15 gün altı: Yanıp sönen kırmızı
+                        } else if (gn <= 30) {
+                            cls = "bg-amber-100 text-amber-700 border border-amber-200"; // 30 gün altı: Turuncu/Sarı
+                        } else if (gn <= 60) {
+                            cls = "bg-indigo-50 text-indigo-600 border border-indigo-100"; // Yaklaşıyor: Mavi
+                        }
+
+                        return `<div class="td-content justify-center">
+                            <span class="px-3 py-1 rounded-lg text-[11px] font-black transition-all duration-300 ${cls}">
+                                ${gn < 0 ? 'GECİKTİ: ' + Math.abs(gn) : gn + ' GÜN'}
+                            </span>
+                        </div>`;
                     }
                     return `<div class="td-content text-slate-600 text-sm">${v}</div>`;
                 };
                 
                 let dragAttr = !sortKolon ? `draggable="true" ondragstart="firmaDragStart(event, '${id}')" ondragover="firmaDragOver(event)" ondrop="firmaDrop(event, '${id}')" title="Sıralamak için basılı tut ve sürükle"` : `title="Sıralama aktifken sürüklenemez"`;
-                let cursorType = !sortKolon ? 'cursor-grab active:cursor-grabbing hover:bg-indigo-50 text-indigo-400' : 'text-slate-300 bg-slate-50';
+                let cursorType = !sortKolon ? 'cursor-grab active:cursor-grabbing' : '';
 
-                let tr=`<tr class="master-tr transition-all duration-200 group" ${dragAttr}>
-                    <td class="p-2 text-center font-mono text-xs border-r border-slate-100 select-none ${cursorType} transition-colors">
-                        <i class="fa-solid fa-grip-vertical opacity-50 mr-2"></i>${sira++}
-                    </td>`;
+                let tr=`<tr class="master-tr ${cursorType}" ${dragAttr}><td class="p-2 text-center font-mono text-xs text-slate-300 border-r border-slate-100 select-none"><i class="fa-solid fa-grip-lines opacity-50 mr-1"></i>${sira++}</td>`;
                 DINAMIK_SUTUNLAR.forEach(s=>{if(!s.gizli) tr+=`<td class="p-0 border-r border-slate-100 max-w-0 align-middle">${getH(s.id)}</td>`;});
                 tr+=`<td class="p-2 text-center sticky right-0 bg-white/90 shadow-[-4px_0_10px_-4px_rgba(0,0,0,0.05)] flex justify-center items-center gap-1.5"><button onclick="sirketDuzenle('${id}')" class="text-slate-400 hover:text-indigo-600 bg-slate-50 hover:bg-indigo-50 w-8 h-8 rounded-lg flex items-center justify-center transition"><i class="fa-solid fa-pen"></i></button><button onclick="sirketeGit('${id}')" class="bg-emerald-50 hover:bg-emerald-500 text-emerald-600 hover:text-white border border-emerald-200 px-3 py-1.5 rounded-lg font-black transition flex items-center text-[10px] uppercase tracking-wider shadow-sm"><i class="fa-solid fa-arrow-right mr-1 text-[11px]"></i> Detay</button></td></tr>`; tB.innerHTML+=tr;
             });
         }
 
-        function hizliErkenOdemeKaydet(id,v){MASTER_DATA.projeler[guncelProjeID].firmalar[id].bilgi.erken_odeme=unformat(v);bulutaGonder(true,true);}
-        function toggleErkenKilit(id){MASTER_DATA.projeler[guncelProjeID].firmalar[id].bilgi.erkenKilit=!MASTER_DATA.projeler[guncelProjeID].firmalar[id].bilgi.erkenKilit;bulutaGonder(true,true);renderMasterView();}
-        function toggleKimlikKilit(){MASTER_DATA.projeler[guncelProjeID].firmalar[guncelFirmaID].bilgi.kimlikKilit=!MASTER_DATA.projeler[guncelProjeID].firmalar[guncelFirmaID].bilgi.kimlikKilit;bulutaGonder(true,true);sirketDuzenle(guncelFirmaID);}
-        function yeniSutunIcatEt(){if(MASTER_DATA.projeler[guncelProjeID].firmalar[guncelFirmaID].bilgi.kimlikKilit)return;let a=prompt("Alan Adı:");if(a){MASTER_DATA.projeler[guncelProjeID].sutunlar.push({id:"dyn_"+Date.now(),ad:a.toUpperCase(),width:'150px'});DINAMIK_SUTUNLAR=MASTER_DATA.projeler[guncelProjeID].sutunlar;sirketDuzenle(guncelFirmaID);renderMasterView();bulutaGonder(true,true);}}
-        function dinamikSutunSil(id){if(confirm("Sil?")){MASTER_DATA.projeler[guncelProjeID].sutunlar=MASTER_DATA.projeler[guncelProjeID].sutunlar.filter(s=>s.id!==id);DINAMIK_SUTUNLAR=MASTER_DATA.projeler[guncelProjeID].sutunlar;sirketDuzenle(guncelFirmaID);renderMasterView();bulutaGonder(true,true);}}
+        function hizliErkenOdemeKaydet(id,v){MASTER_DATA.projeler[guncelProjeID].firmalar[id].bilgi.erken_odeme=unformat(v);firmaKaydet(guncelProjeID,id).catch(()=>undefined);}
+        function toggleErkenKilit(id){MASTER_DATA.projeler[guncelProjeID].firmalar[id].bilgi.erkenKilit=!MASTER_DATA.projeler[guncelProjeID].firmalar[id].bilgi.erkenKilit;firmaKaydet(guncelProjeID,id).catch(()=>undefined);renderMasterView();}
+        function toggleKimlikKilit(){MASTER_DATA.projeler[guncelProjeID].firmalar[guncelFirmaID].bilgi.kimlikKilit=!MASTER_DATA.projeler[guncelProjeID].firmalar[guncelFirmaID].bilgi.kimlikKilit;firmaKaydet(guncelProjeID,guncelFirmaID).catch(()=>undefined);sirketDuzenle(guncelFirmaID);}
+        function yeniSutunIcatEt(){if(MASTER_DATA.projeler[guncelProjeID].firmalar[guncelFirmaID].bilgi.kimlikKilit)return;let a=prompt("Alan Adı:");if(a){MASTER_DATA.projeler[guncelProjeID].sutunlar.push({id:"dyn_"+Date.now(),ad:a.toUpperCase(),width:'150px'});DINAMIK_SUTUNLAR=MASTER_DATA.projeler[guncelProjeID].sutunlar;sirketDuzenle(guncelFirmaID);renderMasterView();projeAyarlariKaydet(guncelProjeID).catch(()=>undefined);}}
+        function dinamikSutunSil(id){if(confirm("Sil?")){MASTER_DATA.projeler[guncelProjeID].sutunlar=MASTER_DATA.projeler[guncelProjeID].sutunlar.filter(s=>s.id!==id);DINAMIK_SUTUNLAR=MASTER_DATA.projeler[guncelProjeID].sutunlar;sirketDuzenle(guncelFirmaID);renderMasterView();projeAyarlariKaydet(guncelProjeID).catch(()=>undefined);}}
         
         function sirketDuzenle(id) {
             guncelFirmaID=id; const b=MASTER_DATA.projeler[guncelProjeID].firmalar[id].bilgi; let html='', kil=b.kimlikKilit===true;
@@ -735,13 +1227,16 @@
             DINAMIK_SUTUNLAR.forEach(s=>{if(s.calc)return;let deg=b[s.id]||'';if(s.id==='erken_odeme')deg=formatMoney(deg);let sb=(!kil&&s.id.startsWith('dyn_'))?`<i class="fa-solid fa-trash-can text-slate-300 hover:text-rose-500 cursor-pointer ml-auto" onclick="dinamikSutunSil('${s.id}')"></i>`:'';html+=`<div class="space-y-1"><label class="text-[10px] font-black text-slate-500 uppercase flex items-center">${s.ad} ${sb}</label><input type="text" id="modal_inp_${s.id}" class="input-transparent ${kil?'bg-slate-50 text-slate-400':''} text-sm" value="${deg}" ${kil?'readonly':''} ${s.id==='erken_odeme'?'oninput="this.value=formatInputVal(this.value)"':''}></div>`;});
             document.getElementById('dinamikAlanlarKapsayici').innerHTML=html;document.getElementById('yeniAlanBolgesi').style.display=kil?'none':'flex';document.getElementById('btnProjeSil').style.display=kil?'none':'flex';document.getElementById('btnProjeKaydet').style.display=kil?'none':'block';document.getElementById('editModal').style.display='flex';
         }
-        function firmaKartiKaydet(){const b=MASTER_DATA.projeler[guncelProjeID].firmalar[guncelFirmaID].bilgi;DINAMIK_SUTUNLAR.forEach(s=>{if(s.calc)return;let el=document.getElementById('modal_inp_'+s.id);if(el)b[s.id]=s.id==='erken_odeme'?unformat(el.value):el.value;});bulutaGonder(true,true);modalKapat();renderMasterView();showToast("Kaydedildi");}
+        function firmaKartiKaydet(){const b=MASTER_DATA.projeler[guncelProjeID].firmalar[guncelFirmaID].bilgi;DINAMIK_SUTUNLAR.forEach(s=>{if(s.calc)return;let el=document.getElementById('modal_inp_'+s.id);if(el)b[s.id]=s.id==='erken_odeme'?unformat(el.value):el.value;});firmaKaydet(guncelProjeID,guncelFirmaID).then(()=>showToast("Kaydedildi")).catch(()=>undefined);modalKapat();renderMasterView();}
         function modalKapat(){document.getElementById('editModal').style.display='none';}
-        function sirketTamamenSil(){if(confirm("Kalıcı sil?")){delete MASTER_DATA.projeler[guncelProjeID].firmalar[guncelFirmaID];bulutaGonder(false,false);modalKapat();renderMasterView();}}
+        async function sirketTamamenSil(){const projeID=guncelProjeID,firmaID=guncelFirmaID,firma=MASTER_DATA.projeler?.[projeID]?.firmalar?.[firmaID];if(!firma)return;const ad=firma.bilgi?.adi||'Firma';const onay=prompt(`"${ad}" firması çöp alanına taşınacak. Onay için firma adını yazın:`);if((onay||'').trim().toUpperCase()!==ad.trim().toUpperCase()){if(onay!==null)showToast("Firma adı eşleşmedi; silme iptal edildi.","error");return;}try{await firmayiGuvenliSil(projeID,firmaID);delete MASTER_DATA.projeler[projeID].firmalar[firmaID];guncelFirmaID=null;modalKapat();renderMasterView();showToast("Firma çöp alanına taşındı.","info");}catch(error){showToast("Firma silinemedi; veri korunuyor.","error");}}
         
         function sirketeGit(id){
-            guncelFirmaID=id; const f = MASTER_DATA.projeler[guncelProjeID].firmalar[id];
-            document.getElementById('masterView').style.display='none'; document.getElementById('detailView').style.display='block';
+            guncelFirmaID=id;
+            const f = MASTER_DATA.projeler[guncelProjeID].firmalar[id];
+            document.getElementById('masterView').style.display='none';
+            document.getElementById('detailView').style.display='block';
+            
             document.getElementById('detayFirmaAdi').innerHTML= `
                 <div class="flex flex-col">
                     <span class="text-2xl font-black">${f.bilgi.adi}</span>
@@ -755,30 +1250,33 @@
             renderTables();
         }
 
-        function yeniFirmaEkle(){let ad=prompt("Yeni Firma Adı:");if(ad){let p=MASTER_DATA.projeler[guncelProjeID];p.firmalar["FIRM_"+Date.now()]=getYeniFirma(ad,p.tip);bulutaGonder(false,false);renderMasterView();}}
-        function toggleDetayKilit(){const f=MASTER_DATA.projeler[guncelProjeID].firmalar[guncelFirmaID];f.bilgi.kilitli=!f.bilgi.kilitli;bulutaGonder(true,true);renderTables();}
+        function yeniFirmaEkle(){let ad=prompt("Yeni Firma Adı:");if(ad){let p=MASTER_DATA.projeler[guncelProjeID],firmaID="FIRM_"+Date.now();p.firmalar[firmaID]=getYeniFirma(ad,p.tip);firmaKaydet(guncelProjeID,firmaID).then(()=>showToast("Firma eklendi")).catch(()=>{delete p.firmalar[firmaID];renderMasterView();});renderMasterView();}}
+        function toggleDetayKilit(){const f=MASTER_DATA.projeler[guncelProjeID].firmalar[guncelFirmaID];f.bilgi.kilitli=!f.bilgi.kilitli;firmaKaydet(guncelProjeID,guncelFirmaID).catch(()=>undefined);renderTables();}
         
         function limitleriKaydet(){const b=MASTER_DATA.projeler[guncelProjeID].firmalar[guncelFirmaID].bilgi;if(b.kilitli)return;b.projeNotu=document.getElementById('genelFirmaAciklama').value;b.erken_odeme=unformat(document.getElementById('detayErkenOdeme').value);b.erkenDurum=document.getElementById('detayErkenDurum').value;b.teminatTutar=unformat(document.getElementById('detayTeminatTutar').value);b.teminatVade=document.getElementById('detayTeminatTarih').value;b.teminatDurum=document.getElementById('detayTeminatDurum').value;document.getElementById('detayErkenOdeme').value=formatMoney(b.erken_odeme);document.getElementById('detayTeminatTutar').value=formatMoney(b.teminatTutar);otomatikKaydet(true);}
         
         function oneriUygula(didx, aidx, val) {
             if(!guncelProjeID || !guncelFirmaID) return;
             const f=MASTER_DATA.projeler[guncelProjeID].firmalar[guncelFirmaID];
-            if(f.bilgi.kilitli) return; f.istihdam[didx].aylar[aidx].f_gun = val;
-            renderIstihdamTables(); istihdamVeriKaydet(true);
+            if(f.bilgi.kilitli) return;
+            f.istihdam[didx].aylar[aidx].f_gun = val;
+            renderIstihdamTables();
+            istihdamVeriKaydet(true);
         }
 
         function istihdamVeriKaydet(force = false){
             const f=MASTER_DATA.projeler[guncelProjeID].firmalar[guncelFirmaID];if(f.bilgi.kilitli)return;
             f.bilgi.personelTurk=document.getElementById('ist_per_t').value;f.bilgi.personelYabanci=document.getElementById('ist_per_y').value;f.bilgi.istihdamAciklama=document.getElementById('ist_aciklama').value;
             document.querySelectorAll('.ist-hedef').forEach(el=>f.istihdam[el.dataset.didx].hedef=parseFloat(el.value)||0);document.querySelectorAll('.ist-tutar').forEach(el=>f.istihdam[el.dataset.didx].destekTutar=unformat(el.value));document.querySelectorAll('.ist-t-gun').forEach(el=>f.istihdam[el.dataset.didx].aylar[el.dataset.aidx].t_gun=el.value);document.querySelectorAll('.ist-y-gun').forEach(el=>f.istihdam[el.dataset.didx].aylar[el.dataset.aidx].y_gun=el.value);document.querySelectorAll('.ist-f-gun').forEach(el=>f.istihdam[el.dataset.didx].aylar[el.dataset.aidx].f_gun=el.value);
-            renderIstihdamTables();clearTimeout(kayitZamanlayici);
-            if(force) bulutaGonder(true, true); else kayitZamanlayici=setTimeout(()=>bulutaGonder(true,true),800);
+            renderIstihdamTables();clearTimeout(kayitZamanlayici);kayitZamanlayici=null;
+            if(force) bulutaGonder(true, true); else kayitZamanlayici=setTimeout(()=>{kayitZamanlayici=null;bulutaGonder(true,true).catch(()=>undefined);},800);
         }
 
         function renderIstihdamTables() {
             const f = MASTER_DATA.projeler[guncelProjeID].firmalar[guncelFirmaID], 
                   kil = f.bilgi.kilitli === true, 
                   cont = document.getElementById('istihdamTablolariKapsayici');
+            
             if (!f.istihdam) return;
 
             const dB = document.getElementById('dosyaTableBody'); 
@@ -796,19 +1294,7 @@
 
             let tOde = f.istihdam.reduce((s, d) => s + (parseFloat(d.destekTutar) || 0), 0);
             
-            // YENİ: FOSTER UYARISI EKLENDİ
-            let html = `
-            <div class="bg-amber-50 border-l-4 border-amber-500 p-4 mb-6 rounded-r-xl shadow-sm">
-                <div class="flex items-start">
-                    <i class="fa-solid fa-triangle-exclamation text-amber-500 text-xl mr-3 mt-0.5"></i>
-                    <div>
-                        <h3 class="font-black text-amber-800 text-sm uppercase tracking-wider">Foster Projesi Prim Şartı Uyarısı</h3>
-                        <p class="text-amber-700 text-xs font-semibold mt-1">Destek alınabilmesi için ilgili personellerin SGK prim ödemelerinin <span class="font-black underline">eksiksiz ve zamanında</span> yapılmış olması zorunludur. Aksi takdirde destek ödemesi reddedilebilir.</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="glass-card bg-emerald-50 border border-emerald-100 p-6 flex justify-between items-center mb-6">
+            let html = `<div class="glass-card bg-emerald-50 border border-emerald-100 p-6 flex justify-between items-center mb-6">
                 <div class="flex items-center gap-4">
                     <div class="bg-white p-3 rounded-xl text-emerald-500 shadow-sm"><i class="fa-solid fa-vault text-2xl"></i></div>
                     <div>
@@ -820,17 +1306,22 @@
 
             html += `<div class="glass-card mb-6 p-5">
                 <div class="grid grid-cols-2 gap-5 mb-5">
-                    <div><label class="text-[10px] font-black text-slate-400 uppercase">Türk Personel Sayısı</label><input type="text" id="ist_per_t" class="input-transparent text-base w-full border mt-1" value="${f.bilgi.personelTurk || ''}" onchange="istihdamVeriKaydet()" ${kil ? 'readonly' : ''}></div>
-                    <div><label class="text-[10px] font-black text-slate-400 uppercase">Yabancı Personel Sayısı</label><input type="text" id="ist_per_y" class="input-transparent text-base w-full border mt-1" value="${f.bilgi.personelYabanci || ''}" onchange="istihdamVeriKaydet()" ${kil ? 'readonly' : ''}></div>
+                    <div><label class="text-[10px] font-black text-slate-400 uppercase">Türk Personel Sayısı</label><input type="text" id="ist_per_t" class="input-transparent w-full border mt-1" value="${f.bilgi.personelTurk || ''}" onchange="istihdamVeriKaydet()" ${kil ? 'readonly' : ''}></div>
+                    <div><label class="text-[10px] font-black text-slate-400 uppercase">Yabancı Personel Sayısı</label><input type="text" id="ist_per_y" class="input-transparent w-full border mt-1" value="${f.bilgi.personelYabanci || ''}" onchange="istihdamVeriKaydet()" ${kil ? 'readonly' : ''}></div>
                 </div>
                 <label class="text-[10px] font-black text-slate-400 uppercase">Proje Notları</label>
-                <textarea id="ist_aciklama" rows="2" class="input-transparent w-full border mt-1 text-sm" onchange="istihdamVeriKaydet()" ${kil ? 'readonly' : ''}>${f.bilgi.istihdamAciklama || ''}</textarea>
+                <textarea id="ist_aciklama" rows="2" class="input-transparent w-full border mt-1" onchange="istihdamVeriKaydet()" ${kil ? 'readonly' : ''}>${f.bilgi.istihdamAciklama || ''}</textarea>
             </div>`;
             
             f.istihdam.forEach((d, i) => {
-                let tF = 0, tT = 0, tY = 0, ah = ''; let bosAylar = [];
+                let tF = 0, tT = 0, tY = 0, ah = ''; 
+                let bosAylar = [];
+
                 d.aylar.forEach((a, ai) => {
-                    let fg = parseFloat(a.f_gun) || 0; tF += fg; tT += parseFloat(a.t_gun) || 0; tY += parseFloat(a.y_gun) || 0;
+                    let fg = parseFloat(a.f_gun) || 0;
+                    tF += fg;
+                    tT += parseFloat(a.t_gun) || 0;
+                    tY += parseFloat(a.y_gun) || 0;
                     if (fg === 0) bosAylar.push(ai);
                 });
 
@@ -838,50 +1329,52 @@
                 let kalanH = Math.max(0, hg - tF);
                 let oneriVal = (bosAylar.length > 0 && kalanH > 0) ? Math.ceil(kalanH / bosAylar.length) : 0;
                 
-                // YENİ: İSTİHDAM PUNTOLARI BÜYÜTÜLDÜ (text-base, text-lg, py-2 vb.)
                 d.aylar.forEach((a, ai) => {
-                    let fg = parseFloat(a.f_gun) || 0; let valFg = fg === 0 ? '' : fg;
-                    let oneriUI = (bosAylar.includes(ai) && oneriVal > 0 && !kil) ? `<button onclick="oneriUygula(${i}, ${ai}, ${oneriVal})" class="absolute right-2 top-1/2 -translate-y-1/2 bg-indigo-500 hover:bg-indigo-600 text-white font-bold text-xs px-2 py-1 rounded shadow-lg z-20 border border-indigo-400 transition-transform active:scale-95">ÖNERİ: ${oneriVal}</button>` : '';
+                    let fg = parseFloat(a.f_gun) || 0;
+                    let valFg = fg === 0 ? '' : fg;
+                    let oneriUI = (bosAylar.includes(ai) && oneriVal > 0 && !kil) ? 
+                        `<button onclick="oneriUygula(${i}, ${ai}, ${oneriVal})" class="absolute right-2 top-1/2 -translate-y-1/2 bg-indigo-500 hover:bg-indigo-600 text-white font-bold text-[10px] px-2 py-1 rounded shadow-lg z-20 border border-indigo-400 transition-transform active:scale-95">ÖNERİ: ${oneriVal}</button>` : '';
 
                     ah += `<tr>
-                            <td class="p-2 bg-slate-50 w-32 border-r border-slate-200"><div class="flex items-center justify-center h-full font-black text-slate-600 text-sm">${a.ay}</div></td>
-                            <td class="p-1 border-r border-slate-200"><input type="number" class="text-center ist-t-gun font-bold text-slate-700 text-base py-2 w-full bg-transparent outline-none focus:bg-white rounded" data-didx="${i}" data-aidx="${ai}" value="${parseFloat(a.t_gun) || ''}" placeholder="0" onchange="istihdamVeriKaydet()" ${kil ? 'readonly' : ''}></td>
-                            <td class="p-1 border-r border-slate-200"><input type="number" class="text-center ist-y-gun font-bold text-slate-700 text-base py-2 w-full bg-transparent outline-none focus:bg-white rounded" data-didx="${i}" data-aidx="${ai}" value="${parseFloat(a.y_gun) || ''}" placeholder="0" onchange="istihdamVeriKaydet()" ${kil ? 'readonly' : ''}></td>
-                            <td class="p-1 bg-indigo-50/40 relative">
-                                <input type="number" class="text-center font-black text-indigo-700 text-lg ist-f-gun placeholder:text-indigo-200 py-2 w-full bg-transparent outline-none focus:bg-white rounded" data-didx="${i}" data-aidx="${ai}" value="${valFg}" placeholder="0" onchange="istihdamVeriKaydet()" ${kil ? 'readonly' : ''}>
+                            <td class="p-0 bg-slate-50 w-32 border-r"><div class="flex items-center justify-center h-full font-black text-slate-600 text-xs">${a.ay}</div></td>
+                            <td class="p-0 border-r"><input type="number" class="text-center ist-t-gun font-bold text-slate-600" data-didx="${i}" data-aidx="${ai}" value="${parseFloat(a.t_gun) || ''}" placeholder="0" onchange="istihdamVeriKaydet()" ${kil ? 'readonly' : ''}></td>
+                            <td class="p-0 border-r"><input type="number" class="text-center ist-y-gun font-bold text-slate-600" data-didx="${i}" data-aidx="${ai}" value="${parseFloat(a.y_gun) || ''}" placeholder="0" onchange="istihdamVeriKaydet()" ${kil ? 'readonly' : ''}></td>
+                            <td class="p-0 bg-indigo-50/40 relative">
+                                <input type="number" class="text-center font-black text-indigo-700 text-base ist-f-gun placeholder:text-indigo-200" data-didx="${i}" data-aidx="${ai}" value="${valFg}" placeholder="0" onchange="istihdamVeriKaydet()" ${kil ? 'readonly' : ''}>
                                 ${oneriUI}
                             </td>
                         </tr>`;
                 });
 
                 let hHata = tF < hg;
-                let dRozet = tF >= hg ? `<span class="badge bg-emerald-100 text-emerald-700 border-emerald-200 text-xs px-3 py-1.5">Hedef Tamam</span>` : `<span class="badge bg-rose-100 text-rose-700 border-rose-200 text-xs px-3 py-1.5">Eksik: ${hg - tF} Gün</span>`;
+                let dRozet = tF >= hg ? `<span class="badge bg-emerald-100 text-emerald-700 border-emerald-200">Hedef Tamam</span>` : `<span class="badge bg-rose-100 text-rose-700 border-rose-200">Eksik: ${hg - tF} Gün</span>`;
 
-                html += `<div class="glass-card mb-8 p-0 overflow-hidden border-2 shadow-sm ${hHata ? 'border-amber-200' : 'border-emerald-200'}">
-                    <div class="bg-indigo-600 p-5 flex justify-between items-center">
-                        <h3 class="text-base font-black uppercase text-white tracking-widest">${d.ad} <span class="text-indigo-200 ml-2 text-xs font-semibold">${i===0 ? '(Şubat - Mayıs 2026)' : ''}</span></h3>
-                        <div class="flex items-center gap-3 bg-indigo-800/40 px-4 py-2 rounded-xl border border-indigo-500 shadow-inner">
-                            <label class="text-xs font-black text-indigo-100 uppercase">HEDEF GÜN:</label>
-                            <input type="number" class="bg-transparent w-20 text-center text-white font-black text-lg ist-hedef outline-none focus:bg-indigo-700/50 rounded transition" data-didx="${i}" value="${d.hedef}" onchange="istihdamVeriKaydet()" ${kil ? 'readonly' : ''}>
+                html += `<div class="glass-card mb-8 p-0 overflow-hidden border-2 ${hHata ? 'border-amber-100' : 'border-emerald-100'}">
+                    <div class="bg-indigo-500 p-4 flex justify-between items-center">
+                        <h3 class="text-sm font-black uppercase text-white tracking-widest">${d.ad} <span class="text-indigo-100 ml-2 text-[10px] font-normal">${i===0 ? '(Şubat - Mayıs 2026)' : ''}</span></h3>
+                        <div class="flex items-center gap-3 bg-indigo-600/50 px-3 py-1.5 rounded-lg border border-indigo-400">
+                            <label class="text-[10px] font-black text-indigo-100 uppercase">HEDEF GÜN:</label>
+                            <input type="number" class="bg-transparent w-16 text-center text-white font-black ist-hedef outline-none" data-didx="${i}" value="${d.hedef}" onchange="istihdamVeriKaydet()" ${kil ? 'readonly' : ''}>
                         </div>
                     </div>
                     <table class="w-full text-sm text-left">
                         <thead>
-                            <tr class="bg-slate-100 border-b border-slate-200">
-                                <th class="text-center py-3 text-xs font-black text-slate-500 uppercase border-r border-slate-200">Dönem Ayı</th>
-                                <th class="text-center py-3 text-xs font-black text-slate-500 uppercase border-r border-slate-200">Türk Personel</th>
-                                <th class="text-center py-3 text-xs font-black text-slate-500 uppercase border-r border-slate-200">Yabancı Personel</th>
-                                <th class="text-center py-3 text-sm font-black text-indigo-700 uppercase bg-indigo-50">FİİLİ TOPLAM</th>
+                            <tr class="bg-slate-100">
+                                <th class="text-center py-2 text-[10px] font-black text-slate-500 uppercase">Dönem Ayı</th>
+                                <th class="text-center py-2 text-[10px] font-black text-slate-500 uppercase">Türk</th>
+                                <th class="text-center py-2 text-[10px] font-black text-slate-500 uppercase">Yabancı</th>
+                                <th class="text-center py-2 text-[10px] font-black text-indigo-600 uppercase bg-indigo-50">FİİLİ TOPLAM</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-200">${ah}</tbody>
+                        <tbody class="divide-y divide-slate-100">${ah}</tbody>
                     </table>
-                    <div class="p-5 bg-slate-50 border-t border-slate-200 flex justify-between items-center">
+                    <div class="p-4 bg-slate-50 border-t flex justify-between items-center">
                         <div class="flex gap-6">${dRozet}</div>
-                        <div><input type="text" class="text-right bg-white border border-emerald-300 text-emerald-700 text-2xl font-black w-56 py-2 px-4 rounded-xl ist-tutar shadow-sm focus:border-emerald-500 outline-none transition" data-didx="${i}" value="${formatMoney(d.destekTutar || 0)}" oninput="this.value=formatInputVal(this.value)" onchange="istihdamVeriKaydet()" ${kil ? 'readonly' : ''}></div>
+                        <div><input type="text" class="text-right bg-white border border-emerald-200 text-emerald-700 text-xl font-black w-44 py-1 px-3 rounded-xl ist-tutar" data-didx="${i}" value="${formatMoney(d.destekTutar || 0)}" oninput="this.value=formatInputVal(this.value)" onchange="istihdamVeriKaydet()" ${kil ? 'readonly' : ''}></div>
                     </div>
                 </div>`;
             }); 
+
             cont.innerHTML = html;
         }
 
@@ -1007,6 +1500,7 @@
             
             let gIdx=1, tG=0, tF=0, tHes=0, ro=kil?'readonly':'', dis=kil?'disabled':'';
             f.giderler.forEach(g=>{
+                // 3-Şartlı Yeni KOSGEB Mantığı Düzeltmesi (Fatura ile Tutarı kıyasla, sonra oranla)
                 let on=parseFloat(g.tutar)||0, fa=parseFloat(g.fatura)||0, or=parseFloat(g.oran)||0, dH = Math.min(fa, on) * (or/100);
                 tG+=on; tF+=fa; tHes+=dH; 
                 gH+=`<tr data-id="${g.id}">`;
@@ -1173,6 +1667,7 @@
             if(f.giderler){
                 f.giderler.forEach(g=>{
                     tG+=parseFloat(g.tutar)||0;tF+=parseFloat(g.fatura)||0;
+                    // 3-Şartlı Yeni KOSGEB Mantığı Düzeltmesi (Fatura ile Tutarı kıyasla, sonra oranla)
                     let on=parseFloat(g.tutar)||0, fa=parseFloat(g.fatura)||0, or=parseFloat(g.oran)||0, dH = Math.min(fa, on) * (or/100); tHes+=dH;
                     if(gTip === 'gider' && g.tutar>0) { gv.push(g.tutar); gl.push(g.ad); }
                 });
@@ -1206,7 +1701,35 @@
         
         function satirEkle(tp,id=null){const f=MASTER_DATA.projeler[guncelProjeID].firmalar[guncelFirmaID];if(f.bilgi.kilitli)return;if(tp==='gider')f.giderler.push({id:uID(),ad:"",miktar:"",birim:"",tutar:0,fatura:0,gerceklesme:"Bekliyor",oran:75});if(tp==='rapor'){let st=f.raporlar.length>0?f.raporlar[f.raporlar.length-1].tarih:'';f.raporlar.push({id:uID(),no:"",aciklama:"",tarih:ucAyEkle(st),durum:"Bekliyor"});}if(tp==='kredi'){let tb=f.krediTablolar.find(t=>t.id===id);let st=tb.veriler.length>0?tb.veriler[tb.veriler.length-1].tarih:'';tb.veriler.push({id:uID(),tarih:ucAyEkle(st),anapara:0,faiz:0,destek:0,not:"",durum:"Ödenmedi"});}renderTables();otomatikKaydet(true);}
         function satirSil(tp,sid,tid=null){const f=MASTER_DATA.projeler[guncelProjeID].firmalar[guncelFirmaID];if(f.bilgi.kilitli)return;if(tp==='dosya')f.dosyalar=f.dosyalar.filter(d=>d.id!==sid);if(tp==='gider')f.giderler=f.giderler.filter(g=>g.id!==sid);if(tp==='rapor')f.raporlar=f.raporlar.filter(r=>r.id!==sid);if(tp==='kredi'){let tb=f.krediTablolar.find(t=>t.id===tid);tb.veriler=tb.veriler.filter(v=>v.id!==sid);}renderTables();otomatikKaydet(true);}
-        function tabloSil(id){if(confirm("Sil?")){MASTER_DATA.projeler[guncelProjeID].firmalar[guncelFirmaID].krediTablolar=MASTER_DATA.projeler[guncelProjeID].firmalar[guncelFirmaID].krediTablolar.filter(t=>t.id!==id);renderTables();otomatikKaydet(true);}}
+        async function tabloSil(id){
+            const projeID = guncelProjeID;
+            const firmaID = guncelFirmaID;
+            const firma = MASTER_DATA.projeler?.[projeID]?.firmalar?.[firmaID];
+            if(!firma || firma.bilgi?.kilitli) return;
+
+            const tablolar = Array.isArray(firma.krediTablolar) ? firma.krediTablolar : [];
+            const silinenTablo = tablolar.find(tablo => tablo.id === id);
+            if(!silinenTablo) {
+                showToast("Silinecek finansman tablosu bulunamadı.", "error");
+                return;
+            }
+
+            const satirSayisi = Array.isArray(silinenTablo.veriler) ? silinenTablo.veriler.length : 0;
+            if(!confirm(`"${silinenTablo.baslik || 'Finansman Tablosu'}" ve içindeki ${satirSayisi} taksit çöp alanına taşınacak.\n\nBu işlem yalnızca bu firmadaki seçili tabloyu etkiler. Devam edilsin mi?`)) return;
+
+            clearTimeout(kayitZamanlayici);
+            const kalanTablolar = tablolar.filter(tablo => tablo.id !== id);
+
+            try {
+                await finansmanTablosunuGuvenliSil(projeID, firmaID, id, silinenTablo, kalanTablolar);
+                const guncelFirma = MASTER_DATA.projeler?.[projeID]?.firmalar?.[firmaID];
+                if(guncelFirma) guncelFirma.krediTablolar = kalanTablolar;
+                renderTables();
+                showToast("Yalnızca seçili finansman tablosu silindi.", "info");
+            } catch(error) {
+                showToast("Tablo silinemedi; hiçbir yerel veri değiştirilmedi.", "error");
+            }
+        }
         function tabloFiltrele(){let inp=document.getElementById("firmaAra").value.toUpperCase(),tr=document.getElementById("masterTable").getElementsByTagName("tr");for(let i=1;i<tr.length;i++){if(tr[i].parentElement.tagName==="TBODY" && tr[i].classList.contains('master-tr'))tr[i].style.display=tr[i].innerText.toUpperCase().indexOf(inp)>-1?"":"none";}}
         
         function pdfAlProfesyonel(){
@@ -1223,6 +1746,7 @@
                 div.style.color = "#1e293b";
                 div.style.backgroundColor = "#ffffff";
                 
+                // 1. GİDERLER TABLOSU HAZIRLIĞI
                 let tG=0, tF=0, tHes=0;
                 let giderSatirlari = '';
                 if(f.giderler && f.giderler.length > 0) {
@@ -1230,6 +1754,8 @@
                         let tutar = parseFloat(g.tutar) || 0;
                         let fatura = parseFloat(g.fatura) || 0;
                         let oran = parseFloat(g.oran) || 0;
+                        
+                        // PDF Çıktısı için Doğru KOSGEB Mantığı
                         let dH = Math.min(fatura, tutar) * (oran / 100);
 
                         tG += tutar; tF += fatura; tHes += dH;
@@ -1246,6 +1772,7 @@
                     });
                 }
 
+                // 2. ZAMAN ÇİZELGESİ (RAPORLAR) HAZIRLIĞI (Açıklama alanı eklendi)
                 let raporSatirlari = '';
                 if(f.raporlar && f.raporlar.length > 0) {
                     f.raporlar.forEach((r, i) => {
@@ -1260,6 +1787,7 @@
                     });
                 }
 
+                // 3. FİNANSMAN TABLOLARI HAZIRLIĞI
                 let finansmanHtml = '';
                 if(f.krediTablolar && f.krediTablolar.length > 0) {
                     f.krediTablolar.forEach(kt => {
@@ -1316,6 +1844,7 @@
                     });
                 }
 
+                // NOTLAR
                 let notHtml = '';
                 if (f.bilgi.projeNotu && f.bilgi.projeNotu.trim() !== '') {
                     notHtml = `
@@ -1404,15 +1933,93 @@
                     </div>
                 `;
 
-                const opt = { margin: 0.4, filename: (f.bilgi.adi || 'Firma') + "_Kapsamli_Rapor.pdf", image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' } };
-                if(typeof html2pdf === 'undefined') { if(loader) loader.style.display='none'; showToast("html2pdf kütüphanesi yüklü değil!", "error"); return; }
-                html2pdf().set(opt).from(div).save().then(()=>{ if(loader) loader.style.display='none'; showToast("Yatay Profesyonel Rapor İndirildi"); }).catch(err => { if(loader) loader.style.display='none'; showToast("PDF dönüştürme başarısız oldu.", "error"); });
-            } catch(e) { if(loader) loader.style.display='none'; showToast("Firma verileri eksik veya hatalı.", "error"); }
+                const opt = {
+                    margin: 0.4,
+                    filename: (f.bilgi.adi || 'Firma') + "_Kapsamli_Rapor.pdf",
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2, useCORS: true }, 
+                    jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }
+                };
+
+                if(typeof html2pdf === 'undefined') {
+                    if(loader) loader.style.display='none';
+                    showToast("html2pdf kütüphanesi yüklü değil!", "error");
+                    alert("Lütfen ana HTML dosyasına html2pdf.js kodunu eklediğinizden emin olun.");
+                    return;
+                }
+
+                html2pdf().set(opt).from(div).save().then(()=>{
+                    if(loader) loader.style.display='none';
+                    showToast("Yatay Profesyonel Rapor İndirildi");
+                }).catch(err => {
+                    if(loader) loader.style.display='none';
+                    console.error("PDF Oluşturma Hatası:", err);
+                    showToast("PDF dönüştürme başarısız oldu.", "error");
+                });
+                
+            } catch(e) {
+                if(loader) loader.style.display='none';
+                console.error("Veri Okuma Hatası:", e);
+                showToast("Firma verileri eksik veya hatalı.", "error");
+            }
         }
 
         function excelAl(){try{let orj=document.getElementById("masterTable"),kop=orj.cloneNode(true);for(let i=0;i<kop.rows.length;i++){kop.rows[i].deleteCell(-1);let cs=kop.rows[i].cells;for(let j=0;j<cs.length;j++){let inp=cs[j].querySelector('input,select');cs[j].innerText=inp?inp.value:cs[j].innerText;}}let wb=XLSX.utils.table_to_book(kop);XLSX.writeFile(wb,MASTER_DATA.projeler[guncelProjeID].ad+"_Excel.xlsx");showToast("Excel İndirildi");}catch(e){showToast("Hata","error");}}
 
-        function dosyaSecildi(e){const fi=e.target.files[0];if(!fi)return;document.getElementById('loader').style.display='flex';const rd=new FileReader();rd.onload=function(ev){fetch(GOOGLE_API_URL,{method:'POST',body:JSON.stringify({islem:"dosyaYukle",fileName:fi.name,mimeType:fi.type,base64:ev.target.result.split(',')[1]})}).then(r=>r.json()).then(rs=>{if(rs.basarili){MASTER_DATA.projeler[guncelProjeID].firmalar[guncelFirmaID].dosyalar.push({id:uID(),ad:fi.name,url:rs.url,tarih:new Date().toLocaleDateString('tr-TR')});bulutaGonder(true,true);renderTables();showToast("Yüklendi");}document.getElementById('loader').style.display='none';e.target.value='';});};rd.readAsDataURL(fi);}
+        async function dosyaSecildi(e){
+            const dosya = e.target.files?.[0];
+            e.target.value = '';
+            if(!dosya) return;
+            if(dosya.size > 25 * 1024 * 1024) {
+                showToast("Dosya boyutu 25 MB sınırını aşıyor.", "error");
+                return;
+            }
+
+            const projeID = guncelProjeID;
+            const firmaID = guncelFirmaID;
+            const firma = MASTER_DATA.projeler?.[projeID]?.firmalar?.[firmaID];
+            if(!firma) return;
+
+            const loader = document.getElementById('loader');
+            loader.style.display = 'flex';
+            document.getElementById('loaderText').innerText = 'Dosya Firebase Storage’a yükleniyor';
+
+            try {
+                const nesil = oturumNesli;
+                const context = await getFirebaseContext();
+                await ortakOturumuDogrula(context, nesil);
+                const { storage, storageSdk } = context;
+                const guvenliAd = dosya.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+                const storagePath = `${DATA_ROOT}/dosyalar/${projeID}/${firmaID}/${firebaseKey()}_${guvenliAd}`;
+                const hedef = storageSdk.ref(storage, storagePath);
+                await storageSdk.uploadBytes(hedef, dosya, { contentType: dosya.type || 'application/octet-stream' });
+                const url = await storageSdk.getDownloadURL(hedef);
+                await ortakOturumuDogrula(context, nesil);
+                const kayit = { id: uID(), ad: dosya.name, url, storagePath, tarih: new Date().toLocaleDateString('tr-TR') };
+                firma.dosyalar = Array.isArray(firma.dosyalar) ? firma.dosyalar : [];
+                firma.dosyalar.push(kayit);
+                try {
+                    await firmaKaydet(projeID, firmaID);
+                } catch(error) {
+                    firma.dosyalar = firma.dosyalar.filter(item => item.id !== kayit.id);
+                    await storageSdk.deleteObject(hedef).catch(() => undefined);
+                    throw error;
+                }
+                renderTables();
+                showToast("Dosya Firebase Storage'a yüklendi");
+            } catch(error) {
+                console.error("Dosya yükleme hatası", error);
+                showToast("Dosya yüklenemedi. Storage yetkilerini kontrol edin.", "error");
+            } finally {
+                loader.style.display = 'none';
+                document.getElementById('loaderText').innerText = 'Sistem Başlatılıyor';
+            }
+        }
+
+        document.addEventListener('visibilitychange', () => {
+            if(document.visibilityState === 'visible') gunlukYedegiKontrolEt();
+        });
+        window.addEventListener('online', () => gunlukYedegiKontrolEt());
 
         document.addEventListener('paste', function(e) {
             const t=e.target; if(!guncelProjeID||!guncelFirmaID)return; const f=MASTER_DATA.projeler[guncelProjeID].firmalar[guncelFirmaID]; if(f&&f.bilgi.kilitli)return;
