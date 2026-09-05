@@ -12,9 +12,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
     <style>
         :root { --glass-bg: #ffffff; --glass-border: rgba(226, 232, 240, 0.8); }
-        body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #1e293b; min-height: 100vh; overflow-x: hidden; font-size: 0.9rem; }
+        body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #1e293b; min-height: 100vh; overflow-x: hidden; font-size: 1rem; }
         .glass-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 10px 25px -5px rgba(0, 0, 0, 0.04); padding: 24px; transition: all 0.3s ease; }
-        input, select, textarea { background: #ffffff; border: 1px solid #cbd5e1; border-radius: 10px; padding: 10px 14px; color: #0f172a; outline: none; width: 100%; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); font-size: 0.85rem; font-weight: 600; }
+        input, select, textarea { background: #ffffff; border: 1px solid #cbd5e1; border-radius: 10px; padding: 10px 14px; color: #0f172a; outline: none; width: 100%; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); font-size: 0.875rem; font-weight: 600; }
         input:focus:not(:read-only), select:focus:not(:disabled), textarea:focus:not(:read-only) { border-color: #8b5cf6; box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15); }
         input:read-only, select:disabled { background: #f8fafc; color: #94a3b8; cursor: not-allowed; border-color: #e2e8f0; }
         
@@ -34,7 +34,7 @@
         
         .td-content { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 100%; height: 100%; padding: 12px 16px; display: flex; align-items: center; }
         .font-mono { font-family: 'JetBrains Mono', monospace; }
-        .badge { padding: 4px 12px; border-radius: 9999px; font-weight: 800; font-size: 0.7rem; text-transform: uppercase; display: inline-flex; align-items: center; justify-content: center; }
+        .badge { padding: 4px 12px; border-radius: 9999px; font-weight: 800; font-size: 0.75rem; text-transform: uppercase; display: inline-flex; align-items: center; justify-content: center; }
         
         .delete-btn { color: #94a3b8; cursor: pointer; transition: 0.2s; padding: 8px; border-radius: 6px; background: #f1f5f9;}
         .delete-btn:hover { background: #fff1f2; color: #e11d48; }
@@ -76,7 +76,7 @@
         
         /* MODERN, FERAH TABLO GÖRÜNÜMÜ (YENİ) */
         #detailView table { width: 100%; margin-bottom: 0; background-color: #ffffff; border-collapse: separate; border-spacing: 0; border-radius: 12px; }
-        #detailView table thead th { background-color: #f8fafc !important; color: #64748b !important; border-bottom: 2px solid #e2e8f0 !important; padding: 16px 12px !important; font-size: 11px !important; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 800; text-align: center; }
+        #detailView table thead th { position: sticky; top: 64px; z-index: 5; background-color: #f8fafc !important; color: #64748b !important; border-bottom: 2px solid #e2e8f0 !important; padding: 16px 12px !important; font-size: 12px !important; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 800; text-align: center; }
         #detailView table tbody tr { transition: background-color 0.2s; }
         #detailView table tbody tr:hover { background-color: #f8fafc !important; }
         #detailView table th, #detailView table td { border: none !important; border-bottom: 1px solid #f1f5f9 !important; vertical-align: middle; position: relative; }
@@ -110,7 +110,7 @@
         .detay-baslik-kritik-tarih { font-size: 16px !important; font-weight: 900 !important; color: #e11d48 !important; letter-spacing: 0.5px; text-transform: uppercase; }
 
         /* Firma listesi ilk açılışta ekrana yayılır; kullanıcı sütunları tutamaçtan değiştirebilir. */
-        .master-table-shell { overflow-x: auto; max-height: calc(100vh - 190px); }
+        .master-table-shell { overflow: auto; max-height: calc(100vh - 250px); }
         #masterTable { width: 100%; min-width: 100%; table-layout: fixed; }
         #masterTable th, #masterTable td { min-width: 0; }
         #masterTable th[data-master-col] { position: relative; }
@@ -119,11 +119,49 @@
         #masterTable .master-resize-handle::after { content: ''; position: absolute; right: 3px; top: 22%; width: 1px; height: 56%; background: #cbd5e1; transition: background-color .15s, width .15s; }
         #masterTable .master-resize-handle:hover::after, body.master-resizing #masterTable .master-resize-handle::after { background: #6366f1; width: 2px; }
         body.master-resizing { cursor: col-resize; user-select: none; }
-        #masterTable .td-content { min-width: 0; padding: 9px 8px; font-size: clamp(9px, 0.65vw, 12px); }
-        #masterTable select.badge-select { min-width: 0; padding-left: 4px !important; padding-right: 18px !important; font-size: clamp(8px, 0.58vw, 10px); text-overflow: ellipsis; }
+        #masterTable .td-content { min-width: 0; padding: 10px 9px; font-size: 13px; }
+        #masterTable select.badge-select { min-width: 0; padding-left: 6px !important; padding-right: 20px !important; font-size: 12px; text-overflow: ellipsis; }
         #masterTable .master-action-cell { width: 112px; }
         #masterTable .master-order-cell { width: 42px; }
         .notification-badge:empty { display: none; }
+
+        /* ARAYÜZ V2: okunabilirlik, sekmeler, tablo denetimleri ve görev merkezi */
+        .text-\[8px\], .text-\[9px\], .text-\[10px\], .text-\[11px\] { font-size: 0.75rem !important; }
+        .detail-tabs { position: sticky; top: 8px; z-index: 35; display: flex; gap: 8px; overflow-x: auto; padding: 8px; margin-bottom: 18px; background: rgba(255,255,255,.96); border: 1px solid #e2e8f0; border-radius: 14px; box-shadow: 0 8px 24px rgba(15,23,42,.06); backdrop-filter: blur(14px); }
+        .detail-tab { flex: 0 0 auto; display: inline-flex; align-items: center; gap: 8px; min-height: 42px; padding: 9px 15px; border-radius: 10px; color: #64748b; font-size: 13px; font-weight: 800; }
+        .detail-tab:hover { color: #4338ca; background: #eef2ff; }
+        .detail-tab.is-active { color: #fff; background: #4f46e5; box-shadow: 0 6px 14px rgba(79,70,229,.22); }
+        .edit-state { display: inline-flex; align-items: center; gap: 7px; padding: 7px 11px; border-radius: 9px; background: #f8fafc; color: #64748b; font-size: 12px; font-weight: 800; }
+        .edit-state.is-editing { background: #fffbeb; color: #b45309; }
+        .master-controls { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; padding: 12px; border: 1px solid #e2e8f0; border-radius: 14px; background: #fff; }
+        .quick-filters { display: flex; flex-wrap: wrap; gap: 7px; }
+        .quick-filter { padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 999px; background: #fff; color: #64748b; font-size: 12px; font-weight: 800; }
+        .quick-filter:hover { border-color: #a5b4fc; color: #4338ca; }
+        .quick-filter.is-active { border-color: #4f46e5; background: #eef2ff; color: #4338ca; }
+        .master-top-scroll { overflow-x: auto; height: 14px; margin: 0 2px 6px; }
+        .master-top-scroll > div { height: 1px; }
+        #masterTable .master-order-cell, #masterTable td.master-order-cell { position: sticky; left: 0; z-index: 16; background: inherit; }
+        #masterTable th.master-name-col, #masterTable td.master-name-col { position: sticky; left: 42px; z-index: 15; background: #fff; box-shadow: 5px 0 10px -9px rgba(15,23,42,.8); }
+        #masterTable thead th.master-name-col { z-index: 25; background: #f8fafc; }
+        #masterTable .master-two-line { height: auto; min-height: 46px; white-space: normal; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+        #firmaListesiBody tr.is-selected > td { background-color: #eef2ff !important; box-shadow: inset 0 1px 0 #c7d2fe, inset 0 -1px 0 #c7d2fe; }
+        #firmaListesiBody tr.is-selected td.master-name-col { background-color: #eef2ff !important; }
+        body.master-compact #masterTable .td-content { min-height: 38px; padding-top: 6px; padding-bottom: 6px; }
+        body.master-compact #masterTable select.badge-select { padding-top: 5px !important; padding-bottom: 5px !important; }
+        body.master-compact #firmaListesiBody tr { height: 40px; }
+        .task-metric { border: 1px solid #e2e8f0; border-radius: 14px; padding: 14px; background: #fff; min-height: 92px; }
+        .task-item { display: flex; gap: 12px; align-items: flex-start; padding: 12px; border: 1px solid #e2e8f0; border-radius: 12px; background: #fff; }
+        .notification-group-title { position: sticky; top: -20px; z-index: 2; padding: 9px 12px; margin: 6px 0 8px; border-radius: 9px; background: #f8fafc; color: #475569; font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: .06em; }
+        .notification-item.is-read { opacity: .67; background: #f8fafc !important; }
+        .progress-track { height: 10px; overflow: hidden; border-radius: 999px; background: #e2e8f0; }
+        .progress-value { height: 100%; border-radius: inherit; transition: width .35s ease; }
+        [data-detail-panel][hidden] { display: none !important; }
+
+        @media (max-width: 700px) {
+            .detail-tabs { top: 4px; }
+            .detail-tab { padding: 8px 11px; }
+            .master-controls { align-items: stretch; }
+        }
 
         @media (max-width: 900px) {
             .master-table-shell { overflow-x: auto; }
@@ -177,6 +215,14 @@
             <div class="mb-5 lg:mb-0"><h1 class="text-2xl font-black tracking-tight text-slate-800 flex items-center"><div class="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center mr-3"><i class="fa-solid fa-infinity text-indigo-600 text-sm"></i></div>KOBİ<span class="font-light text-slate-500 ml-1">Proje Takip Paneli</span></h1></div>
             <div class="flex flex-wrap justify-center gap-2"><button onclick="cikisYap()" class="text-slate-400 hover:text-rose-500 bg-slate-50 hover:bg-rose-50 font-bold py-2.5 px-4 rounded-lg transition text-sm border border-slate-200"><i class="fa-solid fa-power-off mr-2"></i>Çıkış</button><button onclick="verileriYenile()" class="text-slate-500 hover:text-indigo-600 bg-slate-50 hover:bg-indigo-50 font-bold py-2.5 px-4 rounded-lg border border-slate-200 transition" title="Buluttan yeniden yükle"><i class="fa-solid fa-cloud-arrow-down text-base"></i></button><button onclick="teminatBildirimModaliniAc()" class="relative text-fuchsia-700 bg-fuchsia-50 hover:bg-fuchsia-100 border border-fuchsia-100 font-bold py-2.5 px-4 rounded-lg transition text-xs"><i class="fa-solid fa-bell mr-2"></i>Bildirimler <span id="teminatBildirimRozeti" class="notification-badge absolute -right-2 -top-2 min-w-5 h-5 px-1 rounded-full bg-rose-600 text-white text-[10px] flex items-center justify-center"></span></button><button onclick="copKutusunuAc()" class="text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-100 font-bold py-2.5 px-4 rounded-lg transition text-xs"><i class="fa-solid fa-trash-arrow-up mr-2"></i>Çöp Kutusu</button><button onclick="uzmanRehberiAc()" class="text-cyan-700 bg-cyan-50 hover:bg-cyan-100 border border-cyan-100 font-bold py-2.5 px-4 rounded-lg transition text-xs"><i class="fa-solid fa-address-book mr-2"></i>KOSGEB Uzman Rehberi</button><button onclick="jsonIndir()" class="text-indigo-600 bg-indigo-50 hover:bg-indigo-100 border border-indigo-100 font-bold py-2.5 px-4 rounded-lg transition text-xs"><i class="fa-solid fa-download mr-2"></i>JSON İndir</button><input type="file" id="jsonDosyaSec" class="hidden" accept=".json,application/json" onchange="jsonYukle(event)"><button onclick="document.getElementById('jsonDosyaSec').click()" class="text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-100 font-bold py-2.5 px-4 rounded-lg transition text-xs"><i class="fa-solid fa-upload mr-2"></i>JSON Yükle</button><button onclick="yeniAnaProjeEkle()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-2.5 px-5 rounded-lg shadow-sm transition flex items-center text-sm"><i class="fa-solid fa-folder-plus mr-2 text-slate-300"></i> Yeni Proje Klasörü</button></div>
         </header>
+        <section id="gorevMerkezi" class="mb-5 rounded-2xl border border-slate-200 bg-slate-50/70 p-5 shadow-sm" aria-labelledby="gorevMerkeziBaslik">
+            <div class="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                <div><h2 id="gorevMerkeziBaslik" class="text-lg font-black text-slate-800"><i class="fa-solid fa-list-check mr-2 text-indigo-500"></i>Görev Merkezi</h2><p class="mt-1 text-xs font-semibold text-slate-500">Öncelikli işler tüm projelerden otomatik derlenir.</p></div>
+                <button onclick="teminatBildirimModaliniAc()" class="rounded-lg border border-indigo-200 bg-white px-4 py-2 text-xs font-black text-indigo-700 hover:bg-indigo-50">Tüm bildirimleri aç</button>
+            </div>
+            <div id="gorevMerkeziKartlari" class="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-5"></div>
+            <div id="gorevMerkeziListesi" class="mt-4 grid grid-cols-1 gap-3 lg:grid-cols-2"></div>
+        </section>
         <section id="uzmanRehberiOzetKarti" onclick="uzmanRehberiAc()" class="mb-5 bg-gradient-to-r from-cyan-50 to-sky-50 border border-cyan-200 rounded-2xl p-5 cursor-pointer hover:shadow-md transition" aria-label="KOSGEB uzman rehberini aç">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div class="flex items-center gap-4"><div class="w-12 h-12 rounded-xl bg-cyan-600 text-white flex items-center justify-center shadow-sm"><i class="fa-solid fa-address-book text-xl"></i></div><div><h2 class="font-black text-slate-800">KOSGEB Uzman Telefon Rehberi</h2><p id="uzmanRehberiOzetMetni" class="text-xs text-slate-500 mt-1">Firma kayıtlarındaki uzmanlar hazırlanıyor…</p></div></div>
@@ -191,37 +237,44 @@
             <div class="flex items-center w-full lg:w-auto"><button onclick="portfoyEkranaDon()" class="bg-slate-50 hover:bg-slate-100 text-slate-600 border border-slate-200 py-2.5 px-4 rounded-lg transition mr-4 shrink-0"><i class="fa-solid fa-house text-sm"></i></button><div><h1 class="text-xl font-black tracking-tight text-slate-800" id="aktifProjeBaslik">Proje Adı</h1><p class="text-[10px] text-slate-400 font-bold tracking-widest uppercase mt-0.5" id="projeTipEtiketi"></p></div></div>
             <div class="flex flex-wrap justify-center lg:justify-end gap-2 w-full lg:w-auto"><button onclick="teminatBildirimModaliniAc()" class="relative text-fuchsia-600 bg-fuchsia-50 hover:bg-fuchsia-100 border border-fuchsia-100 px-3 py-2 rounded-lg font-bold transition text-xs" title="Teminat bildirimleri"><i class="fa-solid fa-bell"></i><span id="teminatBildirimRozetiMaster" class="notification-badge absolute -right-2 -top-2 min-w-5 h-5 px-1 rounded-full bg-rose-600 text-white text-[10px] flex items-center justify-center"></span></button><button onclick="copKutusunuAc()" class="text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-100 px-3 py-2 rounded-lg font-bold transition text-xs" title="Çöp Kutusu"><i class="fa-solid fa-trash-arrow-up"></i></button><button onclick="excelAl()" class="text-emerald-600 bg-emerald-50 hover:bg-emerald-100 border border-emerald-100 px-4 py-2 rounded-lg font-bold transition flex items-center text-xs"><i class="fa-solid fa-file-excel mr-2 text-sm"></i> Excel'e Aktar</button><div class="relative group"><i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i><input type="text" id="firmaAra" onkeyup="tabloFiltrele()" placeholder="Arama yap..." class="pl-8 pr-3 py-2 bg-slate-50 border-slate-200 text-slate-700 w-full sm:w-48 rounded-lg text-xs font-bold"></div><div class="flex bg-slate-50 rounded-lg p-1 border border-slate-200"><button onclick="sutunMenusuAc('master')" class="text-slate-500 hover:text-indigo-600 px-3 py-1.5 rounded transition text-xs font-bold flex items-center"><i class="fa-solid fa-sliders mr-1.5"></i> Görünüm</button><div class="w-px bg-slate-200 mx-1"></div><button onclick="sutunlariSifirla()" class="text-slate-400 hover:text-rose-500 px-2 py-1.5 rounded transition text-xs"><i class="fa-solid fa-rotate-left"></i></button></div><button onclick="yeniFirmaEkle()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg shadow-sm transition flex items-center text-xs"><i class="fa-solid fa-plus mr-1.5"></i> Yeni Firma</button></div>
         </header>
-        <div class="glass-card p-0 overflow-hidden shadow-sm"><div class="master-table-shell"><table class="text-sm text-left border-collapse" id="masterTable"><colgroup id="masterColgroup"></colgroup><thead class="table-sticky"><tr id="tableHeaderRow"></tr></thead><tbody id="firmaListesiBody"></tbody></table></div></div>
+        <div class="master-controls">
+            <div id="firmaHizliFiltreler" class="quick-filters" aria-label="Firma durum filtreleri"></div>
+            <button id="masterYogunlukBtn" onclick="masterYogunlukDegistir()" class="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-black text-slate-600 hover:bg-slate-100"><i class="fa-solid fa-table-cells mr-1.5"></i>Rahat görünüm</button>
+        </div>
+        <div id="masterTopScroll" class="master-top-scroll" aria-hidden="true"><div id="masterTopScrollInner"></div></div>
+        <div class="glass-card p-0 overflow-hidden shadow-sm"><div id="masterTableShell" class="master-table-shell"><table class="text-sm text-left border-collapse" id="masterTable"><colgroup id="masterColgroup"></colgroup><thead class="table-sticky"><tr id="tableHeaderRow"></tr></thead><tbody id="firmaListesiBody"></tbody></table></div></div>
     </div>
 
     <div id="detailView" style="display: none;" class="fade-in">
         <header class="flex flex-col md:flex-row justify-between items-center mb-6 bg-white p-5 rounded-2xl shadow-sm border border-slate-200 gap-4" id="detailHeader">
             <div class="flex items-center w-full md:w-auto"><button onclick="anaEkranaDon()" class="bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 font-bold py-2 px-4 rounded-lg transition mr-4 flex items-center text-xs"><i class="fa-solid fa-chevron-left mr-1.5"></i> Geri</button><div><h1 class="text-xl font-black text-slate-800 tracking-tight flex items-center"><span id="detayFirmaAdi">Firma Adı</span></h1></div></div>
-            <div class="flex flex-wrap gap-2 w-full md:w-auto"><button onclick="pdfAlProfesyonel()" class="bg-white border border-slate-200 text-slate-600 hover:border-slate-400 font-bold py-2 px-4 rounded-lg transition flex items-center text-xs shadow-sm"><i class="fa-solid fa-file-pdf text-rose-500 mr-2 text-sm"></i> Kurumsal PDF</button><button id="btnGlobalKilit" onclick="toggleDetayKilit()" class="bg-white border border-slate-200 text-slate-600 font-bold py-2 px-4 rounded-lg transition flex items-center text-xs shadow-sm"><i class="fa-solid fa-lock-open mr-2 text-emerald-500 text-sm"></i> Kilidi Açık</button></div>
+            <div class="flex flex-wrap items-center gap-2 w-full md:w-auto"><span id="detayDuzenlemeDurumu" class="edit-state"><i class="fa-solid fa-eye"></i>Görüntüleme</span><button id="btnDetayGeriAl" onclick="detayDegisiklikleriniGeriAl()" class="hidden bg-white border border-slate-200 text-slate-600 hover:border-amber-300 font-bold py-2 px-3 rounded-lg transition text-xs shadow-sm"><i class="fa-solid fa-rotate-left mr-1.5 text-amber-500"></i>Geri Al</button><button id="btnDetayKaydet" onclick="detayDegisiklikleriniKaydet(false)" class="hidden bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded-lg transition text-xs shadow-sm"><i class="fa-solid fa-floppy-disk mr-1.5"></i>Kaydet</button><button id="btnDetayDuzenle" onclick="toggleDetayDuzenleme()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg transition flex items-center text-xs shadow-sm"><i class="fa-solid fa-pen mr-2"></i>Düzenle</button><button onclick="pdfAlProfesyonel()" class="bg-white border border-slate-200 text-slate-600 hover:border-slate-400 font-bold py-2 px-4 rounded-lg transition flex items-center text-xs shadow-sm"><i class="fa-solid fa-file-pdf text-rose-500 mr-2 text-sm"></i>Kurumsal PDF</button><button id="btnGlobalKilit" onclick="toggleDetayKilit()" class="bg-white border border-slate-200 text-slate-600 font-bold py-2 px-3 rounded-lg transition flex items-center text-xs shadow-sm" title="Firma kaydını kalıcı olarak kilitle"><i class="fa-solid fa-lock-open mr-2 text-emerald-500 text-sm"></i>Firma kilidi açık</button></div>
         </header>
 
+        <nav id="detaySekmeCubugu" class="detail-tabs gizle-pdf" aria-label="Firma detay bölümleri"></nav>
+
         <div id="pdfIcerikAlani">
-            <div class="glass-card mb-6 p-5"><label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Proje Notları / Genel Açıklama</label><textarea id="genelFirmaAciklama" rows="2" class="w-full input-transparent border border-slate-200 hover:border-slate-300 p-3 rounded-xl font-medium text-slate-700 text-sm" placeholder="Açıklama veya notlarınızı buraya yazabilirsiniz..." onchange="limitleriKaydet()"></textarea></div>
+            <div data-detail-panel="genel" class="glass-card mb-6 p-5"><label class="block text-xs font-black text-slate-500 uppercase tracking-widest mb-2">Proje Notları / Genel Açıklama</label><textarea id="genelFirmaAciklama" rows="2" class="w-full input-transparent border border-slate-200 hover:border-slate-300 p-3 rounded-xl font-medium text-slate-700 text-sm" placeholder="Açıklama veya notlarınızı buraya yazabilirsiniz..." onchange="limitleriKaydet()"></textarea></div>
 
-            <div id="istihdamModulu" style="display: none;"><div id="istihdamManuelAraclar" class="hidden mb-4 px-2 items-center justify-between gap-3"><div><h2 class="text-sm font-black text-slate-700 uppercase tracking-widest"><i class="fa-solid fa-table-list mr-2 text-indigo-500"></i>İstihdam Dönem Tabloları</h2><p class="text-[10px] text-slate-400 mt-1">Dönem ve ay adlarını düzenleyebilir, yeni tablo veya ay ekleyebilirsiniz.</p></div><button id="kutuIstihdamTabloBtn" onclick="istihdamDonemiEkle()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg text-xs"><i class="fa-solid fa-plus mr-1.5"></i>Tablo Ekle</button></div><div id="istihdamTablolariKapsayici" class="space-y-6 mb-10"></div></div>
+            <div id="istihdamModulu" data-detail-panel="istihdam" style="display: none;"><div id="istihdamManuelAraclar" class="hidden mb-4 px-2 items-center justify-between gap-3"><div><h2 class="text-sm font-black text-slate-700 uppercase tracking-widest"><i class="fa-solid fa-table-list mr-2 text-indigo-500"></i>İstihdam Dönem Tabloları</h2><p class="text-xs text-slate-500 mt-1">Dönem ve ay adlarını düzenleyebilir, yeni tablo veya ay ekleyebilirsiniz.</p></div><button id="kutuIstihdamTabloBtn" onclick="istihdamDonemiEkle()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg text-xs"><i class="fa-solid fa-plus mr-1.5"></i>Tablo Ekle</button></div><div id="istihdamTablolariKapsayici" class="space-y-6 mb-10"></div></div>
 
-            <div id="standartOzetKartlari" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <div id="standartOzetKartlari" data-detail-panel="genel" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                 </div>
 
-            <div id="alarmPaneli" class="mb-6 space-y-2"></div>
+            <div id="alarmPaneli" data-detail-panel="genel" class="mb-6 space-y-2"></div>
 
-            <div class="glass-card overflow-x-auto mb-6 p-0 bg-white gizle-pdf shadow-sm border border-slate-200">
+            <div id="detayDosyalarPaneli" data-detail-panel="dosyalar" class="glass-card overflow-x-auto mb-6 p-0 bg-white gizle-pdf shadow-sm border border-slate-200">
                 <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50"><h2 class="text-xs font-black text-slate-600 uppercase tracking-widest flex items-center"><i class="fa-solid fa-folder-open text-slate-400 mr-2"></i> Bulut Dosyaları</h2><div id="kutuDosyaBtn"><input type="file" id="yeniDosyaSec" class="hidden" accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg" onchange="dosyaSecildi(event)"><button onclick="document.getElementById('yeniDosyaSec').click()" class="bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 font-bold py-1.5 px-3 rounded-lg transition text-xs shadow-sm"><i class="fa-solid fa-cloud-arrow-up mr-1.5"></i> Yükle</button></div></div>
                 <table class="min-w-full text-sm text-left"><thead class="bg-slate-50 text-slate-400 uppercase text-[10px] font-black tracking-widest border-b border-slate-200"><tr><th class="p-3 pl-5 border-r border-slate-200/50">Dosya Adı</th><th class="p-3 text-center border-r border-slate-200/50 w-32">Tarih</th><th class="p-3 text-center border-r border-slate-200/50 w-32">İşlem</th><th class="p-3 w-10 islem-sutun text-center"><i class="fa-solid fa-bolt text-slate-300"></i></th></tr></thead><tbody id="dosyaTableBody" class="divide-y divide-slate-100"></tbody></table>
             </div>
 
             <div id="standartTablolarKapsayici" class="grid grid-cols-1 gap-6 mb-6">
-                <div class="glass-card overflow-x-auto p-0 bg-white shadow-sm border border-slate-200">
+                <div id="detayGiderPaneli" data-detail-panel="giderler" class="glass-card overflow-x-auto p-0 bg-white shadow-sm border border-slate-200">
                     <div class="p-4 border-b border-slate-100 flex flex-col md:flex-row md:justify-between md:items-center gap-3 bg-slate-50/50"><div><h2 class="text-xs font-black text-slate-600 uppercase tracking-widest flex items-center"><i class="fa-solid fa-list-check text-indigo-400 mr-2 text-sm"></i> Harcama Kalemleri (Limit Planı)</h2><p class="mt-1 text-[10px] text-slate-400 font-semibold">Excel’den bir hücreye tıklayıp tek sütun veya çok sütun halinde yapıştırabilirsiniz. Kurul Onay = Miktar × Birim Fiyatı.</p></div><div class="flex gap-2"><button id="btnGiderGorunum" onclick="sutunMenusuAc('gider')" class="bg-white text-slate-500 border border-slate-200 hover:bg-slate-50 font-bold py-1.5 px-3 rounded-lg transition text-xs shadow-sm flex items-center"><i class="fa-solid fa-sliders mr-1.5"></i> Sütunlar</button><button id="kutuGiderBtn" onclick="satirEkle('gider')" class="bg-indigo-50 text-indigo-700 border border-indigo-100 hover:bg-indigo-100 font-bold py-1.5 px-3 rounded-lg transition text-xs shadow-sm flex items-center"><i class="fa-solid fa-plus mr-1.5"></i> Kalem Ekle</button></div></div>
                     <div class="overflow-visible" id="giderTablosuAlani"></div>
                 </div>
                 
-                <div class="glass-card overflow-x-auto p-0 bg-white shadow-sm border border-slate-200">
+                <div id="detayRaporPaneli" data-detail-panel="raporlar" class="glass-card overflow-x-auto p-0 bg-white shadow-sm border border-slate-200">
                     <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50"><h2 class="text-xs font-black text-slate-600 uppercase tracking-widest flex items-center"><i class="fa-solid fa-calendar-days text-amber-400 mr-2 text-sm"></i> Zaman Çizelgesi</h2><button id="kutuRaporBtn" onclick="satirEkle('rapor')" class="bg-amber-50 text-amber-700 border border-amber-100 hover:bg-amber-100 font-bold py-1.5 px-3 rounded-lg transition text-xs shadow-sm flex items-center"><i class="fa-solid fa-plus mr-1.5"></i> Dönem Ekle</button></div>
                     <table class="w-full min-w-[900px] table-fixed text-sm text-left" id="raporTable"><colgroup><col style="width:64px"><col style="width:240px"><col><col style="width:160px"><col style="width:180px"><col style="width:48px"></colgroup><thead class="bg-slate-50 text-slate-400 uppercase text-[10px] font-black tracking-widest border-b border-slate-200"><tr>
                         <th class="p-3 text-center border-r border-slate-200/50">NO</th>
@@ -234,7 +287,7 @@
                 </div>
             </div>
 
-            <div id="krediKapsayiciBolumu">
+            <div id="krediKapsayiciBolumu" data-detail-panel="finansman">
                 <div class="flex justify-between items-center mb-4 px-2"><h2 class="text-sm font-black text-slate-700 uppercase tracking-widest"><i class="fa-solid fa-money-bill-transfer mr-2 text-indigo-400"></i> Finansman Planlaması</h2><button id="kutuYeniTabloBtn" onclick="yeniKrediTablosuEkle()" class="bg-slate-800 text-white hover:bg-slate-900 font-bold py-1.5 px-4 rounded-lg shadow-sm transition text-xs flex items-center"><i class="fa-solid fa-layer-group mr-1.5 text-slate-400"></i> Tablo Bloğu Ekle</button></div>
                 <div id="krediTablolariKapsayici" class="space-y-6 mb-10"></div>
             </div>
@@ -252,6 +305,7 @@
                 <button onclick="teminatBildirimModaliniKapat()" class="w-9 h-9 rounded-lg bg-white border border-slate-200 text-slate-400 hover:text-rose-600" aria-label="Kapat"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div id="teminatBildirimListesi" class="p-5 max-h-[58vh] overflow-y-auto space-y-3"></div>
+            <div id="bildirimGeriAlCubugu" class="hidden mx-5 mb-4 items-center justify-between gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs font-bold text-amber-800"><span>Bildirim gizlendi.</span><button onclick="bildirimSilmeyiGeriAl()" class="rounded-lg bg-white px-3 py-2 text-amber-800 shadow-sm ring-1 ring-amber-200"><i class="fa-solid fa-rotate-left mr-1.5"></i>Geri Al</button></div>
             <div class="p-4 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
                 <p class="text-[11px] text-slate-500 leading-relaxed">E-posta düğmesi taslağı açar; içeriği kontrol edip siz gönderirsiniz. Tarayıcı kapalıyken otomatik e-posta gönderilmez.</p>
                 <a id="teminatEpostaTaslagi" href="mailto:info@kobiproje.com.tr" class="shrink-0 bg-fuchsia-600 hover:bg-fuchsia-700 text-white px-4 py-2.5 rounded-lg font-bold text-xs text-center"><i class="fa-solid fa-envelope mr-2"></i>info@kobiproje.com.tr için taslak aç</a>
@@ -302,7 +356,7 @@
         };
         const FIREBASE_SDK_VERSION = "12.18.0";
         const DATA_ROOT = "kobiPanel";
-        const APP_VERSION = "2026.09.05-hedef-basliklari";
+        const APP_VERSION = "2026.09.05-arayuz-v2";
         const TEMINAT_BILDIRIM_EPOSTASI = "info@kobiproje.com.tr";
         // Bunlar uygulamaya özel ortak Firebase hesabının AÇIK kimlik bilgileridir.
         // Ortak şifre burada veya başka bir uygulama dosyasında ASLA tutulmaz.
@@ -317,6 +371,9 @@
         let gunlukYedekZamanlayici = null, yedekObjectUrl = null;
         let gunlukYedekCalisiyor = false, yedekIstekNesli = 0;
         let kayitHatasiVar = false, duzenlenenUzmanID = null, GUNCEL_TEMINAT_BILDIRIMLERI = [], COP_KUTUSU = {};
+        let aktifFirmaFiltresi = 'tumu', masterYogunluk = 'rahat', secilenFirmaSatiriID = null;
+        let detayAktifSekme = 'genel', detayDuzenlemeAktif = false, detayDegisiklikVar = false, detayGeriAlYedegi = null;
+        let sonSilinenBildirim = null;
         const uID = () => Math.random().toString(36).substr(2, 9);
         const formatMoney = (n) => new Intl.NumberFormat('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n);
         const unformat = (str) => { if(!str) return 0; return parseFloat(str.toString().split('.').join('').replace(',', '.')) || 0; };
@@ -904,7 +961,7 @@
             return istek;
         }
 
-        function otomatikKaydet(force = false) {
+        function otomatikKaydet(force = false, kaydetmeyeZorla = false) {
             if(!oturumAcik) return;
             if(!guncelProjeID || !guncelFirmaID) return; 
             const p = MASTER_DATA.projeler?.[guncelProjeID];
@@ -937,10 +994,12 @@
             }
             hesaplamalariYap();
             teminatBildirimleriniGuncelle(false);
+            if(detayDuzenlemeAktif && !kaydetmeyeZorla){detayDegisiklikIsaretle();return Promise.resolve();}
             clearTimeout(kayitZamanlayici); 
             kayitZamanlayici = null;
-            if (force) bulutaGonder(true, true);
-            else kayitZamanlayici = setTimeout(()=>{ kayitZamanlayici = null; bulutaGonder(true,true).catch(()=>undefined); }, 800);
+            if (force) return bulutaGonder(true, true);
+            kayitZamanlayici = setTimeout(()=>{ kayitZamanlayici = null; bulutaGonder(true,true).catch(()=>undefined); }, 800);
+            return Promise.resolve();
         }
 
         function giderSatiriYenidenHesapla(eleman) {
@@ -952,14 +1011,12 @@
             otomatikKaydet();
         }
 
-        function anaEkranaDon() { 
-            try {
-                if(document.getElementById('detailView').style.display !== 'none') {
-                    if(MASTER_DATA.projeler[guncelProjeID].tip === "istihdam") istihdamVeriKaydet(true); 
-                    else otomatikKaydet(true); 
-                }
-            } catch(error) { console.error("Kayıt hatası atlatıldı", error); }
-            
+        function anaEkranaDon() {
+            if(detayDuzenlemeAktif&&detayDegisiklikVar){
+                if(!confirm('Kaydedilmemiş değişiklikler var. Kaydetmeden firma listesine dönülsün mü?'))return;
+                if(detayGeriAlYedegi&&guncelProjeID&&guncelFirmaID)MASTER_DATA.projeler[guncelProjeID].firmalar[guncelFirmaID]=cloneData(detayGeriAlYedegi);
+            }
+            detayDuzenlemeAktif=false;detayDegisiklikVar=false;detayGeriAlYedegi=null;
             document.getElementById('detailView').style.display='none';
             document.getElementById('masterView').style.display='block';
             renderMasterView(); 
@@ -1466,6 +1523,35 @@
             if(!tablo || !kabuk) return;
             const veriGenisligi=DINAMIK_SUTUNLAR.filter(s=>!s.gizli).reduce((toplam,s)=>toplam+(parseFloat(s.width)||120),0);
             tablo.style.width=`${Math.max(kabuk.clientWidth || 0, veriGenisligi + 154)}px`;
+            const ustIc=document.getElementById('masterTopScrollInner');
+            if(ustIc) ustIc.style.width=`${tablo.scrollWidth}px`;
+        }
+        function masterKaydirmaCubugunuHazirla() {
+            const ust=document.getElementById('masterTopScroll'), alt=document.getElementById('masterTableShell');
+            if(!ust||!alt)return;
+            if(ust.dataset.syncHazir!=='1'){
+                let senkronize=false;
+                ust.addEventListener('scroll',()=>{if(senkronize)return;senkronize=true;alt.scrollLeft=ust.scrollLeft;senkronize=false;});
+                alt.addEventListener('scroll',()=>{if(senkronize)return;senkronize=true;ust.scrollLeft=alt.scrollLeft;senkronize=false;});
+                ust.dataset.syncHazir='1';
+            }
+            masterTabloGenisliginiUygula();
+            ust.scrollLeft=alt.scrollLeft;
+        }
+        function masterYogunlukAnahtari() { return `kobiMasterYogunluk:${FIREBASE_CONFIG.projectId}:${SHARED_LOGIN_UID}`; }
+        function masterYogunluguUygula() {
+            document.body.classList.toggle('master-compact',masterYogunluk==='kompakt');
+            const btn=document.getElementById('masterYogunlukBtn');
+            if(btn)btn.innerHTML=masterYogunluk==='kompakt'?'<i class="fa-solid fa-table-cells-large mr-1.5"></i>Rahat görünüm':'<i class="fa-solid fa-table-list mr-1.5"></i>Kompakt görünüm';
+        }
+        function masterYogunlukDegistir() {
+            masterYogunluk=masterYogunluk==='kompakt'?'rahat':'kompakt';
+            try{localStorage.setItem(masterYogunlukAnahtari(),masterYogunluk);}catch(_){}
+            masterYogunluguUygula();
+        }
+        function masterYogunlugunuYukle() {
+            try{const kayit=localStorage.getItem(masterYogunlukAnahtari());if(['rahat','kompakt'].includes(kayit))masterYogunluk=kayit;}catch(_){}
+            masterYogunluguUygula();
         }
         function masterSutunBoyutlandirmaBaslat(event, encodedID) {
             event.preventDefault(); event.stopPropagation();
@@ -1530,7 +1616,7 @@
                     if(kalanGun === 9999 || kalanGun > 31) return;
                     const id = encodeURIComponent(`${projeID}|${firmaID}|${vade}`);
                     try { if(localStorage.getItem(teminatBildirimDepoAnahtari('silindi', id))) return; } catch(_) { /* Bildirim yine gösterilir. */ }
-                    bildirimler.push({ tur:'teminat', id, proje: proje.ad || 'Proje', firma: firma?.bilgi?.adi || 'İsimsiz Firma', vade, kalanGun });
+                    bildirimler.push({ tur:'teminat', id, projeID, firmaID, proje: proje.ad || 'Proje', firma: firma?.bilgi?.adi || 'İsimsiz Firma', vade, kalanGun });
                 });
             });
             return bildirimler.sort((a,b)=>a.kalanGun-b.kalanGun);
@@ -1547,7 +1633,7 @@
                             const tarih=(satir.tarih || '').toString().trim(), kalanGun=gunFarki(tarih,bugun);
                             if(kalanGun===9999 || kalanGun>0) return;
                             const id=encodeURIComponent(`kredi|${projeID}|${firmaID}|${tablo.id||''}|${satir.id||''}|${tarih}`);
-                            bildirimler.push({tur:'kredi',id,proje:proje.ad||'Proje',firma:firma?.bilgi?.adi||'İsimsiz Firma',tablo:tablo.baslik||'Finansman Tablosu',vade:tarih,kalanGun,tutar:(Number(satir.anapara)||0)+(Number(satir.faiz)||0)});
+                            bildirimler.push({tur:'kredi',id,projeID,firmaID,proje:proje.ad||'Proje',firma:firma?.bilgi?.adi||'İsimsiz Firma',tablo:tablo.baslik||'Finansman Tablosu',vade:tarih,kalanGun,tutar:(Number(satir.anapara)||0)+(Number(satir.faiz)||0)});
                         });
                     });
                 });
@@ -1565,41 +1651,65 @@
                 baglanti.classList.toggle('opacity-50', satirlar.length===0);
             }
         }
+        function bildirimOkunduMu(bildirim) { try{return !!localStorage.getItem(teminatBildirimDepoAnahtari('okundu',bildirim.id));}catch(_){return false;} }
+        function bildirimGrubu(bildirim) { return bildirim.kalanGun<0?'geciken':bildirim.kalanGun<=7?'yedi':'otuzbir'; }
         function teminatBildirimleriniRender() {
             const liste = document.getElementById('teminatBildirimListesi');
             if(!liste) return;
             if(!GUNCEL_TEMINAT_BILDIRIMLERI.length) {
                 liste.innerHTML = `<div class="py-12 text-center text-slate-400"><i class="fa-solid fa-circle-check text-4xl text-emerald-400 mb-3"></i><p class="font-bold text-slate-600">Güncel bildirim yok.</p><p class="text-xs mt-1">31 gün içindeki teminatlar ve Kapasite Geliştirme projesinin ödenmemiş, vadesi gelen taksitleri burada görünecek.</p></div>`;
             } else {
-                liste.innerHTML = GUNCEL_TEMINAT_BILDIRIMLERI.map((b,index) => {
-                    const gecmis = b.kalanGun < 0;
-                    const kredi=b.tur==='kredi', sure=gecmis?`${Math.abs(b.kalanGun)} gün geçti`:(b.kalanGun===0?(kredi?'Ödeme bugün':'Bugün sona eriyor'):`${b.kalanGun} gün kaldı`);
-                    const cerceve=kredi?(gecmis?'border-rose-200 bg-rose-50':'border-sky-200 bg-sky-50'):(gecmis?'border-rose-200 bg-rose-50':'border-amber-200 bg-amber-50');
-                    const detay=kredi?`${escapeHTML(b.proje)} · ${escapeHTML(b.tablo)} · Ödeme: <strong>${escapeHTML(b.vade)}</strong>${b.tutar?` · ${formatMoney(b.tutar)} ₺`:''}`:`${escapeHTML(b.proje)} · Vade: <strong>${escapeHTML(b.vade)}</strong>`;
-                    const eylem=kredi?'<span class="shrink-0 rounded-lg border border-sky-200 bg-white px-3 py-2 text-[10px] font-black text-sky-700"><i class="fa-solid fa-lock mr-1.5"></i>Ödendi işaretlenene kadar kalır</span>':`<button onclick="teminatBildiriminiSil(${index})" class="shrink-0 border border-slate-200 bg-white hover:bg-rose-50 hover:text-rose-700 rounded-lg px-3 py-2 text-xs font-bold"><i class="fa-solid fa-trash-can mr-1.5"></i>Okudum, sil</button>`;
-                    return `<article class="rounded-xl border ${cerceve} p-4 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between"><div class="min-w-0"><p class="text-[10px] font-black uppercase tracking-widest ${kredi?'text-sky-700':'text-fuchsia-700'}"><i class="fa-solid ${kredi?'fa-money-check-dollar':'fa-file-contract'} mr-1.5"></i>${kredi?'Kredi Ödemesi':'Teminat Mektubu'}</p><p class="font-black text-slate-800 truncate mt-1" title="${escapeHTML(b.firma)}">${escapeHTML(b.firma)}</p><p class="text-xs text-slate-500 mt-1">${detay}</p><p class="text-xs font-black mt-1 ${gecmis?'text-rose-700':(kredi?'text-sky-700':'text-amber-700')}">${sure}</p></div>${eylem}</article>`;
+                const gruplar=[['geciken','Geciken'],['yedi','7 gün içinde'],['otuzbir','31 gün içinde']];
+                liste.innerHTML=gruplar.map(([grup,baslik])=>{
+                    const bildirimler=GUNCEL_TEMINAT_BILDIRIMLERI.map((b,index)=>({b,index})).filter(x=>bildirimGrubu(x.b)===grup).sort((a,b)=>Number(bildirimOkunduMu(a.b))-Number(bildirimOkunduMu(b.b)));
+                    if(!bildirimler.length)return '';
+                    return `<section><h3 class="notification-group-title">${baslik} <span class="ml-1 rounded-full bg-white px-2 py-1 text-slate-500">${bildirimler.length}</span></h3>${bildirimler.map(({b,index}) => {
+                        const gecmis=b.kalanGun<0, kredi=b.tur==='kredi', okundu=bildirimOkunduMu(b);
+                        const sure=gecmis?`${Math.abs(b.kalanGun)} gün geçti`:(b.kalanGun===0?(kredi?'Ödeme bugün':'Bugün sona eriyor'):`${b.kalanGun} gün kaldı`);
+                        const cerceve=kredi?(gecmis?'border-rose-200 bg-rose-50':'border-sky-200 bg-sky-50'):(gecmis?'border-rose-200 bg-rose-50':'border-amber-200 bg-amber-50');
+                        const detay=kredi?`${escapeHTML(b.proje)} · ${escapeHTML(b.tablo)} · Ödeme: <strong>${escapeHTML(b.vade)}</strong>${b.tutar?` · ${formatMoney(b.tutar)} ₺`:''}`:`${escapeHTML(b.proje)} · Vade: <strong>${escapeHTML(b.vade)}</strong>`;
+                        return `<article class="notification-item ${okundu?'is-read':''} rounded-xl border ${cerceve} p-4"><div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between"><div class="min-w-0"><p class="text-xs font-black uppercase tracking-widest ${kredi?'text-sky-700':'text-fuchsia-700'}"><i class="fa-solid ${kredi?'fa-money-check-dollar':'fa-file-contract'} mr-1.5"></i>${kredi?'Kredi Ödemesi':'Teminat Mektubu'} ${okundu?'<span class="ml-2 text-slate-400">· Okundu</span>':'<span class="ml-2 text-rose-600">· Yeni</span>'}</p><p class="font-black text-slate-800 mt-1" title="${escapeHTML(b.firma)}">${escapeHTML(b.firma)}</p><p class="text-xs text-slate-500 mt-1">${detay}</p><p class="text-xs font-black mt-1 ${gecmis?'text-rose-700':(kredi?'text-sky-700':'text-amber-700')}">${sure}</p></div><div class="flex shrink-0 flex-wrap gap-2"><button onclick="bildirimdenFirmayaGit(${index})" class="rounded-lg border border-indigo-200 bg-white px-3 py-2 text-xs font-bold text-indigo-700 hover:bg-indigo-50"><i class="fa-solid fa-arrow-up-right-from-square mr-1.5"></i>Firmaya git</button>${okundu?'':`<button onclick="teminatBildiriminiOkunduYap(${index})" class="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-600 hover:bg-slate-50"><i class="fa-solid fa-check mr-1.5"></i>Okundu</button>`}${kredi?'<span class="rounded-lg border border-sky-200 bg-white px-3 py-2 text-xs font-black text-sky-700"><i class="fa-solid fa-lock mr-1.5"></i>Ödenene kadar kalır</span>':`<button onclick="teminatBildiriminiSil(${index})" class="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-600 hover:bg-rose-50 hover:text-rose-700"><i class="fa-solid fa-eye-slash mr-1.5"></i>Gizle</button>`}</div></div></article>`;
+                    }).join('')}</section>`;
                 }).join('');
             }
             teminatEpostaBaglantisiniGuncelle();
         }
         function teminatBildirimleriniGuncelle(otomatikAc = false) {
             GUNCEL_TEMINAT_BILDIRIMLERI = [...teminatBildirimleriniBul(), ...krediBildirimleriniBul()].sort((a,b)=>a.kalanGun-b.kalanGun);
-            ['teminatBildirimRozeti','teminatBildirimRozetiMaster'].forEach(id => { const el=document.getElementById(id); if(el) el.textContent=GUNCEL_TEMINAT_BILDIRIMLERI.length ? String(GUNCEL_TEMINAT_BILDIRIMLERI.length) : ''; });
+            const okunmamis=GUNCEL_TEMINAT_BILDIRIMLERI.filter(b=>!bildirimOkunduMu(b)).length;
+            ['teminatBildirimRozeti','teminatBildirimRozetiMaster'].forEach(id => { const el=document.getElementById(id); if(el) el.textContent=okunmamis ? String(okunmamis) : ''; });
             teminatBildirimleriniRender();
-            if(otomatikAc && GUNCEL_TEMINAT_BILDIRIMLERI.some(b => { try { return !localStorage.getItem(teminatBildirimDepoAnahtari('okundu', b.id)); } catch(_) { return true; } })) teminatBildirimModaliniAc();
+            if(document.getElementById('portfolioView')?.style.display!=='none')gorevMerkeziniRender();
+            if(otomatikAc && okunmamis>0) teminatBildirimModaliniAc();
         }
         function teminatBildirimModaliniAc() {
             teminatBildirimleriniGuncelle(false);
-            GUNCEL_TEMINAT_BILDIRIMLERI.forEach(b => { try { localStorage.setItem(teminatBildirimDepoAnahtari('okundu', b.id), new Date().toISOString()); } catch(_) { /* Okundu kaydı zorunlu değil. */ } });
             document.getElementById('teminatBildirimModal').style.display='flex';
         }
         function teminatBildirimModaliniKapat() { document.getElementById('teminatBildirimModal').style.display='none'; }
+        function teminatBildiriminiOkunduYap(index) {
+            const bildirim=GUNCEL_TEMINAT_BILDIRIMLERI[index];if(!bildirim)return;
+            try{localStorage.setItem(teminatBildirimDepoAnahtari('okundu',bildirim.id),new Date().toISOString());}catch(_){}
+            teminatBildirimleriniGuncelle(false);
+        }
         function teminatBildiriminiSil(index) {
             const bildirim = GUNCEL_TEMINAT_BILDIRIMLERI[index];
             if(bildirim?.tur==='kredi'){showToast('Taksit bildirimi, satır “Ödendi” yapılana kadar kaldırılamaz.','info');return;}
             if(!bildirim || !confirm(`“${bildirim.firma}” bildirimi bu tarayıcıdan silinsin mi? Firma kaydı değişmez.`)) return;
-            try { localStorage.setItem(teminatBildirimDepoAnahtari('silindi', bildirim.id), new Date().toISOString()); } catch(_) { showToast('Bildirim tercihi bu tarayıcıya kaydedilemedi.','error'); return; }
+            try { const anahtar=teminatBildirimDepoAnahtari('silindi', bildirim.id);localStorage.setItem(anahtar, new Date().toISOString());sonSilinenBildirim={anahtar,bildirim}; } catch(_) { showToast('Bildirim tercihi bu tarayıcıya kaydedilemedi.','error'); return; }
             teminatBildirimleriniGuncelle(false);
+            const cubuk=document.getElementById('bildirimGeriAlCubugu');if(cubuk){cubuk.classList.remove('hidden');cubuk.classList.add('flex');}
+        }
+        function bildirimSilmeyiGeriAl() {
+            if(!sonSilinenBildirim)return;
+            try{localStorage.removeItem(sonSilinenBildirim.anahtar);}catch(_){}
+            sonSilinenBildirim=null;teminatBildirimleriniGuncelle(false);
+            const cubuk=document.getElementById('bildirimGeriAlCubugu');if(cubuk){cubuk.classList.add('hidden');cubuk.classList.remove('flex');}
+            showToast('Bildirim yeniden gösteriliyor','info');
+        }
+        function bildirimdenFirmayaGit(index) {
+            const b=GUNCEL_TEMINAT_BILDIRIMLERI[index];if(!b?.projeID||!b?.firmaID)return;
+            teminatBildirimModaliniKapat();firmaDetayinaGit(b.projeID,b.firmaID,b.tur==='kredi'?'finansman':'genel');
         }
 
         function uzmanMetniniNormallestir(deger) {
@@ -1729,9 +1839,35 @@
             catch(error) { console.error(error); showToast('Rehber kaydı silinemedi','error'); }
         }
 
+        function gorevMerkeziGorevleri() {
+            const gorevler=[];
+            krediBildirimleriniBul().forEach(b=>gorevler.push({tur:'kredi',oncelik:b.kalanGun<0?0:1,ikon:'fa-money-check-dollar',renk:'rose',baslik:b.kalanGun<0?'Geciken kredi ödemesi':'Kredi ödemesi bugün',detay:`${b.vade} · ${b.tablo}`,projeID:b.projeID,firmaID:b.firmaID,proje:b.proje,firma:b.firma}));
+            teminatBildirimleriniBul().forEach(b=>gorevler.push({tur:'teminat',oncelik:b.kalanGun<0?0:(b.kalanGun<=7?1:2),ikon:'fa-file-contract',renk:b.kalanGun<0?'rose':'amber',baslik:b.kalanGun<0?'Teminat süresi geçti':`${b.kalanGun} gün içinde teminat`,detay:`Vade: ${b.vade}`,projeID:b.projeID,firmaID:b.firmaID,proje:b.proje,firma:b.firma}));
+            Object.entries(MASTER_DATA.projeler||{}).forEach(([projeID,proje])=>Object.entries(proje?.firmalar||{}).forEach(([firmaID,firma])=>{
+                const durum=(firma?.bilgi?.durum||'').toLocaleUpperCase('tr-TR');
+                if(durum.includes('REVİZYON'))gorevler.push({tur:'revizyon',oncelik:2,ikon:'fa-rotate',renk:'violet',baslik:durum,detay:'Revizyon süreci takip ediliyor',projeID,firmaID,proje:proje.ad,firma:firma.bilgi?.adi||'İsimsiz Firma'});
+                if(durum.includes('ÖDEME TALEBİ')||durum.startsWith('ÖT ')||durum.includes('DİJİTAL CÜZDAN'))gorevler.push({tur:'odeme',oncelik:2,ikon:'fa-file-invoice-dollar',renk:'sky',baslik:durum,detay:'Ödeme talebi süreci',projeID,firmaID,proje:proje.ad,firma:firma.bilgi?.adi||'İsimsiz Firma'});
+                if(proje.tip==='istihdam')guvenliNesneDizisi(firma.istihdam).forEach((donem,index)=>{
+                    const hedef=Number(donem.hedef)||0, fiili=guvenliNesneDizisi(donem.aylar).reduce((toplam,ay)=>toplam+(Number(ay.f_gun)||0),0);
+                    if(hedef>0&&fiili<hedef)gorevler.push({tur:'istihdam',oncelik:2,ikon:'fa-users',renk:'emerald',baslik:`${donem.ad||`${index+1}. Dönem`} hedefin altında`,detay:`Eksik ${formatMoney(hedef-fiili)} gün · ${formatMoney(fiili)} / ${formatMoney(hedef)}`,projeID,firmaID,proje:proje.ad,firma:firma.bilgi?.adi||'İsimsiz Firma'});
+                });
+            }));
+            return gorevler.sort((a,b)=>a.oncelik-b.oncelik||a.proje.localeCompare(b.proje,'tr'));
+        }
+        function gorevRenkSinifi(renk){return ({rose:'bg-rose-50 text-rose-600',amber:'bg-amber-50 text-amber-600',violet:'bg-violet-50 text-violet-600',sky:'bg-sky-50 text-sky-600',emerald:'bg-emerald-50 text-emerald-600'})[renk]||'bg-slate-50 text-slate-600';}
+        function gorevMerkeziniRender() {
+            const kartlar=document.getElementById('gorevMerkeziKartlari'),liste=document.getElementById('gorevMerkeziListesi');if(!kartlar||!liste)return;
+            const gorevler=gorevMerkeziGorevleri(), tanimlar=[['kredi','Geciken Ödeme','fa-money-check-dollar','rose'],['teminat','Teminat','fa-file-contract','amber'],['revizyon','Revizyon','fa-rotate','violet'],['odeme','Ödeme Talebi','fa-file-invoice-dollar','sky'],['istihdam','İstihdam Hedefi','fa-users','emerald']];
+            kartlar.innerHTML=tanimlar.map(([tur,ad,ikon,renk])=>{const sayi=gorevler.filter(g=>g.tur===tur).length;return `<div class="task-metric"><div class="flex items-center justify-between"><span class="flex h-9 w-9 items-center justify-center rounded-lg ${gorevRenkSinifi(renk)}"><i class="fa-solid ${ikon}"></i></span><strong class="text-2xl font-black text-slate-800">${sayi}</strong></div><p class="mt-2 text-xs font-black text-slate-600">${ad}</p></div>`;}).join('');
+            if(!gorevler.length){liste.innerHTML='<div class="lg:col-span-2 rounded-xl border border-emerald-200 bg-emerald-50 p-5 text-center text-sm font-bold text-emerald-700"><i class="fa-solid fa-circle-check mr-2"></i>Takip bekleyen kritik görev bulunmuyor.</div>';return;}
+            liste.innerHTML=gorevler.slice(0,10).map(g=>`<button onclick="gorevdenFirmayaGit('${encodeURIComponent(g.projeID)}','${encodeURIComponent(g.firmaID)}','${g.tur==='kredi'?'finansman':g.tur==='istihdam'?'istihdam':'genel'}')" class="task-item text-left hover:border-indigo-300 hover:shadow-sm"><span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${gorevRenkSinifi(g.renk)}"><i class="fa-solid ${g.ikon}"></i></span><span class="min-w-0"><strong class="block text-sm font-black text-slate-800">${escapeHTML(g.baslik)}</strong><span class="mt-1 block text-xs font-semibold text-slate-500">${escapeHTML(g.firma)} · ${escapeHTML(g.proje)}</span><span class="mt-1 block text-xs text-slate-400">${escapeHTML(g.detay)}</span></span><i class="fa-solid fa-chevron-right ml-auto mt-2 text-slate-300"></i></button>`).join('');
+        }
+        function gorevdenFirmayaGit(projeKod,firmaKod,sekme='genel'){firmaDetayinaGit(decodeURIComponent(projeKod),decodeURIComponent(firmaKod),sekme);}
+
         function renderPortfoyView() {
             document.getElementById('masterView').style.display='none';document.getElementById('detailView').style.display='none';document.getElementById('portfolioView').style.display='block';
             uzmanRehberiOzetiniGuncelle();
+            gorevMerkeziniRender();
             const c = document.getElementById('projeKartlariKapsayici'); c.innerHTML='';
             Object.entries(MASTER_DATA.projeler).sort((a,b)=>a[1].ad.localeCompare(b[1].ad,'tr',{numeric:true})).forEach(([id,p])=>{
                 let isIst=p.tip==="istihdam";
@@ -1782,7 +1918,7 @@
         }
         function portfoyEkranaDon(){guncelProjeID=null;DINAMIK_SUTUNLAR=[];renderPortfoyView();}
 
-        function projeyeGit(id){guncelProjeID=id;DINAMIK_SUTUNLAR=MASTER_DATA.projeler[id].sutunlar;document.getElementById('portfolioView').style.display='none';document.getElementById('masterView').style.display='block';document.getElementById('aktifProjeBaslik').innerText=MASTER_DATA.projeler[id].ad;document.getElementById('projeTipEtiketi').innerText=MASTER_DATA.projeler[id].tip==="istihdam"?"İstihdam Yönetimi":"Harcama Yönetimi";renderMasterView();}
+        function projeyeGit(id){guncelProjeID=id;aktifFirmaFiltresi='tumu';secilenFirmaSatiriID=null;DINAMIK_SUTUNLAR=MASTER_DATA.projeler[id].sutunlar;document.getElementById('portfolioView').style.display='none';document.getElementById('masterView').style.display='block';document.getElementById('aktifProjeBaslik').innerText=MASTER_DATA.projeler[id].ad;document.getElementById('projeTipEtiketi').innerText=MASTER_DATA.projeler[id].tip==="istihdam"?"İstihdam Yönetimi":"Harcama Yönetimi";renderMasterView();}
 
         function firmaDragStart(e, id) { 
             if(sortKolon) return; 
@@ -1811,12 +1947,35 @@
             suruklenenFirmaID = null;
         }
 
+        function firmaGecikmisMi(proje,item) {
+            if(item.gn!==9999&&item.gn<=0)return true;
+            const teminat=item.b?.teminatVade, teminatGun=teminat?gunFarki(teminat):9999;if(teminatGun!==9999&&teminatGun<0)return true;
+            const kapasite=/^1\s*-\s*KAPASİTE GELİŞTİRME DP(?:\s|\(|$)/.test((proje?.ad||'').toLocaleUpperCase('tr-TR').replace(/\s+/g,' ').trim());
+            return kapasite&&guvenliNesneDizisi(item.f?.krediTablolar).some(t=>guvenliNesneDizisi(t.veriler).some(v=>(v.durum||'Ödenmedi')!=='Ödendi'&&gunFarki(v.tarih)<=0));
+        }
+        function firmaFiltreEslesiyor(filtre,proje,item) {
+            const durum=(item.b?.durum||'AKTİF').toLocaleUpperCase('tr-TR');
+            if(filtre==='aktif')return durum==='AKTİF';
+            if(filtre==='revizyon')return durum.includes('REVİZYON');
+            if(filtre==='odeme')return durum.includes('ÖDEME TALEBİ')||durum.startsWith('ÖT ')||durum.includes('DİJİTAL CÜZDAN');
+            if(filtre==='geciken')return firmaGecikmisMi(proje,item);
+            if(filtre==='tamamlandi')return durum==='TAMAMLANDI';
+            return true;
+        }
+        function firmaFiltreleriniRender(proje,tumFirmalar) {
+            const alan=document.getElementById('firmaHizliFiltreler');if(!alan)return;
+            const filtreler=[['tumu','Tümü'],['aktif','Aktif'],['revizyon','Revizyon'],['odeme','Ödeme Talebi'],['geciken','Geciken'],['tamamlandi','Tamamlandı']];
+            alan.innerHTML=filtreler.map(([id,ad])=>`<button onclick="firmaFiltresiAyarla('${id}')" class="quick-filter ${aktifFirmaFiltresi===id?'is-active':''}">${ad} <span class="ml-1 opacity-60">${tumFirmalar.filter(item=>firmaFiltreEslesiyor(id,proje,item)).length}</span></button>`).join('');
+        }
+        function firmaFiltresiAyarla(filtre){aktifFirmaFiltresi=filtre;renderMasterView();}
+        function firmaSatiriniSec(id){secilenFirmaSatiriID=id;document.querySelectorAll('.master-tr').forEach(tr=>tr.classList.toggle('is-selected',tr.dataset.firmaid===id));}
+
         // --- YENİLENMİŞ ANA LİSTE GÖRÜNÜMÜ ---
         function renderMasterView() {
             if(!guncelProjeID) return; const p = MASTER_DATA.projeler[guncelProjeID]; const trH=document.getElementById('tableHeaderRow'); const tB=document.getElementById('firmaListesiBody'); const colgroup=document.getElementById('masterColgroup');
             colgroup.innerHTML='<col style="width:42px">'+DINAMIK_SUTUNLAR.filter(s=>!s.gizli).map(s=>`<col data-col="${escapeHTML(s.id)}" style="width:${parseFloat(s.width)||120}px">`).join('')+'<col style="width:112px">';
             trH.innerHTML=`<th class="master-order-cell p-3 text-center border-r border-slate-200" title="Kendi sıralamanız için basılı tutup sürükleyin"><i class="fa-solid fa-arrows-up-down text-slate-300"></i></th>`;
-            DINAMIK_SUTUNLAR.forEach((s,i)=>{if(!s.gizli) trH.innerHTML+=`<th data-master-col="${escapeHTML(s.id)}" class="border-r border-slate-200" draggable="true" ondragstart="dragStart(event,${i},'master')" ondragover="dragOver(event)" ondrop="drop(event,${i},'master')"><div class="resize-wrapper"><span class="flex-1 hover:text-indigo-600 cursor-pointer truncate" title="${escapeHTML(s.ad)}" onclick="tabloSirala('${s.id}')">${escapeHTML(s.ad)} ${sortKolon===s.id?(sortArtan?'<i class="fa-solid fa-arrow-down"></i>':'<i class="fa-solid fa-arrow-up"></i>'):''}</span></div><div class="master-resize-handle" title="Sütunu daraltmak veya genişletmek için sürükleyin" onpointerdown="masterSutunBoyutlandirmaBaslat(event,'${encodeURIComponent(s.id)}')"></div></th>`;});
+            DINAMIK_SUTUNLAR.forEach((s,i)=>{if(!s.gizli) trH.innerHTML+=`<th data-master-col="${escapeHTML(s.id)}" class="border-r border-slate-200 ${s.id==='adi'?'master-name-col':''}" draggable="true" ondragstart="dragStart(event,${i},'master')" ondragover="dragOver(event)" ondrop="drop(event,${i},'master')"><div class="resize-wrapper"><span class="flex-1 hover:text-indigo-600 cursor-pointer truncate" title="${escapeHTML(s.ad)}" onclick="tabloSirala('${s.id}')">${escapeHTML(s.ad)} ${sortKolon===s.id?(sortArtan?'<i class="fa-solid fa-arrow-down"></i>':'<i class="fa-solid fa-arrow-up"></i>'):''}</span></div><div class="master-resize-handle" title="Sütunu daraltmak veya genişletmek için sürükleyin" onpointerdown="masterSutunBoyutlandirmaBaslat(event,'${encodeURIComponent(s.id)}')"></div></th>`;});
             trH.innerHTML+=`<th class="master-action-cell p-3 text-center sticky right-0 bg-white"><i class="fa-solid fa-bolt"></i></th>`; tB.innerHTML='';
 
             let fDizi=Object.entries(p.firmalar).map(([id,f])=>{
@@ -1872,6 +2031,9 @@
                 });
             }
 
+            firmaFiltreleriniRender(p,fDizi);
+            fDizi=fDizi.filter(item=>firmaFiltreEslesiyor(aktifFirmaFiltresi,p,item));
+
             let sira=1, isIst=p.tip==="istihdam";
             fDizi.forEach(item=>{
                 let id=item.id, b=item.b, getH=(col)=>{
@@ -1908,7 +2070,7 @@
                         </div>`;
                     }
                     
-                    if(col==='adi') return `<div class="td-content font-bold text-sm text-slate-800">${v}</div>`; 
+                    if(col==='adi') return `<div class="td-content master-two-line font-bold text-slate-800" title="${escapeHTML(v)}">${escapeHTML(v)}</div>`; 
                     if(col==='alinan_destek') return `<div class="td-content justify-end font-mono font-semibold text-sm text-emerald-600 bg-emerald-50 px-2 rounded">${formatMoney(item.tD)}</div>`;
                     if(col==='erken_odeme'){if(isIst)return '-'; return `<div class="flex items-center mx-2 border hover:border-slate-200 rounded p-1"><input type="text" class="input-transparent text-right font-mono font-semibold text-sm w-full p-0 m-0 ${b.erkenKilit!==false?'text-slate-400':'text-indigo-600'}" value="${formatMoney(b.erken_odeme||0)}" ${b.erkenKilit!==false?'readonly':''} oninput="this.value=formatInputVal(this.value)" onchange="hizliErkenOdemeKaydet('${id}',this.value)"><button onclick="toggleErkenKilit('${id}')" class="w-5 h-5"><i class="fa-solid ${b.erkenKilit!==false?'fa-lock text-slate-300':'fa-lock-open text-emerald-500'}"></i></button></div>`;}
                     if(col==='ist_hedef') return `<div class="td-content justify-center"><span class="bg-slate-100 text-slate-500 px-3 py-1 rounded-full font-mono font-bold text-xs">${item.f.istihdam[0]?.hedef||0} GÜN</span></div>`;
@@ -1938,17 +2100,17 @@
                             </span>
                         </div>`;
                     }
-                    return `<div class="td-content text-slate-600 text-sm">${v}</div>`;
+                    return `<div class="td-content ${col==='aciklama'?'master-two-line':''} text-slate-600" title="${escapeHTML(v)}">${escapeHTML(v)}</div>`;
                 };
                 
                 let dragAttr = !sortKolon ? `draggable="true" ondragstart="firmaDragStart(event, '${id}')" ondragover="firmaDragOver(event)" ondrop="firmaDrop(event, '${id}')" title="Sıralamak için basılı tut ve sürükle"` : `title="Sıralama aktifken sürüklenemez"`;
                 let cursorType = !sortKolon ? 'cursor-grab active:cursor-grabbing' : '';
 
-                let tr=`<tr class="master-tr ${cursorType}" ${dragAttr}><td class="p-2 text-center font-mono text-xs text-slate-300 border-r border-slate-100 select-none"><i class="fa-solid fa-grip-lines opacity-50 mr-1"></i>${sira++}</td>`;
-                DINAMIK_SUTUNLAR.forEach(s=>{if(!s.gizli) tr+=`<td class="p-0 border-r border-slate-100 max-w-0 align-middle">${getH(s.id)}</td>`;});
+                let tr=`<tr data-firmaid="${escapeHTML(id)}" onclick="firmaSatiriniSec('${id}')" class="master-tr ${cursorType} ${secilenFirmaSatiriID===id?'is-selected':''}" ${dragAttr}><td class="master-order-cell p-2 text-center font-mono text-xs text-slate-300 border-r border-slate-100 select-none"><i class="fa-solid fa-grip-lines opacity-50 mr-1"></i>${sira++}</td>`;
+                DINAMIK_SUTUNLAR.forEach(s=>{if(!s.gizli) tr+=`<td class="p-0 border-r border-slate-100 max-w-0 align-middle ${s.id==='adi'?'master-name-col':''}">${getH(s.id)}</td>`;});
                 tr+=`<td class="master-action-cell p-2 text-center sticky right-0 bg-white/90 shadow-[-4px_0_10px_-4px_rgba(0,0,0,0.05)]"><div class="flex justify-center items-center gap-1"><button onclick="sirketDuzenle('${id}')" class="text-slate-400 hover:text-indigo-600 bg-slate-50 hover:bg-indigo-50 w-8 h-8 rounded-lg flex items-center justify-center transition" title="Düzenle"><i class="fa-solid fa-pen"></i></button><button onclick="sirketeGit('${id}')" class="bg-emerald-50 hover:bg-emerald-500 text-emerald-600 hover:text-white border border-emerald-200 w-9 h-8 rounded-lg font-black transition flex items-center justify-center shadow-sm" title="Detay"><i class="fa-solid fa-arrow-right text-[11px]"></i></button></div></td></tr>`; tB.innerHTML+=tr;
             });
-            requestAnimationFrame(masterTabloGenisliginiUygula);
+            requestAnimationFrame(()=>{masterYogunlugunuYukle();masterTabloGenisliginiUygula();masterKaydirmaCubugunuHazirla();});
         }
 
         function hizliErkenOdemeKaydet(id,v){MASTER_DATA.projeler[guncelProjeID].firmalar[id].bilgi.erken_odeme=unformat(v);firmaKaydet(guncelProjeID,id).catch(()=>undefined);}
@@ -1967,19 +2129,65 @@
         function modalKapat(){document.getElementById('editModal').style.display='none';}
         async function sirketTamamenSil(){const projeID=guncelProjeID,firmaID=guncelFirmaID,firma=MASTER_DATA.projeler?.[projeID]?.firmalar?.[firmaID];if(!firma)return;const ad=firma.bilgi?.adi||'Firma';const onay=prompt(`"${ad}" firması çöp alanına taşınacak. Onay için firma adını yazın:`);if((onay||'').trim().toUpperCase()!==ad.trim().toUpperCase()){if(onay!==null)showToast("Firma adı eşleşmedi; silme iptal edildi.","error");return;}try{await firmayiGuvenliSil(projeID,firmaID);delete MASTER_DATA.projeler[projeID].firmalar[firmaID];guncelFirmaID=null;modalKapat();renderMasterView();showToast("Firma çöp alanına taşındı.","info");}catch(error){showToast("Firma silinemedi; veri korunuyor.","error");}}
         
-        function sirketeGit(id){
+        function detaySekmeleriniHazirla(tip) {
+            const nav=document.getElementById('detaySekmeCubugu');if(!nav)return;
+            const sekmeler=tip==='istihdam'?[['genel','Genel Bilgiler','fa-circle-info'],['istihdam','İstihdam','fa-users'],['dosyalar','Dosyalar','fa-folder-open']]:[['genel','Genel Bilgiler','fa-circle-info'],['giderler','Harcama Kalemleri','fa-list-check'],['finansman','Finansman','fa-money-bill-transfer'],['raporlar','Raporlar','fa-calendar-days'],['dosyalar','Dosyalar','fa-folder-open']];
+            if(!sekmeler.some(([id])=>id===detayAktifSekme))detayAktifSekme='genel';
+            nav.innerHTML=sekmeler.map(([id,ad,ikon])=>`<button class="detail-tab ${detayAktifSekme===id?'is-active':''}" onclick="detaySekmeAc('${id}')"><i class="fa-solid ${ikon}"></i>${ad}</button>`).join('');
+            detaySekmeAc(detayAktifSekme,false);
+        }
+        function detaySekmeAc(sekme,kaydir=true) {
+            detayAktifSekme=sekme;
+            document.querySelectorAll('[data-detail-panel]').forEach(panel=>panel.hidden=panel.dataset.detailPanel!==sekme);
+            const tabloKapsayici=document.getElementById('standartTablolarKapsayici');if(tabloKapsayici&&MASTER_DATA.projeler?.[guncelProjeID]?.tip!=='istihdam')tabloKapsayici.style.display=['giderler','raporlar'].includes(sekme)?'grid':'none';
+            document.querySelectorAll('#detaySekmeCubugu .detail-tab').forEach(btn=>btn.classList.toggle('is-active',btn.getAttribute('onclick')?.includes(`'${sekme}'`)));
+            if(kaydir)document.getElementById('detailHeader')?.scrollIntoView({behavior:'smooth',block:'start'});
+        }
+        function detayDuzenlemeDurumunuYansit(kaliciKilit=false) {
+            const durum=document.getElementById('detayDuzenlemeDurumu'), duzenle=document.getElementById('btnDetayDuzenle'), kaydet=document.getElementById('btnDetayKaydet'), geri=document.getElementById('btnDetayGeriAl');
+            if(durum){durum.className=`edit-state ${detayDuzenlemeAktif?'is-editing':''}`;durum.innerHTML=detayDuzenlemeAktif?`<i class="fa-solid fa-pen"></i>${detayDegisiklikVar?'Kaydedilmedi':'Düzenleme açık'}`:'<i class="fa-solid fa-eye"></i>Görüntüleme';}
+            if(duzenle){duzenle.disabled=kaliciKilit;duzenle.classList.toggle('opacity-50',kaliciKilit);duzenle.innerHTML=detayDuzenlemeAktif?'<i class="fa-solid fa-check mr-2"></i>Düzenlemeyi bitir':'<i class="fa-solid fa-pen mr-2"></i>Düzenle';}
+            [kaydet,geri].forEach(btn=>{if(btn){btn.classList.toggle('hidden',!detayDuzenlemeAktif);btn.disabled=!detayDegisiklikVar;btn.classList.toggle('opacity-50',!detayDegisiklikVar);}});
+        }
+        function detayDegisiklikIsaretle(){if(!detayDuzenlemeAktif)return;detayDegisiklikVar=true;detayDuzenlemeDurumunuYansit(false);}
+        async function toggleDetayDuzenleme(){
+            const f=MASTER_DATA.projeler?.[guncelProjeID]?.firmalar?.[guncelFirmaID];if(!f)return;
+            if(f.bilgi?.kilitli){showToast('Önce firma kilidini açın.','info');return;}
+            if(detayDuzenlemeAktif){await detayDegisiklikleriniKaydet(true);return;}
+            detayGeriAlYedegi=cloneData(f);detayDuzenlemeAktif=true;detayDegisiklikVar=false;renderTables();
+        }
+        async function detayDegisiklikleriniKaydet(duzenlemeyiBitir=false){
+            const p=MASTER_DATA.projeler?.[guncelProjeID];if(!p||!guncelFirmaID)return;
+            try{
+                if(detayDegisiklikVar){if(p.tip==='istihdam')await istihdamVeriKaydet(true,true);else await otomatikKaydet(true,true);showToast('Değişiklikler kaydedildi');}
+                detayDegisiklikVar=false;detayGeriAlYedegi=cloneData(p.firmalar[guncelFirmaID]);if(duzenlemeyiBitir)detayDuzenlemeAktif=false;renderTables();
+            }catch(error){console.error(error);showToast('Değişiklikler kaydedilemedi; düzenleme açık bırakıldı.','error');}
+        }
+        function detayDegisiklikleriniGeriAl(){
+            if(!detayDuzenlemeAktif||!detayDegisiklikVar||!detayGeriAlYedegi)return;
+            if(!confirm('Son kayıttan sonraki değişiklikler geri alınsın mı?'))return;
+            MASTER_DATA.projeler[guncelProjeID].firmalar[guncelFirmaID]=cloneData(detayGeriAlYedegi);detayDegisiklikVar=false;renderTables();showToast('Kaydedilmemiş değişiklikler geri alındı','info');
+        }
+        window.addEventListener('beforeunload',event=>{if(detayDuzenlemeAktif&&detayDegisiklikVar){event.preventDefault();event.returnValue='';}});
+        function firmaDetayinaGit(projeID,firmaID,sekme='genel'){
+            const p=MASTER_DATA.projeler?.[projeID],f=p?.firmalar?.[firmaID];if(!p||!f)return;
+            guncelProjeID=projeID;DINAMIK_SUTUNLAR=p.sutunlar;document.getElementById('portfolioView').style.display='none';document.getElementById('masterView').style.display='none';document.getElementById('aktifProjeBaslik').innerText=p.ad;document.getElementById('projeTipEtiketi').innerText=p.tip==='istihdam'?'İstihdam Yönetimi':'Harcama Yönetimi';sirketeGit(firmaID,sekme);
+        }
+
+        function sirketeGit(id,sekme='genel'){
             guncelFirmaID=id;
             const f = MASTER_DATA.projeler[guncelProjeID].firmalar[id];
+            detayAktifSekme=sekme;detayDuzenlemeAktif=false;detayDegisiklikVar=false;detayGeriAlYedegi=cloneData(f);
             document.getElementById('masterView').style.display='none';
             document.getElementById('detailView').style.display='block';
             
             document.getElementById('detayFirmaAdi').innerHTML= `
                 <div class="flex flex-col">
-                    <span class="text-2xl font-black">${f.bilgi.adi}</span>
+                    <span class="text-2xl font-black">${escapeHTML(f.bilgi.adi)}</span>
                     <div class="flex flex-wrap gap-4 mt-2 text-xs font-semibold text-slate-500 uppercase tracking-widest bg-slate-50 p-2 rounded-lg border border-slate-200 w-fit">
-                        <span class="flex items-center"><i class="fa-solid fa-id-card text-indigo-400 mr-1.5"></i> VKN: <span class="text-slate-800 ml-1 font-mono">${f.bilgi.vergi_no || '-'}</span></span>
-                        <span class="flex items-center"><i class="fa-solid fa-user-shield text-indigo-400 mr-1.5"></i> TC: <span class="text-slate-800 ml-1 font-mono">${f.bilgi.tc || '-'}</span></span>
-                        <span class="flex items-center"><i class="fa-solid fa-key text-amber-400 mr-1.5"></i> Şifre: <span class="text-slate-800 ml-1 font-mono">${f.bilgi.sifre || '-'}</span></span>
+                        <span class="flex items-center"><i class="fa-solid fa-id-card text-indigo-400 mr-1.5"></i> VKN: <span class="text-slate-800 ml-1 font-mono">${escapeHTML(f.bilgi.vergi_no || '-')}</span></span>
+                        <span class="flex items-center"><i class="fa-solid fa-user-shield text-indigo-400 mr-1.5"></i> TC: <span class="text-slate-800 ml-1 font-mono">${escapeHTML(f.bilgi.tc || '-')}</span></span>
+                        <span class="flex items-center"><i class="fa-solid fa-key text-amber-400 mr-1.5"></i> Şifre: <span class="text-slate-800 ml-1 font-mono">${escapeHTML(f.bilgi.sifre || '-')}</span></span>
                     </div>
                 </div>
             `;
@@ -1987,7 +2195,7 @@
         }
 
         function yeniFirmaEkle(){let ad=prompt("Yeni Firma Adı:");if(ad){let p=MASTER_DATA.projeler[guncelProjeID],firmaID="FIRM_"+Date.now();p.firmalar[firmaID]=getYeniFirma(ad,p.tip);firmaKaydet(guncelProjeID,firmaID).then(()=>showToast("Firma eklendi")).catch(()=>{delete p.firmalar[firmaID];renderMasterView();});renderMasterView();}}
-        function toggleDetayKilit(){const f=MASTER_DATA.projeler[guncelProjeID].firmalar[guncelFirmaID];f.bilgi.kilitli=!f.bilgi.kilitli;firmaKaydet(guncelProjeID,guncelFirmaID).catch(()=>undefined);renderTables();}
+        function toggleDetayKilit(){const f=MASTER_DATA.projeler[guncelProjeID].firmalar[guncelFirmaID];if(detayDegisiklikVar){showToast('Önce değişiklikleri kaydedin veya geri alın.','info');return;}f.bilgi.kilitli=!f.bilgi.kilitli;if(f.bilgi.kilitli)detayDuzenlemeAktif=false;firmaKaydet(guncelProjeID,guncelFirmaID).catch(()=>undefined);renderTables();}
         
         function limitleriKaydet(){const b=MASTER_DATA.projeler[guncelProjeID].firmalar[guncelFirmaID].bilgi;if(b.kilitli)return;b.projeNotu=document.getElementById('genelFirmaAciklama').value;b.erken_odeme=unformat(document.getElementById('detayErkenOdeme').value);b.erkenDurum=document.getElementById('detayErkenDurum').value;b.teminatTutar=unformat(document.getElementById('detayTeminatTutar').value);b.teminatVade=document.getElementById('detayTeminatTarih').value;b.teminatDurum=document.getElementById('detayTeminatDurum').value;document.getElementById('detayErkenOdeme').value=formatMoney(b.erken_odeme);document.getElementById('detayTeminatTutar').value=formatMoney(b.teminatTutar);teminatBildirimleriniGuncelle(false);otomatikKaydet(true);}
         
@@ -2026,22 +2234,22 @@
             return f;
         }
         function istihdamPersoneliEkle(grup) {
-            const f=istihdamDOMVerisiniOku();if(!f||f.bilgi.kilitli||!['turk','gkasUksk'].includes(grup))return;
+            const f=istihdamDOMVerisiniOku();if(!f||f.bilgi.kilitli||!detayDuzenlemeAktif||!['turk','gkasUksk'].includes(grup))return;
             f.istihdamPersonelleri[grup].push(yeniIstihdamPersoneli());
             f.bilgi[grup==='turk'?'personelTurk':'personelYabanci']=String(f.istihdamPersonelleri[grup].length);
-            renderIstihdamTables();
-            firmaKaydet(guncelProjeID,guncelFirmaID).then(()=>showToast('Personel satırı eklendi')).catch(()=>showToast('Personel satırı kaydedilemedi','error'));
+            renderIstihdamTables();detayDegisiklikIsaretle();
         }
         async function istihdamPersoneliSil(grup,pidx) {
             const f=istihdamDOMVerisiniOku(), liste=f?.istihdamPersonelleri?.[grup], personel=liste?.[pidx];
             if(!f||f.bilgi.kilitli||!personel)return;
+            if(detayDegisiklikVar){showToast('Silmeden önce değişiklikleri kaydedin veya geri alın.','info');return;}
             if(!confirm(`“${personel.adSoyad||`${pidx+1}. personel`}” kaydı Çöp Kutusu'na taşınsın mı?`))return;
             const projeID=guncelProjeID, firmaID=guncelFirmaID, kalan=liste.filter((_,index)=>index!==pidx), alan=grup==='turk'?'personelTurk':'personelYabanci';
             try {
                 await firmaKaydet(projeID,firmaID);
                 await altKaydiGuvenliSil('istihdamPersonelleri','Personel kaydı',`${DATA_ROOT}/projeler/${projeID}/firmalar/${firmaID}/istihdamPersonelleri/${grup}`,kalan,{projeID,firmaID,grup,originalID:personel.id,originalIndex:pidx,kayit:personel},{[`${DATA_ROOT}/projeler/${projeID}/firmalar/${firmaID}/bilgi/${alan}`]:String(kalan.length)});
                 f.istihdamPersonelleri[grup]=kalan;f.bilgi[alan]=String(kalan.length);
-                renderIstihdamTables();showToast('Personel kaydı Çöp Kutusu\'na taşındı','info');
+                detayGeriAlYedegi=cloneData(f);renderIstihdamTables();showToast('Personel kaydı Çöp Kutusu\'na taşındı','info');
             } catch(error) { console.error(error); showToast('Personel kaydı silinemedi; veri korunuyor','error'); }
         }
         function istihdamPersonelSecenekleri(deger,secenekler) {
@@ -2078,10 +2286,13 @@
                 </div>
             </section>`;
         }
-        function istihdamVeriKaydet(force = false){
+        function istihdamVeriKaydet(force = false, kaydetmeyeZorla = false){
             const f=istihdamDOMVerisiniOku();if(!f||f.bilgi.kilitli)return;
-            renderIstihdamTables();clearTimeout(kayitZamanlayici);kayitZamanlayici=null;
-            if(force) bulutaGonder(true, true); else kayitZamanlayici=setTimeout(()=>{kayitZamanlayici=null;bulutaGonder(true,true).catch(()=>undefined);},800);
+            renderIstihdamTables();
+            if(detayDuzenlemeAktif&&!kaydetmeyeZorla){detayDegisiklikIsaretle();return Promise.resolve();}
+            clearTimeout(kayitZamanlayici);kayitZamanlayici=null;
+            if(force)return bulutaGonder(true, true);
+            kayitZamanlayici=setTimeout(()=>{kayitZamanlayici=null;bulutaGonder(true,true).catch(()=>undefined);},800);return Promise.resolve();
         }
         async function istihdamHedefBasliginiGuncelle(alan,deger) {
             const p=MASTER_DATA.projeler?.[guncelProjeID], f=istihdamDOMVerisiniOku();
@@ -2094,27 +2305,35 @@
             if(sonuclar.some(sonuc=>sonuc.status==='rejected'))showToast('Hedef başlığı kaydedilemedi; internet bağlantısını kontrol edin','error');
             else showToast('Hedef başlığı tüm dönem tablolarında güncellendi');
         }
+        function istihdamHedefBasliginiDuzenle(alan) {
+            const p=MASTER_DATA.projeler?.[guncelProjeID], f=p?.firmalar?.[guncelFirmaID];
+            if(!p||!f||f.bilgi?.kilitli||!detayDuzenlemeAktif)return;
+            const mevcut=p.istihdamHedefBasliklari?.[alan]||varsayilanIstihdamHedefBasliklari[alan],yeni=prompt('Tüm dönem tablolarında kullanılacak hedef başlığı:',mevcut);
+            if(yeni!==null)istihdamHedefBasliginiGuncelle(alan,yeni);
+        }
         function istihdamDonemiEkle() {
-            const p=MASTER_DATA.projeler?.[guncelProjeID], f=istihdamDOMVerisiniOku();if(!manuelIstihdamDuzenlemeAktif(p)||!f||f.bilgi.kilitli)return;
+            const p=MASTER_DATA.projeler?.[guncelProjeID], f=istihdamDOMVerisiniOku();if(!manuelIstihdamDuzenlemeAktif(p)||!f||f.bilgi.kilitli||!detayDuzenlemeAktif)return;
             const no=f.istihdam.length+1, donem=yeniIstihdamDonemi(no,[1,2,3,4].map(i=>`Ay ${i}`));donem.altBaslik='';f.istihdam.push(donem);
-            renderIstihdamTables();firmaKaydet(guncelProjeID,guncelFirmaID).then(()=>showToast('Yeni dönem tablosu eklendi')).catch(()=>showToast('Dönem tablosu kaydedilemedi','error'));
+            renderIstihdamTables();detayDegisiklikIsaretle();
         }
         async function istihdamDonemiSil(didx) {
             const p=MASTER_DATA.projeler?.[guncelProjeID], f=istihdamDOMVerisiniOku();if(!manuelIstihdamDuzenlemeAktif(p)||!f||f.bilgi.kilitli||!f.istihdam[didx])return;
+            if(detayDegisiklikVar){showToast('Silmeden önce değişiklikleri kaydedin veya geri alın.','info');return;}
             const donem=f.istihdam[didx];if(!confirm(`“${donem.ad||'Dönem'}” tablosu Çöp Kutusu'na taşınsın mı?`))return;
             const projeID=guncelProjeID,firmaID=guncelFirmaID,kalan=f.istihdam.filter((_,index)=>index!==didx);
-            try { await firmaKaydet(projeID,firmaID);await altKaydiGuvenliSil('istihdamDonemleri','İstihdam dönemi',`${DATA_ROOT}/projeler/${projeID}/firmalar/${firmaID}/istihdam`,kalan,{projeID,firmaID,originalID:donem.id,originalIndex:didx,kayit:donem});f.istihdam=kalan;renderIstihdamTables();showToast('Dönem tablosu Çöp Kutusu\'na taşındı','info'); }
+            try { await firmaKaydet(projeID,firmaID);await altKaydiGuvenliSil('istihdamDonemleri','İstihdam dönemi',`${DATA_ROOT}/projeler/${projeID}/firmalar/${firmaID}/istihdam`,kalan,{projeID,firmaID,originalID:donem.id,originalIndex:didx,kayit:donem});f.istihdam=kalan;detayGeriAlYedegi=cloneData(f);renderIstihdamTables();showToast('Dönem tablosu Çöp Kutusu\'na taşındı','info'); }
             catch(error){console.error(error);showToast('Dönem tablosu silinemedi; veri korunuyor','error');}
         }
         function istihdamAyiEkle(didx) {
-            const p=MASTER_DATA.projeler?.[guncelProjeID], f=istihdamDOMVerisiniOku(), donem=f?.istihdam?.[didx];if(!manuelIstihdamDuzenlemeAktif(p)||!donem||f.bilgi.kilitli)return;
-            donem.aylar.push({id:`ist_ay_${uID()}`,ay:`Ay ${donem.aylar.length+1}`,t_gun:0,y_gun:0,f_gun:0});renderIstihdamTables();firmaKaydet(guncelProjeID,guncelFirmaID).catch(()=>showToast('Ay satırı kaydedilemedi','error'));
+            const p=MASTER_DATA.projeler?.[guncelProjeID], f=istihdamDOMVerisiniOku(), donem=f?.istihdam?.[didx];if(!manuelIstihdamDuzenlemeAktif(p)||!donem||f.bilgi.kilitli||!detayDuzenlemeAktif)return;
+            donem.aylar.push({id:`ist_ay_${uID()}`,ay:`Ay ${donem.aylar.length+1}`,t_gun:0,y_gun:0,f_gun:0});renderIstihdamTables();detayDegisiklikIsaretle();
         }
         async function istihdamAyiSil(didx,aidx) {
             const p=MASTER_DATA.projeler?.[guncelProjeID], f=istihdamDOMVerisiniOku(), donem=f?.istihdam?.[didx];if(!manuelIstihdamDuzenlemeAktif(p)||!donem||f.bilgi.kilitli||donem.aylar.length<=1)return;
+            if(detayDegisiklikVar){showToast('Silmeden önce değişiklikleri kaydedin veya geri alın.','info');return;}
             const ay=donem.aylar[aidx];if(!ay||!confirm(`“${ay.ay||'Ay'}” satırı Çöp Kutusu'na taşınsın mı?`))return;
             const projeID=guncelProjeID,firmaID=guncelFirmaID,kalan=donem.aylar.filter((_,index)=>index!==aidx);
-            try { await firmaKaydet(projeID,firmaID);await altKaydiGuvenliSil('istihdamAylari','İstihdam ayı',`${DATA_ROOT}/projeler/${projeID}/firmalar/${firmaID}/istihdam/${didx}/aylar`,kalan,{projeID,firmaID,donemID:donem.id,originalID:ay.id,originalIndex:aidx,kayit:ay});donem.aylar=kalan;renderIstihdamTables();showToast('Ay satırı Çöp Kutusu\'na taşındı','info'); }
+            try { await firmaKaydet(projeID,firmaID);await altKaydiGuvenliSil('istihdamAylari','İstihdam ayı',`${DATA_ROOT}/projeler/${projeID}/firmalar/${firmaID}/istihdam/${didx}/aylar`,kalan,{projeID,firmaID,donemID:donem.id,originalID:ay.id,originalIndex:aidx,kayit:ay});donem.aylar=kalan;detayGeriAlYedegi=cloneData(f);renderIstihdamTables();showToast('Ay satırı Çöp Kutusu\'na taşındı','info'); }
             catch(error){console.error(error);showToast('Ay satırı silinemedi; veri korunuyor','error');}
         }
 
@@ -2124,10 +2343,14 @@
             if(gerceklesenSayi>=hedefSayi)return `<span class="rounded-full bg-emerald-100 text-emerald-700 px-3 py-1 text-[10px] font-black"><i class="fa-solid fa-check mr-1"></i>Tamam: ${yaz(gerceklesenSayi)} / ${yaz(hedefSayi)}</span>`;
             return `<span class="rounded-full bg-rose-100 text-rose-700 px-3 py-1 text-[10px] font-black">Eksik ${yaz(hedefSayi-gerceklesenSayi)} gün · ${yaz(gerceklesenSayi)} / ${yaz(hedefSayi)}</span>`;
         }
+        function istihdamHedefIlerlemeHTML(gerceklesen,hedef) {
+            const h=Number(hedef)||0,g=Number(gerceklesen)||0,oran=h>0?Math.min(100,Math.max(0,(g/h)*100)):0,renk=h>0&&g>=h?'bg-emerald-500':g>0?'bg-indigo-500':'bg-slate-300';
+            return `<div class="mt-3"><div class="mb-1 flex justify-between text-xs font-bold text-slate-500"><span>Gerçekleşme</span><span>%${Math.round(oran)}</span></div><div class="progress-track"><div class="progress-value ${renk}" style="width:${oran}%"></div></div></div>`;
+        }
 
         function renderIstihdamTables() {
             const p = MASTER_DATA.projeler[guncelProjeID], f = p.firmalar[guncelFirmaID], 
-                  kil = f.bilgi.kilitli === true, 
+                  kil = f.bilgi.kilitli === true || !detayDuzenlemeAktif, 
                   manuel = manuelIstihdamDuzenlemeAktif(p), cont = document.getElementById('istihdamTablolariKapsayici');
             
             if (!f.istihdam) return;
@@ -2216,7 +2439,7 @@
                 html += `<div class="glass-card mb-8 p-0 overflow-hidden border-2 ${hHata ? 'border-amber-100' : 'border-emerald-100'}">
                     <div class="bg-indigo-500 p-4 flex flex-col lg:flex-row lg:justify-between lg:items-center gap-3">
                         ${manuel?`<div class="flex flex-1 flex-col sm:flex-row gap-2"><input type="text" class="ist-donem-ad bg-indigo-600/40 border border-indigo-300 rounded-lg px-3 py-2 text-sm font-black uppercase text-white tracking-widest" data-didx="${i}" value="${escapeHTML(d.ad||`${i+1}. DÖNEM`)}" onchange="istihdamVeriKaydet()" ${kil?'readonly':''}><input type="text" class="ist-donem-alt bg-indigo-600/30 border border-indigo-300 rounded-lg px-3 py-2 text-xs font-bold text-indigo-50 min-w-[240px]" data-didx="${i}" value="${escapeHTML(d.altBaslik??(i===0?'Şubat - Mayıs 2026':''))}" placeholder="Dönem tarih aralığı" onchange="istihdamVeriKaydet()" ${kil?'readonly':''}></div>`:`<h3 class="text-sm font-black uppercase text-white tracking-widest">${escapeHTML(d.ad||'')} <span class="text-indigo-100 ml-2 text-[10px] font-normal">${i===0 ? '(Şubat - Mayıs 2026)' : ''}</span></h3>`}
-                        ${manuel&&!kil?`<button onclick="istihdamDonemiSil(${i})" class="bg-white/10 hover:bg-rose-600 text-white border border-white/30 rounded-lg px-3 py-2 text-xs font-bold" title="Tabloyu sil"><i class="fa-solid fa-trash-can"></i></button>`:''}
+                        <div class="flex items-center gap-2"><label class="flex items-center gap-2 rounded-lg border border-white/30 bg-indigo-600/40 px-3 py-2 text-xs font-black text-white">Genel hedef:<input type="number" min="0" step="1" class="ist-hedef w-24 border-0 bg-white/95 px-2 py-1 text-center font-black text-indigo-700" data-didx="${i}" value="${d.hedef||''}" placeholder="0" onchange="istihdamVeriKaydet()" ${kil?'readonly':''}></label>${manuel&&!kil?`<button onclick="istihdamDonemiSil(${i})" class="bg-white/10 hover:bg-rose-600 text-white border border-white/30 rounded-lg px-3 py-2 text-xs font-bold" title="Tabloyu sil"><i class="fa-solid fa-trash-can"></i></button>`:''}</div>
                     </div>
                     <table class="w-full text-sm text-left">
                         <thead>
@@ -2230,7 +2453,7 @@
                         <tbody class="divide-y divide-slate-100">${ah}</tbody>
                     </table>
                     <div class="grid grid-cols-1 xl:grid-cols-3 gap-3 p-4 bg-white border-t border-slate-100">
-                        ${hedefKartlari.map(kart=>`<div class="rounded-xl border border-indigo-100 bg-indigo-50/40 p-4"><textarea rows="2" class="block min-h-[48px] w-full resize-none rounded-lg border border-transparent bg-transparent px-2 py-1 text-[10px] leading-relaxed font-black uppercase tracking-wide text-slate-600 hover:border-indigo-200 focus:border-indigo-300 focus:bg-white focus:outline-none" aria-label="Hedef başlığı" title="Bu başlık aynı projenin tüm dönem tablolarında kullanılır" onchange="istihdamHedefBasliginiGuncelle('${kart.alan}',this.value)" ${kil?'readonly':''}>${escapeHTML(kart.etiket)}</textarea><div class="mt-3 flex flex-wrap items-center gap-2"><input type="number" min="0" step="1" class="${kart.sinif} w-28 rounded-lg border border-indigo-200 bg-white px-3 py-2 text-center font-black text-indigo-700" data-didx="${i}" value="${kart.hedef||''}" placeholder="Hedef" onchange="istihdamVeriKaydet()" ${kil?'readonly':''}>${istihdamHedefRozeti(kart.gerceklesen,kart.hedef,kart.ondalik)}</div><p class="mt-2 text-[10px] font-bold text-slate-400">${kart.aciklama}</p></div>`).join('')}
+                        ${hedefKartlari.map(kart=>`<div class="rounded-xl border border-indigo-100 bg-indigo-50/40 p-4"><div class="flex min-h-[46px] items-start justify-between gap-2"><h4 class="text-xs leading-relaxed font-black uppercase tracking-wide text-slate-600">${escapeHTML(kart.etiket)}</h4>${kil?'':`<button onclick="istihdamHedefBasliginiDuzenle('${kart.alan}')" class="shrink-0 rounded-lg bg-white p-2 text-indigo-600 shadow-sm ring-1 ring-indigo-100" title="Başlığı tüm dönemlerde değiştir"><i class="fa-solid fa-pen"></i></button>`}</div><div class="mt-3 flex flex-wrap items-center gap-2">${kart.alan==='donem'?`<span class="rounded-lg border border-indigo-200 bg-white px-4 py-2 text-lg font-black text-indigo-700">${formatMoney(kart.hedef)} gün</span>`:`<input type="number" min="0" step="1" class="${kart.sinif} w-28 rounded-lg border border-indigo-200 bg-white px-3 py-2 text-center font-black text-indigo-700" data-didx="${i}" value="${kart.hedef||''}" placeholder="Hedef" onchange="istihdamVeriKaydet()" ${kil?'readonly':''}>`}${istihdamHedefRozeti(kart.gerceklesen,kart.hedef,kart.ondalik)}</div>${istihdamHedefIlerlemeHTML(kart.gerceklesen,kart.hedef)}<p class="mt-2 text-xs font-bold text-slate-500">${kart.aciklama}</p></div>`).join('')}
                     </div>
                     <div class="p-4 bg-slate-50 border-t flex justify-between items-center">
                         <div class="flex gap-3 items-center">${dRozet}${manuel&&!kil?`<button onclick="istihdamAyiEkle(${i})" class="bg-white border border-indigo-200 text-indigo-700 hover:bg-indigo-50 rounded-lg px-3 py-2 text-xs font-bold"><i class="fa-solid fa-plus mr-1"></i>Ay Ekle</button>`:''}</div>
@@ -2283,11 +2506,12 @@
         }
 
         function renderTables() {
-            const p=MASTER_DATA.projeler[guncelProjeID], f=p.firmalar[guncelFirmaID], kil=f.bilgi.kilitli===true, ig=p.ad.includes("İŞ GELİŞTİRME");
-            document.getElementById('btnGlobalKilit').innerHTML=kil?`<i class="fa-solid fa-lock text-rose-500"></i> Kapalı`:`<i class="fa-solid fa-lock-open text-emerald-500"></i> Açık`;
+            const p=MASTER_DATA.projeler[guncelProjeID], f=p.firmalar[guncelFirmaID], kaliciKilit=f.bilgi.kilitli===true, kil=kaliciKilit||!detayDuzenlemeAktif, ig=p.ad.includes("İŞ GELİŞTİRME");
+            document.getElementById('btnGlobalKilit').innerHTML=kaliciKilit?`<i class="fa-solid fa-lock text-rose-500 mr-2"></i>Firma kilitli`:`<i class="fa-solid fa-lock-open text-emerald-500 mr-2"></i>Firma kilidi açık`;
+            detayDuzenlemeDurumunuYansit(kaliciKilit);
             document.getElementById('genelFirmaAciklama').value=f.bilgi.projeNotu||''; kil?document.getElementById('genelFirmaAciklama').setAttribute('readonly',true):document.getElementById('genelFirmaAciklama').removeAttribute('readonly');
             
-            if(p.tip==="istihdam"){document.getElementById('istihdamModulu').style.display='block';document.getElementById('standartOzetKartlari').style.display='none';document.getElementById('standartTablolarKapsayici').style.display='none';document.getElementById('krediKapsayiciBolumu').style.display='none';if(document.getElementById('kutuDosyaBtn'))document.getElementById('kutuDosyaBtn').style.display=kil?'none':'block';const manuelAraclar=document.getElementById('istihdamManuelAraclar');if(manuelAraclar){manuelAraclar.classList.toggle('hidden',!manuelIstihdamDuzenlemeAktif(p));manuelAraclar.classList.toggle('flex',manuelIstihdamDuzenlemeAktif(p));}const tabloBtn=document.getElementById('kutuIstihdamTabloBtn');if(tabloBtn)tabloBtn.style.display=kil?'none':'';renderIstihdamTables();return;}
+            if(p.tip==="istihdam"){document.getElementById('istihdamModulu').style.display='block';document.getElementById('standartOzetKartlari').style.display='none';document.getElementById('standartTablolarKapsayici').style.display='none';document.getElementById('krediKapsayiciBolumu').style.display='none';if(document.getElementById('kutuDosyaBtn'))document.getElementById('kutuDosyaBtn').style.display=kil?'none':'block';const manuelAraclar=document.getElementById('istihdamManuelAraclar');if(manuelAraclar){manuelAraclar.classList.toggle('hidden',!manuelIstihdamDuzenlemeAktif(p));manuelAraclar.classList.toggle('flex',manuelIstihdamDuzenlemeAktif(p));}const tabloBtn=document.getElementById('kutuIstihdamTabloBtn');if(tabloBtn)tabloBtn.style.display=kil?'none':'';renderIstihdamTables();detaySekmeleriniHazirla(p.tip);return;}
             else{document.getElementById('istihdamModulu').style.display='none';document.getElementById('standartOzetKartlari').style.display='grid';document.getElementById('standartTablolarKapsayici').style.display='grid';document.getElementById('krediKapsayiciBolumu').style.display='block';}
 
             document.getElementById('standartOzetKartlari').innerHTML = `
@@ -2514,11 +2738,12 @@
                 kA.innerHTML+=kh;
             });
 
-            requestAnimationFrame(()=>setTimeout(()=>{if(!kil)hesaplamalariYap();},50));
+            detaySekmeleriniHazirla(p.tip);
+            requestAnimationFrame(()=>setTimeout(()=>{hesaplamalariYap();},50));
         }
 
         function yeniKrediTablosuEkle() {
-            if(!guncelProjeID || !guncelFirmaID) return; const f = MASTER_DATA.projeler[guncelProjeID].firmalar[guncelFirmaID]; if(f.bilgi.kilitli) return;
+            if(!guncelProjeID || !guncelFirmaID) return; const f = MASTER_DATA.projeler[guncelProjeID].firmalar[guncelFirmaID]; if(f.bilgi.kilitli||!detayDuzenlemeAktif) return;
             if(!f.krediTablolar) f.krediTablolar = [];
             f.krediTablolar.push({ id: "kt_" + uID(), baslik: "Yeni Finansman Tablosu", veriler: [{ id: uID(), tarih: new Date().toLocaleDateString('tr-TR'), anapara: 0, faiz: 0, destek: 0, not: "-", durum: "Ödenmedi" }] });
             renderTables(); otomatikKaydet(true);
@@ -2564,9 +2789,10 @@
             if(ap) { ap.innerHTML=''; }
         }
         
-        function satirEkle(tp,id=null){const f=MASTER_DATA.projeler[guncelProjeID].firmalar[guncelFirmaID];if(f.bilgi.kilitli)return;if(tp==='gider')f.giderler.push({id:uID(),ad:"",miktar:"",birim:"",birimFiyat:0,tutar:0,fatura:0,gerceklesme:"Bekliyor",oran:75});if(tp==='rapor'){let st=f.raporlar.length>0?f.raporlar[f.raporlar.length-1].tarih:'';f.raporlar.push({id:uID(),no:"",aciklama:"",tarih:ucAyEkle(st),durum:"Bekliyor"});}if(tp==='kredi'){let tb=f.krediTablolar.find(t=>t.id===id);let st=tb.veriler.length>0?tb.veriler[tb.veriler.length-1].tarih:'';tb.veriler.push({id:uID(),tarih:ucAyEkle(st),anapara:0,faiz:0,destek:0,not:"",durum:"Ödenmedi"});}renderTables();otomatikKaydet(true);}
+        function satirEkle(tp,id=null){const f=MASTER_DATA.projeler[guncelProjeID].firmalar[guncelFirmaID];if(f.bilgi.kilitli||!detayDuzenlemeAktif)return;if(tp==='gider')f.giderler.push({id:uID(),ad:"",miktar:"",birim:"",birimFiyat:0,tutar:0,fatura:0,gerceklesme:"Bekliyor",oran:75});if(tp==='rapor'){let st=f.raporlar.length>0?f.raporlar[f.raporlar.length-1].tarih:'';f.raporlar.push({id:uID(),no:"",aciklama:"",tarih:ucAyEkle(st),durum:"Bekliyor"});}if(tp==='kredi'){let tb=f.krediTablolar.find(t=>t.id===id);let st=tb.veriler.length>0?tb.veriler[tb.veriler.length-1].tarih:'';tb.veriler.push({id:uID(),tarih:ucAyEkle(st),anapara:0,faiz:0,destek:0,not:"",durum:"Ödenmedi"});}renderTables();otomatikKaydet(true);}
         async function satirSil(tp,sid,tid=null){
             const projeID=guncelProjeID,firmaID=guncelFirmaID,f=MASTER_DATA.projeler?.[projeID]?.firmalar?.[firmaID];if(!f||f.bilgi.kilitli)return;
+            if(detayDegisiklikVar){showToast('Silmeden önce değişiklikleri kaydedin veya geri alın.','info');return;}
             const turler={dosya:{alan:'dosyalar',kategori:'dosyalar',etiket:'Dosya kaydı'},gider:{alan:'giderler',kategori:'giderler',etiket:'Harcama kalemi'},rapor:{alan:'raporlar',kategori:'raporlar',etiket:'Rapor satırı'}};
             let bilgi=turler[tp],liste,indeks,kayit,aktifYol,copEk={};
             if(tp==='kredi'){
@@ -2586,7 +2812,7 @@
                 const kalan=liste.filter((_,index)=>index!==indeks);
                 await altKaydiGuvenliSil(bilgi.kategori,bilgi.etiket,aktifYol,kalan,{projeID,firmaID,...copEk,originalID:kayit.id,originalIndex:indeks,kayit});
                 if(tp==='kredi')f.krediTablolar.find(t=>t.id===tid).veriler=kalan;else f[bilgi.alan]=kalan;
-                renderTables();teminatBildirimleriniGuncelle(false);showToast(`${bilgi.etiket} Çöp Kutusu'na taşındı`,'info');
+                detayGeriAlYedegi=cloneData(f);renderTables();teminatBildirimleriniGuncelle(false);showToast(`${bilgi.etiket} Çöp Kutusu'na taşındı`,'info');
             }catch(error){console.error(error);showToast(`${bilgi.etiket} silinemedi; veri korunuyor`,'error');}
         }
         async function tabloSil(id){
@@ -2594,6 +2820,7 @@
             const firmaID = guncelFirmaID;
             const firma = MASTER_DATA.projeler?.[projeID]?.firmalar?.[firmaID];
             if(!firma || firma.bilgi?.kilitli) return;
+            if(detayDegisiklikVar){showToast('Silmeden önce değişiklikleri kaydedin veya geri alın.','info');return;}
 
             const tablolar = Array.isArray(firma.krediTablolar) ? firma.krediTablolar : [];
             const silinenTablo = tablolar.find(tablo => tablo.id === id);
@@ -2611,7 +2838,7 @@
             try {
                 await finansmanTablosunuGuvenliSil(projeID, firmaID, id, silinenTablo, kalanTablolar);
                 const guncelFirma = MASTER_DATA.projeler?.[projeID]?.firmalar?.[firmaID];
-                if(guncelFirma) guncelFirma.krediTablolar = kalanTablolar;
+                if(guncelFirma){guncelFirma.krediTablolar = kalanTablolar;detayGeriAlYedegi=cloneData(guncelFirma);}
                 renderTables();
                 showToast("Yalnızca seçili finansman tablosu silindi.", "info");
             } catch(error) {
@@ -2873,6 +3100,7 @@
             const firmaID = guncelFirmaID;
             const firma = MASTER_DATA.projeler?.[projeID]?.firmalar?.[firmaID];
             if(!firma) return;
+            if(detayDegisiklikVar){showToast('Dosya yüklemeden önce değişiklikleri kaydedin veya geri alın.','info');return;}
 
             const loader = document.getElementById('loader');
             loader.style.display = 'flex';
@@ -2899,6 +3127,7 @@
                     await storageSdk.deleteObject(hedef).catch(() => undefined);
                     throw error;
                 }
+                if(detayDuzenlemeAktif)detayGeriAlYedegi=cloneData(firma);
                 renderTables();
                 showToast("Dosya Firebase Storage'a yüklendi");
             } catch(error) {
