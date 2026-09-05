@@ -302,7 +302,7 @@
         };
         const FIREBASE_SDK_VERSION = "12.18.0";
         const DATA_ROOT = "kobiPanel";
-        const APP_VERSION = "2026.09.05-cop-kutusu-hedefler";
+        const APP_VERSION = "2026.09.05-hedef-basliklari";
         const TEMINAT_BILDIRIM_EPOSTASI = "info@kobiproje.com.tr";
         // Bunlar uygulamaya özel ortak Firebase hesabının AÇIK kimlik bilgileridir.
         // Ortak şifre burada veya başka bir uygulama dosyasında ASLA tutulmaz.
@@ -369,6 +369,11 @@
             'ÖT DEĞERLENDİRME AŞAMASINDA', 'ÖDEME TALEBİ YAPILACAK', 'ÖDEME TALEBİ ONAYLANDI', 'ÖDEME TALEBİ OLURA BAĞLANDI',
             'GO DİJİTAL CÜZDAN HESABI BEKLENİYOR', 'TAMAMLANDI', 'İPTAL'
         ];
+        const varsayilanIstihdamHedefBasliklari = Object.freeze({
+            donem: 'Bir dönemde sağlanması gereken asgari SGK prim gün sayısı',
+            turk: 'T.C. vatandaşı sağlanması gereken asgari prim gün sayısı',
+            gkasUksk: 'GKAS veya UKSK vatandaşı sağlanması gereken asgari prim gün sayısı'
+        });
         const varsayilanGiderSutunlari = (isGelistirme = false) => [
             {id:'no',ad:'NO',width:'60px'}, {id:'ad',ad:'GİDER ADI',width:'250px'},
             {id:'miktar',ad:'MİKTAR',width:'90px'}, {id:'birim',ad:'BİRİM',width:'90px'},
@@ -571,7 +576,8 @@
                 ad: proje.ad,
                 tip: proje.tip,
                 sutunlar: proje.sutunlar || [],
-                giderSutunlari: proje.giderSutunlari || []
+                giderSutunlari: proje.giderSutunlari || [],
+                istihdamHedefBasliklari: proje.istihdamHedefBasliklari || varsayilanIstihdamHedefBasliklari
             });
             return kuyrugaEkle("Proje ayarları", ({ db, databaseSdk }) =>
                 databaseSdk.update(databaseSdk.ref(db, `${DATA_ROOT}/projeler/${projeID}`), patch)
@@ -1328,6 +1334,11 @@
                 if(!p.firmalar || typeof p.firmalar !== 'object') p.firmalar={};
                 p.sutunlar = guvenliNesneDizisi(p.sutunlar);
                 if(p.sutunlar.length === 0) p.sutunlar=JSON.parse(JSON.stringify(varsayilanSutunlar));
+                const mevcutHedefBasliklari = p.istihdamHedefBasliklari && typeof p.istihdamHedefBasliklari === 'object' ? p.istihdamHedefBasliklari : {};
+                p.istihdamHedefBasliklari = Object.fromEntries(Object.entries(varsayilanIstihdamHedefBasliklari).map(([alan,varsayilan]) => {
+                    const baslik = typeof mevcutHedefBasliklari[alan] === 'string' ? mevcutHedefBasliklari[alan].trim() : '';
+                    return [alan, baslik || varsayilan];
+                }));
 
                 Object.entries(p.firmalar).forEach(([firmaID, mevcutFirma]) => {
                     let f = mevcutFirma;
@@ -2009,7 +2020,6 @@
             document.querySelectorAll('.ist-donem-alt').forEach(el=>{if(f.istihdam[el.dataset.didx])f.istihdam[el.dataset.didx].altBaslik=el.value.trim();});
             document.querySelectorAll('.ist-ay-ad').forEach(el=>{const ay=f.istihdam[el.dataset.didx]?.aylar?.[el.dataset.aidx];if(ay)ay.ay=el.value.trim()||`Ay ${Number(el.dataset.aidx)+1}`;});
             document.querySelectorAll('.ist-hedef').forEach(el=>{if(f.istihdam[el.dataset.didx])f.istihdam[el.dataset.didx].hedef=parseFloat(el.value)||0;});
-            document.querySelectorAll('.ist-asgari-kisi').forEach(el=>{if(f.istihdam[el.dataset.didx])f.istihdam[el.dataset.didx].asgariPrimGunKisi=parseFloat(el.value)||0;});
             document.querySelectorAll('.ist-asgari-turk').forEach(el=>{if(f.istihdam[el.dataset.didx])f.istihdam[el.dataset.didx].asgariPrimGunTurk=parseFloat(el.value)||0;});
             document.querySelectorAll('.ist-asgari-gkas').forEach(el=>{if(f.istihdam[el.dataset.didx])f.istihdam[el.dataset.didx].asgariPrimGunGkasUksk=parseFloat(el.value)||0;});
             document.querySelectorAll('.ist-tutar').forEach(el=>{if(f.istihdam[el.dataset.didx])f.istihdam[el.dataset.didx].destekTutar=unformat(el.value);});document.querySelectorAll('.ist-t-gun').forEach(el=>{const ay=f.istihdam[el.dataset.didx]?.aylar?.[el.dataset.aidx];if(ay)ay.t_gun=el.value;});document.querySelectorAll('.ist-y-gun').forEach(el=>{const ay=f.istihdam[el.dataset.didx]?.aylar?.[el.dataset.aidx];if(ay)ay.y_gun=el.value;});document.querySelectorAll('.ist-f-gun').forEach(el=>{const ay=f.istihdam[el.dataset.didx]?.aylar?.[el.dataset.aidx];if(ay)ay.f_gun=el.value;});
@@ -2072,6 +2082,17 @@
             const f=istihdamDOMVerisiniOku();if(!f||f.bilgi.kilitli)return;
             renderIstihdamTables();clearTimeout(kayitZamanlayici);kayitZamanlayici=null;
             if(force) bulutaGonder(true, true); else kayitZamanlayici=setTimeout(()=>{kayitZamanlayici=null;bulutaGonder(true,true).catch(()=>undefined);},800);
+        }
+        async function istihdamHedefBasliginiGuncelle(alan,deger) {
+            const p=MASTER_DATA.projeler?.[guncelProjeID], f=istihdamDOMVerisiniOku();
+            if(!p||!f||f.bilgi.kilitli||!Object.prototype.hasOwnProperty.call(varsayilanIstihdamHedefBasliklari,alan))return;
+            const temizBaslik=(deger??'').toString().trim();
+            p.istihdamHedefBasliklari={...varsayilanIstihdamHedefBasliklari,...(p.istihdamHedefBasliklari||{})};
+            p.istihdamHedefBasliklari[alan]=temizBaslik||varsayilanIstihdamHedefBasliklari[alan];
+            renderIstihdamTables();
+            const sonuclar=await Promise.allSettled([firmaKaydet(guncelProjeID,guncelFirmaID),projeAyarlariKaydet(guncelProjeID)]);
+            if(sonuclar.some(sonuc=>sonuc.status==='rejected'))showToast('Hedef başlığı kaydedilemedi; internet bağlantısını kontrol edin','error');
+            else showToast('Hedef başlığı tüm dönem tablolarında güncellendi');
         }
         function istihdamDonemiEkle() {
             const p=MASTER_DATA.projeler?.[guncelProjeID], f=istihdamDOMVerisiniOku();if(!manuelIstihdamDuzenlemeAktif(p)||!f||f.bilgi.kilitli)return;
@@ -2186,20 +2207,16 @@
 
                 let hHata = tF < hg;
                 let dRozet = tF >= hg ? `<span class="badge bg-emerald-100 text-emerald-700 border-emerald-200">Hedef Tamam</span>` : `<span class="badge bg-rose-100 text-rose-700 border-rose-200">Eksik: ${hg - tF} Gün</span>`;
-                const personelAdedi=personeller.turk.length+personeller.gkasUksk.length, kisiOrtalamasi=personelAdedi?tF/personelAdedi:0;
                 const hedefKartlari=[
-                    {sinif:'ist-asgari-kisi',etiket:'Ödeme Döneminde Bir Personel İçin Sağlanması Gereken Asgari Prim Gün Sayısı',hedef:d.asgariPrimGunKisi||0,gerceklesen:kisiOrtalamasi,aciklama:personelAdedi?`Fiili ortalama: ${formatMoney(kisiOrtalamasi)} gün (${personelAdedi} personel)`:'Personel kaydı eklenmedi',ondalik:true},
-                    {sinif:'ist-asgari-turk',etiket:'T.C. Vatandaşı Sağlanması Gereken Asgari Prim Gün Sayısı',hedef:d.asgariPrimGunTurk||0,gerceklesen:tT,aciklama:`Türk fiili toplamı: ${formatMoney(tT)} gün`},
-                    {sinif:'ist-asgari-gkas',etiket:'GKAS veya UKSK Vatandaşı Sağlanması Gereken Asgari Prim Gün Sayısı',hedef:d.asgariPrimGunGkasUksk||0,gerceklesen:tY,aciklama:`GKAS / UKSK fiili toplamı: ${formatMoney(tY)} gün`}
+                    {alan:'donem',sinif:'ist-hedef',etiket:p.istihdamHedefBasliklari.donem,hedef:d.hedef||0,gerceklesen:tF,aciklama:`Fiili toplam: ${formatMoney(tF)} gün`,ondalik:true},
+                    {alan:'turk',sinif:'ist-asgari-turk',etiket:p.istihdamHedefBasliklari.turk,hedef:d.asgariPrimGunTurk||0,gerceklesen:tT,aciklama:`Türk fiili toplamı: ${formatMoney(tT)} gün`},
+                    {alan:'gkasUksk',sinif:'ist-asgari-gkas',etiket:p.istihdamHedefBasliklari.gkasUksk,hedef:d.asgariPrimGunGkasUksk||0,gerceklesen:tY,aciklama:`GKAS / UKSK fiili toplamı: ${formatMoney(tY)} gün`}
                 ];
 
                 html += `<div class="glass-card mb-8 p-0 overflow-hidden border-2 ${hHata ? 'border-amber-100' : 'border-emerald-100'}">
                     <div class="bg-indigo-500 p-4 flex flex-col lg:flex-row lg:justify-between lg:items-center gap-3">
                         ${manuel?`<div class="flex flex-1 flex-col sm:flex-row gap-2"><input type="text" class="ist-donem-ad bg-indigo-600/40 border border-indigo-300 rounded-lg px-3 py-2 text-sm font-black uppercase text-white tracking-widest" data-didx="${i}" value="${escapeHTML(d.ad||`${i+1}. DÖNEM`)}" onchange="istihdamVeriKaydet()" ${kil?'readonly':''}><input type="text" class="ist-donem-alt bg-indigo-600/30 border border-indigo-300 rounded-lg px-3 py-2 text-xs font-bold text-indigo-50 min-w-[240px]" data-didx="${i}" value="${escapeHTML(d.altBaslik??(i===0?'Şubat - Mayıs 2026':''))}" placeholder="Dönem tarih aralığı" onchange="istihdamVeriKaydet()" ${kil?'readonly':''}></div>`:`<h3 class="text-sm font-black uppercase text-white tracking-widest">${escapeHTML(d.ad||'')} <span class="text-indigo-100 ml-2 text-[10px] font-normal">${i===0 ? '(Şubat - Mayıs 2026)' : ''}</span></h3>`}
-                        <div class="flex items-center gap-2"><div class="flex items-center gap-3 bg-indigo-600/50 px-3 py-1.5 rounded-lg border border-indigo-400">
-                            <label class="text-[10px] font-black text-indigo-100 uppercase">GENEL HEDEF:</label>
-                            <input type="number" class="bg-transparent w-16 text-center text-white font-black ist-hedef outline-none" data-didx="${i}" value="${d.hedef}" onchange="istihdamVeriKaydet()" ${kil ? 'readonly' : ''}>
-                        </div>${manuel&&!kil?`<button onclick="istihdamDonemiSil(${i})" class="bg-white/10 hover:bg-rose-600 text-white border border-white/30 rounded-lg px-3 py-2 text-xs font-bold" title="Tabloyu sil"><i class="fa-solid fa-trash-can"></i></button>`:''}</div>
+                        ${manuel&&!kil?`<button onclick="istihdamDonemiSil(${i})" class="bg-white/10 hover:bg-rose-600 text-white border border-white/30 rounded-lg px-3 py-2 text-xs font-bold" title="Tabloyu sil"><i class="fa-solid fa-trash-can"></i></button>`:''}
                     </div>
                     <table class="w-full text-sm text-left">
                         <thead>
@@ -2213,7 +2230,7 @@
                         <tbody class="divide-y divide-slate-100">${ah}</tbody>
                     </table>
                     <div class="grid grid-cols-1 xl:grid-cols-3 gap-3 p-4 bg-white border-t border-slate-100">
-                        ${hedefKartlari.map(kart=>`<div class="rounded-xl border border-indigo-100 bg-indigo-50/40 p-4"><label class="block min-h-[42px] text-[10px] leading-relaxed font-black uppercase tracking-wide text-slate-600">${kart.etiket}</label><div class="mt-3 flex items-center gap-2"><input type="number" min="0" step="1" class="${kart.sinif} w-28 rounded-lg border border-indigo-200 bg-white px-3 py-2 text-center font-black text-indigo-700" data-didx="${i}" value="${kart.hedef||''}" placeholder="Hedef" onchange="istihdamVeriKaydet()" ${kil?'readonly':''}>${istihdamHedefRozeti(kart.gerceklesen,kart.hedef,kart.ondalik)}</div><p class="mt-2 text-[10px] font-bold text-slate-400">${kart.aciklama}</p></div>`).join('')}
+                        ${hedefKartlari.map(kart=>`<div class="rounded-xl border border-indigo-100 bg-indigo-50/40 p-4"><textarea rows="2" class="block min-h-[48px] w-full resize-none rounded-lg border border-transparent bg-transparent px-2 py-1 text-[10px] leading-relaxed font-black uppercase tracking-wide text-slate-600 hover:border-indigo-200 focus:border-indigo-300 focus:bg-white focus:outline-none" aria-label="Hedef başlığı" title="Bu başlık aynı projenin tüm dönem tablolarında kullanılır" onchange="istihdamHedefBasliginiGuncelle('${kart.alan}',this.value)" ${kil?'readonly':''}>${escapeHTML(kart.etiket)}</textarea><div class="mt-3 flex flex-wrap items-center gap-2"><input type="number" min="0" step="1" class="${kart.sinif} w-28 rounded-lg border border-indigo-200 bg-white px-3 py-2 text-center font-black text-indigo-700" data-didx="${i}" value="${kart.hedef||''}" placeholder="Hedef" onchange="istihdamVeriKaydet()" ${kil?'readonly':''}>${istihdamHedefRozeti(kart.gerceklesen,kart.hedef,kart.ondalik)}</div><p class="mt-2 text-[10px] font-bold text-slate-400">${kart.aciklama}</p></div>`).join('')}
                     </div>
                     <div class="p-4 bg-slate-50 border-t flex justify-between items-center">
                         <div class="flex gap-3 items-center">${dRozet}${manuel&&!kil?`<button onclick="istihdamAyiEkle(${i})" class="bg-white border border-indigo-200 text-indigo-700 hover:bg-indigo-50 rounded-lg px-3 py-2 text-xs font-bold"><i class="fa-solid fa-plus mr-1"></i>Ay Ekle</button>`:''}</div>
