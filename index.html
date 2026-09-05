@@ -289,7 +289,7 @@
         };
         const FIREBASE_SDK_VERSION = "12.18.0";
         const DATA_ROOT = "kobiPanel";
-        const APP_VERSION = "2026.09.04-revizyon2";
+        const APP_VERSION = "2026.09.05-personel-detay";
         const TEMINAT_BILDIRIM_EPOSTASI = "info@kobiproje.com.tr";
         // Bunlar uygulamaya özel ortak Firebase hesabının AÇIK kimlik bilgileridir.
         // Ortak şifre burada veya başka bir uygulama dosyasında ASLA tutulmaz.
@@ -1067,6 +1067,54 @@
             return adaylar.filter(item => item && typeof item === 'object');
         }
 
+        function yeniIstihdamPersoneli(adSoyad = '') {
+            return {
+                id: `per_${uID()}`,
+                tcKimlikNo: '',
+                adSoyad,
+                cinsiyet: '',
+                gencIstihdam: '',
+                istihdamTuru: '',
+                iseGirisTarihi: '',
+                istenCikisTarihi: '',
+                dogumTarihi: ''
+            };
+        }
+
+        function istihdamPersonelleriniYapilandir(firma) {
+            if(!firma || typeof firma !== 'object') return { turk: [], gkasUksk: [] };
+            if(!firma.bilgi || typeof firma.bilgi !== 'object') firma.bilgi = {};
+            if(!firma.istihdamPersonelleri || typeof firma.istihdamPersonelleri !== 'object' || Array.isArray(firma.istihdamPersonelleri)) {
+                firma.istihdamPersonelleri = {};
+            }
+
+            [['turk','personelTurk'], ['gkasUksk','personelYabanci']].forEach(([grup, eskiAlan]) => {
+                let liste = guvenliNesneDizisi(firma.istihdamPersonelleri[grup]);
+                if(liste.length === 0) {
+                    const eskiDeger = (firma.bilgi[eskiAlan] ?? '').toString().trim();
+                    if(/^\d{1,3}$/.test(eskiDeger)) {
+                        const adet = Math.min(100, Number(eskiDeger));
+                        liste = Array.from({ length: adet }, () => yeniIstihdamPersoneli());
+                    } else if(eskiDeger) {
+                        liste = eskiDeger.split(/\r?\n|;/).map(ad => ad.trim()).filter(Boolean).map(ad => yeniIstihdamPersoneli(ad));
+                    }
+                }
+                firma.istihdamPersonelleri[grup] = liste.map(personel => ({
+                    id: (personel.id || `per_${uID()}`).toString(),
+                    tcKimlikNo: (personel.tcKimlikNo || '').toString(),
+                    adSoyad: (personel.adSoyad || '').toString(),
+                    cinsiyet: (personel.cinsiyet || '').toString(),
+                    gencIstihdam: (personel.gencIstihdam || '').toString(),
+                    istihdamTuru: (personel.istihdamTuru || '').toString(),
+                    iseGirisTarihi: (personel.iseGirisTarihi || '').toString(),
+                    istenCikisTarihi: (personel.istenCikisTarihi || '').toString(),
+                    dogumTarihi: (personel.dogumTarihi || '').toString()
+                }));
+                firma.bilgi[eskiAlan] = String(firma.istihdamPersonelleri[grup].length);
+            });
+            return firma.istihdamPersonelleri;
+        }
+
         function veriYapilandir() {
             Object.entries(MASTER_DATA.projeler).forEach(([projeID, p]) => {
                 if(!p || typeof p !== 'object') return;
@@ -1087,6 +1135,7 @@
                     f.raporlar = guvenliNesneDizisi(f.raporlar);
                     f.istihdam = guvenliNesneDizisi(f.istihdam);
                     f.istihdam.forEach(donem => { donem.aylar = guvenliNesneDizisi(donem.aylar); });
+                    if(p.tip === 'istihdam') istihdamPersonelleriniYapilandir(f);
                     f.krediTablolar = guvenliNesneDizisi(f.krediTablolar);
                     f.krediTablolar.forEach(tablo => { tablo.veriler = guvenliNesneDizisi(tablo.veriler); });
                 });
@@ -1230,7 +1279,7 @@
         let suruklenenIndex=null,suruklenenTablo=null; function dragStart(e,i,t){suruklenenIndex=i;suruklenenTablo=t;e.target.classList.add('opacity-50');} function dragOver(e){e.preventDefault();} function drop(e,h,t){e.preventDefault();document.querySelectorAll('.opacity-50').forEach(el=>el.classList.remove('opacity-50'));if(suruklenenIndex===null||suruklenenIndex===h||suruklenenTablo!==t)return;let arr=t==='master'?DINAMIK_SUTUNLAR:MASTER_DATA.projeler[guncelProjeID].giderSutunlari;arr.splice(h,0,arr.splice(suruklenenIndex,1)[0]);if(document.getElementById('sutunModal').style.display==='flex')sutunMenusuAc(t);else{t==='master'?(MASTER_DATA.projeler[guncelProjeID].sutunlar=arr,renderMasterView()):(MASTER_DATA.projeler[guncelProjeID].giderSutunlari=arr,renderTables());projeAyarlariKaydet(guncelProjeID).catch(()=>undefined);}}
         function tabloSirala(k){sortKolon===k?sortArtan=!sortArtan:(sortKolon=k,sortArtan=true);renderMasterView();}
 
-        const getYeniFirma=(ad,tip="standart")=>{let tb={adi:ad,durum:"AKTİF",limitKosgeb:0,erken_odeme:0,erkenDurum:'Alınmadı',erkenKilit:true,teminatTutar:0,teminatVade:'',teminatDurum:'Alınmadı',kilitli:false,kimlikKilit:false,projeNotu:"",manuelDestek:0,sira:999};if(tip==="istihdam")return{bilgi:tb,dosyalar:[],istihdam:[{id:"ist_1",ad:"1. DÖNEM",hedef:120,aylar:[{ay:"Şubat",t_gun:0,y_gun:0,f_gun:0},{ay:"Mart",t_gun:0,y_gun:0,f_gun:0},{ay:"Nisan",t_gun:0,y_gun:0,f_gun:0},{ay:"Mayıs",t_gun:0,y_gun:0,f_gun:0}],destekTutar:0},{id:"ist_2",ad:"2. DÖNEM",hedef:120,aylar:[{ay:"Ay 1",t_gun:0,y_gun:0,f_gun:0},{ay:"Ay 2",t_gun:0,y_gun:0,f_gun:0},{ay:"Ay 3",t_gun:0,y_gun:0,f_gun:0},{ay:"Ay 4",t_gun:0,y_gun:0,f_gun:0}],destekTutar:0},{id:"ist_3",ad:"3. DÖNEM",hedef:120,aylar:[{ay:"Ay 1",t_gun:0,y_gun:0,f_gun:0},{ay:"Ay 2",t_gun:0,y_gun:0,f_gun:0},{ay:"Ay 3",t_gun:0,y_gun:0,f_gun:0},{ay:"Ay 4",t_gun:0,y_gun:0,f_gun:0}],destekTutar:0},{id:"ist_4",ad:"4. DÖNEM",hedef:120,aylar:[{ay:"Ay 1",t_gun:0,y_gun:0,f_gun:0},{ay:"Ay 2",t_gun:0,y_gun:0,f_gun:0},{ay:"Ay 3",t_gun:0,y_gun:0,f_gun:0},{ay:"Ay 4",t_gun:0,y_gun:0,f_gun:0}],destekTutar:0}]};else return{bilgi:tb,dosyalar:[],giderler:[{id:uID(),ad:"Yeni Kalem",miktar:"1",birim:"Adet",birimFiyat:0,tutar:0,fatura:0,gerceklesme:"Bekliyor",oran:75}],raporlar:[{id:uID(),no:"Başlangıç",aciklama:"",tarih:new Date().toLocaleDateString('tr-TR'),durum:"Bekliyor"}],krediTablolar:[{id:"kt_"+uID(),baslik:"Finansman Tablosu",veriler:[{id:uID(),tarih:new Date().toLocaleDateString('tr-TR'),anapara:0,faiz:0,destek:0,not:"-",durum:"Ödenmedi"}]}]};};
+        const getYeniFirma=(ad,tip="standart")=>{let tb={adi:ad,durum:"AKTİF",limitKosgeb:0,erken_odeme:0,erkenDurum:'Alınmadı',erkenKilit:true,teminatTutar:0,teminatVade:'',teminatDurum:'Alınmadı',kilitli:false,kimlikKilit:false,projeNotu:"",manuelDestek:0,sira:999};if(tip==="istihdam")return{bilgi:tb,dosyalar:[],istihdamPersonelleri:{turk:[],gkasUksk:[]},istihdam:[{id:"ist_1",ad:"1. DÖNEM",hedef:120,aylar:[{ay:"Şubat",t_gun:0,y_gun:0,f_gun:0},{ay:"Mart",t_gun:0,y_gun:0,f_gun:0},{ay:"Nisan",t_gun:0,y_gun:0,f_gun:0},{ay:"Mayıs",t_gun:0,y_gun:0,f_gun:0}],destekTutar:0},{id:"ist_2",ad:"2. DÖNEM",hedef:120,aylar:[{ay:"Ay 1",t_gun:0,y_gun:0,f_gun:0},{ay:"Ay 2",t_gun:0,y_gun:0,f_gun:0},{ay:"Ay 3",t_gun:0,y_gun:0,f_gun:0},{ay:"Ay 4",t_gun:0,y_gun:0,f_gun:0}],destekTutar:0},{id:"ist_3",ad:"3. DÖNEM",hedef:120,aylar:[{ay:"Ay 1",t_gun:0,y_gun:0,f_gun:0},{ay:"Ay 2",t_gun:0,y_gun:0,f_gun:0},{ay:"Ay 3",t_gun:0,y_gun:0,f_gun:0},{ay:"Ay 4",t_gun:0,y_gun:0,f_gun:0}],destekTutar:0},{id:"ist_4",ad:"4. DÖNEM",hedef:120,aylar:[{ay:"Ay 1",t_gun:0,y_gun:0,f_gun:0},{ay:"Ay 2",t_gun:0,y_gun:0,f_gun:0},{ay:"Ay 3",t_gun:0,y_gun:0,f_gun:0},{ay:"Ay 4",t_gun:0,y_gun:0,f_gun:0}],destekTutar:0}]};else return{bilgi:tb,dosyalar:[],giderler:[{id:uID(),ad:"Yeni Kalem",miktar:"1",birim:"Adet",birimFiyat:0,tutar:0,fatura:0,gerceklesme:"Bekliyor",oran:75}],raporlar:[{id:uID(),no:"Başlangıç",aciklama:"",tarih:new Date().toLocaleDateString('tr-TR'),durum:"Bekliyor"}],krediTablolar:[{id:"kt_"+uID(),baslik:"Finansman Tablosu",veriler:[{id:uID(),tarih:new Date().toLocaleDateString('tr-TR'),anapara:0,faiz:0,destek:0,not:"-",durum:"Ödenmedi"}]}]};};
 
         function teminatBildirimDepoAnahtari(tur, id) {
             return `kobiTeminat:${FIREBASE_CONFIG.projectId}:${SHARED_LOGIN_UID}:${tur}:${id}`;
@@ -1681,13 +1730,70 @@
         }
         function istihdamDOMVerisiniOku() {
             const f=MASTER_DATA.projeler?.[guncelProjeID]?.firmalar?.[guncelFirmaID]; if(!f||f.bilgi.kilitli)return f;
-            const turk=document.getElementById('ist_per_t'), yabanci=document.getElementById('ist_per_y'), aciklama=document.getElementById('ist_aciklama');
-            if(turk)f.bilgi.personelTurk=turk.value;if(yabanci)f.bilgi.personelYabanci=yabanci.value;if(aciklama)f.bilgi.istihdamAciklama=aciklama.value;
+            istihdamPersonelleriniYapilandir(f);
+            const aciklama=document.getElementById('ist_aciklama');
+            if(aciklama)f.bilgi.istihdamAciklama=aciklama.value;
+            document.querySelectorAll('.ist-personel-alan').forEach(el=>{
+                const liste=f.istihdamPersonelleri?.[el.dataset.grup], personel=liste?.[Number(el.dataset.pidx)];
+                if(!personel||!['tcKimlikNo','adSoyad','cinsiyet','gencIstihdam','istihdamTuru','iseGirisTarihi','istenCikisTarihi','dogumTarihi'].includes(el.dataset.alan))return;
+                personel[el.dataset.alan]=el.dataset.alan==='tcKimlikNo'?el.value.replace(/[^0-9]/g,'').slice(0,11):el.value.trim();
+            });
+            f.bilgi.personelTurk=String(f.istihdamPersonelleri.turk.length);
+            f.bilgi.personelYabanci=String(f.istihdamPersonelleri.gkasUksk.length);
             document.querySelectorAll('.ist-donem-ad').forEach(el=>{if(f.istihdam[el.dataset.didx])f.istihdam[el.dataset.didx].ad=el.value.trim()||`${Number(el.dataset.didx)+1}. DÖNEM`;});
             document.querySelectorAll('.ist-donem-alt').forEach(el=>{if(f.istihdam[el.dataset.didx])f.istihdam[el.dataset.didx].altBaslik=el.value.trim();});
             document.querySelectorAll('.ist-ay-ad').forEach(el=>{const ay=f.istihdam[el.dataset.didx]?.aylar?.[el.dataset.aidx];if(ay)ay.ay=el.value.trim()||`Ay ${Number(el.dataset.aidx)+1}`;});
             document.querySelectorAll('.ist-hedef').forEach(el=>{if(f.istihdam[el.dataset.didx])f.istihdam[el.dataset.didx].hedef=parseFloat(el.value)||0;});document.querySelectorAll('.ist-tutar').forEach(el=>{if(f.istihdam[el.dataset.didx])f.istihdam[el.dataset.didx].destekTutar=unformat(el.value);});document.querySelectorAll('.ist-t-gun').forEach(el=>{const ay=f.istihdam[el.dataset.didx]?.aylar?.[el.dataset.aidx];if(ay)ay.t_gun=el.value;});document.querySelectorAll('.ist-y-gun').forEach(el=>{const ay=f.istihdam[el.dataset.didx]?.aylar?.[el.dataset.aidx];if(ay)ay.y_gun=el.value;});document.querySelectorAll('.ist-f-gun').forEach(el=>{const ay=f.istihdam[el.dataset.didx]?.aylar?.[el.dataset.aidx];if(ay)ay.f_gun=el.value;});
             return f;
+        }
+        function istihdamPersoneliEkle(grup) {
+            const f=istihdamDOMVerisiniOku();if(!f||f.bilgi.kilitli||!['turk','gkasUksk'].includes(grup))return;
+            f.istihdamPersonelleri[grup].push(yeniIstihdamPersoneli());
+            f.bilgi[grup==='turk'?'personelTurk':'personelYabanci']=String(f.istihdamPersonelleri[grup].length);
+            renderIstihdamTables();
+            firmaKaydet(guncelProjeID,guncelFirmaID).then(()=>showToast('Personel satırı eklendi')).catch(()=>showToast('Personel satırı kaydedilemedi','error'));
+        }
+        function istihdamPersoneliSil(grup,pidx) {
+            const f=istihdamDOMVerisiniOku(), liste=f?.istihdamPersonelleri?.[grup], personel=liste?.[pidx];
+            if(!f||f.bilgi.kilitli||!personel)return;
+            if(!confirm(`“${personel.adSoyad||`${pidx+1}. personel`}” kaydı silinsin mi?`))return;
+            liste.splice(pidx,1);f.bilgi[grup==='turk'?'personelTurk':'personelYabanci']=String(liste.length);
+            renderIstihdamTables();
+            firmaKaydet(guncelProjeID,guncelFirmaID).then(()=>showToast('Personel kaydı silindi','info')).catch(()=>showToast('Personel kaydı silinemedi','error'));
+        }
+        function istihdamPersonelSecenekleri(deger,secenekler) {
+            return `<option value="">Seçiniz</option>`+secenekler.map(secenek=>`<option value="${escapeHTML(secenek)}" ${deger===secenek?'selected':''}>${escapeHTML(secenek)}</option>`).join('');
+        }
+        function istihdamPersonelTablosuHTML(f,grup,kil) {
+            const liste=f.istihdamPersonelleri?.[grup]||[], turk=grup==='turk',
+                  baslik=turk?'İstihdam Edilen Türk Vatandaşı Personel Bilgileri':'İstihdam Edilen GKAS veya UKSK Personel Bilgileri',
+                  kimlikBasligi=turk?'T.C. Kimlik No':'T.C. / Yabancı Kimlik No',
+                  vurgu=turk?'bg-indigo-50 border-indigo-200 text-indigo-800':'bg-cyan-50 border-cyan-200 text-cyan-800';
+            const satirlar=liste.length?liste.map((personel,i)=>`<tr class="border-t border-slate-100 hover:bg-slate-50/70">
+                    <td class="text-center font-black text-slate-400 bg-slate-50">${i+1}</td>
+                    <td class="p-1"><input type="text" inputmode="numeric" maxlength="11" autocomplete="off" aria-label="${escapeHTML(baslik)} ${i+1}. satır kimlik numarası" class="ist-personel-alan w-full min-w-[145px] rounded-lg border border-slate-200 bg-white px-2 py-2 font-mono text-sm font-bold text-slate-700" data-grup="${grup}" data-pidx="${i}" data-alan="tcKimlikNo" value="${escapeHTML(personel.tcKimlikNo)}" oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,11)" onchange="istihdamVeriKaydet()" ${kil?'readonly':''}></td>
+                    <td class="p-1"><input type="text" autocomplete="off" aria-label="${escapeHTML(baslik)} ${i+1}. satır ad soyad" class="ist-personel-alan w-full min-w-[220px] rounded-lg border border-slate-200 bg-white px-2 py-2 text-sm font-bold uppercase text-slate-800" data-grup="${grup}" data-pidx="${i}" data-alan="adSoyad" value="${escapeHTML(personel.adSoyad)}" onchange="istihdamVeriKaydet()" ${kil?'readonly':''}></td>
+                    <td class="p-1"><select aria-label="${escapeHTML(baslik)} ${i+1}. satır cinsiyet" class="ist-personel-alan w-full min-w-[110px] rounded-lg border border-slate-200 bg-white px-2 py-2 text-sm font-bold text-slate-700" data-grup="${grup}" data-pidx="${i}" data-alan="cinsiyet" onchange="istihdamVeriKaydet()" ${kil?'disabled':''}>${istihdamPersonelSecenekleri(personel.cinsiyet,['Kadın','Erkek'])}</select></td>
+                    <td class="p-1"><select aria-label="${escapeHTML(baslik)} ${i+1}. satır genç istihdam" class="ist-personel-alan w-full min-w-[105px] rounded-lg border border-slate-200 bg-white px-2 py-2 text-sm font-bold text-slate-700" data-grup="${grup}" data-pidx="${i}" data-alan="gencIstihdam" onchange="istihdamVeriKaydet()" ${kil?'disabled':''}>${istihdamPersonelSecenekleri(personel.gencIstihdam,['Evet','Hayır'])}</select></td>
+                    <td class="p-1"><select aria-label="${escapeHTML(baslik)} ${i+1}. satır istihdam türü" class="ist-personel-alan w-full min-w-[115px] rounded-lg border border-slate-200 bg-white px-2 py-2 text-sm font-bold text-slate-700" data-grup="${grup}" data-pidx="${i}" data-alan="istihdamTuru" onchange="istihdamVeriKaydet()" ${kil?'disabled':''}>${istihdamPersonelSecenekleri(personel.istihdamTuru,['Yeni','Mevcut'])}</select></td>
+                    <td class="p-1"><input type="date" aria-label="${escapeHTML(baslik)} ${i+1}. satır işe giriş tarihi" class="ist-personel-alan w-full min-w-[150px] rounded-lg border border-slate-200 bg-white px-2 py-2 font-mono text-sm font-bold text-slate-700" data-grup="${grup}" data-pidx="${i}" data-alan="iseGirisTarihi" value="${escapeHTML(personel.iseGirisTarihi)}" onchange="istihdamVeriKaydet()" ${kil?'readonly':''}></td>
+                    <td class="p-1"><input type="date" aria-label="${escapeHTML(baslik)} ${i+1}. satır işten çıkış tarihi" class="ist-personel-alan w-full min-w-[150px] rounded-lg border border-slate-200 bg-white px-2 py-2 font-mono text-sm font-bold text-slate-700" data-grup="${grup}" data-pidx="${i}" data-alan="istenCikisTarihi" value="${escapeHTML(personel.istenCikisTarihi)}" onchange="istihdamVeriKaydet()" ${kil?'readonly':''}></td>
+                    <td class="p-1"><input type="date" aria-label="${escapeHTML(baslik)} ${i+1}. satır doğum tarihi" class="ist-personel-alan w-full min-w-[150px] rounded-lg border border-slate-200 bg-white px-2 py-2 font-mono text-sm font-bold text-slate-700" data-grup="${grup}" data-pidx="${i}" data-alan="dogumTarihi" value="${escapeHTML(personel.dogumTarihi)}" onchange="istihdamVeriKaydet()" ${kil?'readonly':''}></td>
+                    <td class="w-12 text-center">${kil?'':`<button onclick="istihdamPersoneliSil('${grup}',${i})" class="p-2 text-slate-300 hover:text-rose-600" title="Personel kaydını sil"><i class="fa-solid fa-trash-can"></i></button>`}</td>
+                </tr>`).join(''):`<tr><td colspan="10" class="px-4 py-8 text-center text-sm font-semibold text-slate-400">Henüz personel kaydı eklenmedi.</td></tr>`;
+            return `<section class="glass-card mb-6 overflow-hidden border ${turk?'border-indigo-100':'border-cyan-100'}">
+                <div class="${vurgu} flex flex-col gap-3 border-b px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div><h3 class="text-sm font-black uppercase tracking-wide">${baslik}</h3><p class="mt-1 text-xs font-semibold opacity-70">${liste.length} personel kaydı</p></div>
+                    ${kil?'':`<button onclick="istihdamPersoneliEkle('${grup}')" class="rounded-lg bg-white px-4 py-2 text-xs font-black shadow-sm ring-1 ring-black/5 hover:bg-slate-50"><i class="fa-solid fa-user-plus mr-1.5"></i>Personel Ekle</button>`}
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left" style="min-width:1320px">
+                        <thead><tr class="bg-slate-100 text-[10px] font-black uppercase tracking-wide text-slate-500">
+                            <th class="w-12 px-2 py-3 text-center">No</th><th class="px-2 py-3">${kimlikBasligi}</th><th class="px-2 py-3">Adı Soyadı</th><th class="px-2 py-3">Cinsiyet</th><th class="px-2 py-3">Genç İstihdam</th><th class="px-2 py-3">İstihdam Türü</th><th class="px-2 py-3">İşe Giriş Tarihi</th><th class="px-2 py-3">İşten Çıkış Tarihi</th><th class="px-2 py-3">Doğum Tarihi</th><th class="w-12"></th>
+                        </tr></thead><tbody>${satirlar}</tbody>
+                    </table>
+                </div>
+            </section>`;
         }
         function istihdamVeriKaydet(force = false){
             const f=istihdamDOMVerisiniOku();if(!f||f.bilgi.kilitli)return;
@@ -1732,6 +1838,7 @@
                 });
             }
 
+            const personeller=istihdamPersonelleriniYapilandir(f);
             let tOde = f.istihdam.reduce((s, d) => s + (parseFloat(d.destekTutar) || 0), 0);
             
             let html = `<div class="glass-card bg-emerald-50 border border-emerald-100 p-6 flex justify-between items-center mb-6">
@@ -1744,11 +1851,16 @@
                 </div>
             </div>`;
 
+            html += `<div class="mb-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div class="glass-card border-l-4 border-indigo-500 p-5"><div class="text-[10px] font-black uppercase tracking-widest text-slate-400">Türk Vatandaşı Personel</div><div class="mt-1 text-3xl font-black text-indigo-700">${personeller.turk.length}</div></div>
+                <div class="glass-card border-l-4 border-cyan-500 p-5"><div class="text-[10px] font-black uppercase tracking-widest text-slate-400">GKAS / UKSK Personel</div><div class="mt-1 text-3xl font-black text-cyan-700">${personeller.gkasUksk.length}</div></div>
+            </div>`;
+
+            html += `<div class="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs font-semibold text-amber-800"><i class="fa-solid fa-shield-halved mr-2"></i>Bu bölüm kimlik ve doğum tarihi gibi kişisel veriler içerir. Bilgileri yalnızca yetkili kullanıcılarla paylaşın.</div>`;
+            html += istihdamPersonelTablosuHTML(f,'turk',kil);
+            html += istihdamPersonelTablosuHTML(f,'gkasUksk',kil);
+
             html += `<div class="glass-card mb-6 p-5">
-                <div class="grid grid-cols-2 gap-5 mb-5">
-                    <div><label class="text-[10px] font-black text-slate-400 uppercase">Türk Personel Sayısı</label><input type="text" id="ist_per_t" class="input-transparent w-full border mt-1" value="${f.bilgi.personelTurk || ''}" onchange="istihdamVeriKaydet()" ${kil ? 'readonly' : ''}></div>
-                    <div><label class="text-[10px] font-black text-slate-400 uppercase">Yabancı Personel Sayısı</label><input type="text" id="ist_per_y" class="input-transparent w-full border mt-1" value="${f.bilgi.personelYabanci || ''}" onchange="istihdamVeriKaydet()" ${kil ? 'readonly' : ''}></div>
-                </div>
                 <label class="text-[10px] font-black text-slate-400 uppercase">Proje Notları</label>
                 <textarea id="ist_aciklama" rows="2" class="input-transparent w-full border mt-1" onchange="istihdamVeriKaydet()" ${kil ? 'readonly' : ''}>${f.bilgi.istihdamAciklama || ''}</textarea>
             </div>`;
