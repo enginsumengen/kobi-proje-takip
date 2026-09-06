@@ -46,6 +46,9 @@
         .toast-exit { transform: translateX(100%); opacity: 0; transition: all 0.3s ease-in; }
         .project-card { border: 1px solid #e2e8f0; transition: all 0.3s; cursor: pointer; }
         .project-card:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.05); border-color: #cbd5e1; }
+        .project-color-picker { position: relative; overflow: hidden; }
+        .project-color-picker input[type="color"] { position: absolute; inset: -8px; width: calc(100% + 16px); height: calc(100% + 16px); padding: 0; border: 0; opacity: 0; cursor: pointer; }
+        .auto-grow-textarea { min-height: 96px; overflow-y: hidden; resize: vertical; line-height: 1.55; }
         .login-bg { background: #0f172a; position: fixed; inset: 0; z-index: 99998; display: flex; justify-content: center; align-items: center; }
         
         #floatingSync { position: fixed; bottom: 30px; right: 30px; z-index: 9999; background: white; padding: 10px 18px; border-radius: 9999px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; display: flex; align-items: center; gap: 8px; transition: all 0.4s; opacity: 0; transform: translateY(30px); pointer-events: none; }
@@ -234,20 +237,6 @@
             <div class="mb-5 lg:mb-0"><h1 class="text-2xl font-black tracking-tight text-slate-800 flex items-center"><div class="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center mr-3"><i class="fa-solid fa-infinity text-indigo-600 text-sm"></i></div>KOBİ<span class="font-light text-slate-500 ml-1">Proje Takip Paneli</span></h1></div>
             <div class="flex flex-wrap justify-center gap-2"><button onclick="cikisYap()" class="text-slate-400 hover:text-rose-500 bg-slate-50 hover:bg-rose-50 font-bold py-2.5 px-4 rounded-lg transition text-sm border border-slate-200"><i class="fa-solid fa-power-off mr-2"></i>Çıkış</button><button onclick="verileriYenile()" class="text-slate-500 hover:text-indigo-600 bg-slate-50 hover:bg-indigo-50 font-bold py-2.5 px-4 rounded-lg border border-slate-200 transition" title="Buluttan yeniden yükle"><i class="fa-solid fa-cloud-arrow-down text-base"></i></button><button onclick="teminatBildirimModaliniAc()" class="relative text-fuchsia-700 bg-fuchsia-50 hover:bg-fuchsia-100 border border-fuchsia-100 font-bold py-2.5 px-4 rounded-lg transition text-xs"><i class="fa-solid fa-bell mr-2"></i>Bildirimler <span id="teminatBildirimRozeti" class="notification-badge absolute -right-2 -top-2 min-w-5 h-5 px-1 rounded-full bg-rose-600 text-white text-[10px] flex items-center justify-center"></span></button><button onclick="copKutusunuAc()" class="text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-100 font-bold py-2.5 px-4 rounded-lg transition text-xs"><i class="fa-solid fa-trash-arrow-up mr-2"></i>Çöp Kutusu</button><button onclick="uzmanRehberiAc()" class="text-cyan-700 bg-cyan-50 hover:bg-cyan-100 border border-cyan-100 font-bold py-2.5 px-4 rounded-lg transition text-xs"><i class="fa-solid fa-address-book mr-2"></i>KOSGEB Uzman Rehberi</button><button onclick="jsonIndir()" class="text-indigo-600 bg-indigo-50 hover:bg-indigo-100 border border-indigo-100 font-bold py-2.5 px-4 rounded-lg transition text-xs"><i class="fa-solid fa-download mr-2"></i>JSON İndir</button><input type="file" id="jsonDosyaSec" class="hidden" accept=".json,application/json" onchange="jsonYukle(event)"><button onclick="document.getElementById('jsonDosyaSec').click()" class="text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-100 font-bold py-2.5 px-4 rounded-lg transition text-xs"><i class="fa-solid fa-upload mr-2"></i>JSON Yükle</button><button onclick="yeniAnaProjeEkle()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-2.5 px-5 rounded-lg shadow-sm transition flex items-center text-sm"><i class="fa-solid fa-folder-plus mr-2 text-slate-300"></i> Yeni Proje Klasörü</button></div>
         </header>
-        <section id="gorevMerkezi" class="mb-5 rounded-2xl border border-slate-200 bg-slate-50/70 p-5 shadow-sm" aria-labelledby="gorevMerkeziBaslik">
-            <div class="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                <div><h2 id="gorevMerkeziBaslik" class="text-lg font-black text-slate-800"><i class="fa-solid fa-list-check mr-2 text-indigo-500"></i>Görev Merkezi</h2><p class="mt-1 text-xs font-semibold text-slate-500">Bir kutu seçin; yalnızca o gruptaki işler gösterilsin.</p></div>
-                <button onclick="teminatBildirimModaliniAc()" class="rounded-lg border border-indigo-200 bg-white px-4 py-2 text-xs font-black text-indigo-700 hover:bg-indigo-50">Tüm bildirimleri aç</button>
-            </div>
-            <div id="gorevMerkeziKartlari" class="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-5"></div>
-            <div class="mt-4 flex flex-wrap items-center justify-between gap-2">
-                <p id="gorevMerkeziListeBasligi" class="text-sm font-black text-slate-700"></p>
-                <button id="gorevTumunuGosterBtn" onclick="gorevFiltresiAyarla('tumu')" class="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-black text-slate-600 hover:bg-slate-50">Tüm türleri göster</button>
-            </div>
-            <div id="gorevMerkeziListesi" class="mt-3 grid grid-cols-1 gap-2"></div>
-            <div id="gorevDahaFazlaAlani" class="mt-3 text-center"></div>
-            <div id="gorevGeriAlCubugu" class="mt-3 hidden items-center justify-between gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs font-bold text-amber-800"><span>Görev, Görev Merkezi'nden kaldırıldı. Firma kaydı değişmedi.</span><button onclick="gorevKaldirmayiGeriAl()" class="rounded-lg bg-white px-3 py-2 text-amber-800 shadow-sm ring-1 ring-amber-200"><i class="fa-solid fa-rotate-left mr-1.5"></i>Geri Al</button></div>
-        </section>
         <section id="uzmanRehberiOzetKarti" onclick="uzmanRehberiAc()" class="mb-5 bg-gradient-to-r from-cyan-50 to-sky-50 border border-cyan-200 rounded-2xl p-5 cursor-pointer hover:shadow-md transition" aria-label="KOSGEB uzman rehberini aç">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div class="flex items-center gap-4"><div class="w-12 h-12 rounded-xl bg-cyan-600 text-white flex items-center justify-center shadow-sm"><i class="fa-solid fa-address-book text-xl"></i></div><div><h2 class="font-black text-slate-800">KOSGEB Uzman Telefon Rehberi</h2><p id="uzmanRehberiOzetMetni" class="text-xs text-slate-500 mt-1">Firma kayıtlarındaki uzmanlar hazırlanıyor…</p></div></div>
@@ -273,13 +262,13 @@
     <div id="detailView" style="display: none;" class="fade-in">
         <header class="flex flex-col md:flex-row justify-between items-center mb-6 bg-white p-5 rounded-2xl shadow-sm border border-slate-200 gap-4" id="detailHeader">
             <div class="flex items-center w-full md:w-auto"><button onclick="anaEkranaDon()" class="bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 font-bold py-2 px-4 rounded-lg transition mr-4 flex items-center text-xs"><i class="fa-solid fa-chevron-left mr-1.5"></i> Geri</button><div><h1 class="text-xl font-black text-slate-800 tracking-tight flex items-center"><span id="detayFirmaAdi">Firma Adı</span></h1></div></div>
-            <div class="flex flex-wrap items-center gap-2 w-full md:w-auto"><span id="detayDuzenlemeDurumu" class="edit-state"><i class="fa-solid fa-eye"></i>Görüntüleme</span><button id="btnDetayGeriAl" onclick="detayDegisiklikleriniGeriAl()" class="hidden bg-white border border-slate-200 text-slate-600 hover:border-amber-300 font-bold py-2 px-3 rounded-lg transition text-xs shadow-sm"><i class="fa-solid fa-rotate-left mr-1.5 text-amber-500"></i>Geri Al</button><button id="btnDetayKaydet" onclick="detayDegisiklikleriniKaydet(false)" class="hidden bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded-lg transition text-xs shadow-sm"><i class="fa-solid fa-floppy-disk mr-1.5"></i>Kaydet</button><button id="btnDetayDuzenle" onclick="toggleDetayDuzenleme()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg transition flex items-center text-xs shadow-sm"><i class="fa-solid fa-pen mr-2"></i>Düzenle</button><button onclick="pdfAlProfesyonel()" class="bg-white border border-slate-200 text-slate-600 hover:border-slate-400 font-bold py-2 px-4 rounded-lg transition flex items-center text-xs shadow-sm"><i class="fa-solid fa-file-pdf text-rose-500 mr-2 text-sm"></i>Kurumsal PDF</button><button id="btnGlobalKilit" onclick="toggleDetayKilit()" class="bg-white border border-slate-200 text-slate-600 font-bold py-2 px-3 rounded-lg transition flex items-center text-xs shadow-sm" title="Firma kaydını kalıcı olarak kilitle"><i class="fa-solid fa-lock-open mr-2 text-emerald-500 text-sm"></i>Firma kilidi açık</button></div>
+            <div class="flex flex-wrap items-center gap-2 w-full md:w-auto"><span id="detayDuzenlemeDurumu" class="edit-state"><i class="fa-solid fa-eye"></i>Görüntüleme</span><button id="btnDetayGeriAl" onclick="detayDegisiklikleriniGeriAl()" class="hidden bg-white border border-slate-200 text-slate-600 hover:border-amber-300 font-bold py-2 px-3 rounded-lg transition text-xs shadow-sm"><i class="fa-solid fa-rotate-left mr-1.5 text-amber-500"></i>Geri Al</button><button id="btnDetayKaydet" onclick="detayDegisiklikleriniKaydet(false)" class="hidden bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded-lg transition text-xs shadow-sm"><i class="fa-solid fa-floppy-disk mr-1.5"></i>Kaydet</button><button id="btnDetayDuzenle" onclick="toggleDetayDuzenleme()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg transition flex items-center text-xs shadow-sm"><i class="fa-solid fa-pen mr-2"></i>Düzenle</button><button onclick="pdfAlProfesyonel()" class="bg-white border border-slate-200 text-slate-600 hover:border-slate-400 font-bold py-2 px-4 rounded-lg transition flex items-center text-xs shadow-sm"><i class="fa-solid fa-file-pdf text-rose-500 mr-2 text-sm"></i>Kurumsal PDF</button></div>
         </header>
 
         <nav id="detaySekmeCubugu" class="detail-tabs gizle-pdf" aria-label="Firma detay bölümleri"></nav>
 
         <div id="pdfIcerikAlani">
-            <div data-detail-panel="genel" class="glass-card mb-6 p-5"><label class="block text-xs font-black text-slate-500 uppercase tracking-widest mb-2">Proje Notları / Genel Açıklama</label><textarea id="genelFirmaAciklama" rows="2" class="w-full input-transparent border border-slate-200 hover:border-slate-300 p-3 rounded-xl font-medium text-slate-700 text-sm" placeholder="Açıklama veya notlarınızı buraya yazabilirsiniz..." onchange="limitleriKaydet()"></textarea></div>
+            <div data-detail-panel="genel" class="glass-card mb-6 p-5"><label class="block text-xs font-black text-slate-500 uppercase tracking-widest mb-2">Proje Notları / Genel Açıklama</label><textarea id="genelFirmaAciklama" rows="3" class="auto-grow-textarea w-full input-transparent border border-slate-200 hover:border-slate-300 p-3 rounded-xl font-medium text-slate-700 text-sm" placeholder="Açıklama veya notlarınızı buraya yazabilirsiniz..." oninput="otomatikTextareaBoyutlandir(this)" onchange="limitleriKaydet()"></textarea></div>
 
             <div id="istihdamModulu" data-detail-panel="istihdam" style="display: none;"><div id="istihdamManuelAraclar" class="hidden mb-4 px-2 items-center justify-between gap-3"><div><h2 class="text-sm font-black text-slate-700 uppercase tracking-widest"><i class="fa-solid fa-table-list mr-2 text-indigo-500"></i>İstihdam Dönem Tabloları</h2><p class="text-xs text-slate-500 mt-1">Dönem ve ay adlarını düzenleyebilir, yeni tablo veya ay ekleyebilirsiniz.</p></div><button id="kutuIstihdamTabloBtn" onclick="istihdamDonemiEkle()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg text-xs"><i class="fa-solid fa-plus mr-1.5"></i>Tablo Ekle</button></div><div id="istihdamTablolariKapsayici" class="space-y-6 mb-10"></div></div>
 
@@ -381,7 +370,7 @@
         };
         const FIREBASE_SDK_VERSION = "12.18.0";
         const DATA_ROOT = "kobiPanel";
-        const APP_VERSION = "2026.09.06-gorev-sutun-v3";
+        const APP_VERSION = "2026.09.06-sade-arayuz-v4";
         const TEMINAT_BILDIRIM_EPOSTASI = "info@kobiproje.com.tr";
         // Bunlar uygulamaya özel ortak Firebase hesabının AÇIK kimlik bilgileridir.
         // Ortak şifre burada veya başka bir uygulama dosyasında ASLA tutulmaz.
@@ -431,6 +420,13 @@
             return Number(s) || 0;
         };
         const giderTutariniHesapla = (miktar, birimFiyat) => giderMiktariniCoz(miktar) * (typeof birimFiyat === 'number' ? birimFiyat : unformat(birimFiyat));
+        const varsayilanProjeRengi = (tip) => tip === 'istihdam' ? '#10b981' : '#6366f1';
+        const projeRenginiDogrula = (deger, tip = 'standart') => /^#[0-9a-fA-F]{6}$/.test((deger || '').toString()) ? deger.toString().toLowerCase() : varsayilanProjeRengi(tip);
+        function otomatikTextareaBoyutlandir(eleman) {
+            if(!eleman) return;
+            eleman.style.height = 'auto';
+            eleman.style.height = `${Math.max(96, eleman.scrollHeight || 0)}px`;
+        }
         
         const varsayilanSutunlar = [
             { id: 'durum', ad: 'DURUM', width: '150px' }, { id: 'adi', ad: 'MÜŞTERİ ADI', width: '250px' }, { id: 'alinan_destek', ad: 'ALINAN DESTEK ₺', width: '150px', calc: true },
@@ -657,6 +653,7 @@
             const patch = cloneData({
                 ad: proje.ad,
                 tip: proje.tip,
+                kartRengi: projeRenginiDogrula(proje.kartRengi, proje.tip),
                 sutunlar: proje.sutunlar || [],
                 giderSutunlari: proje.giderSutunlari || [],
                 istihdamHedefBasliklari: proje.istihdamHedefBasliklari || varsayilanIstihdamHedefBasliklari
@@ -992,8 +989,6 @@
             const p = MASTER_DATA.projeler?.[guncelProjeID];
             const f = p?.firmalar?.[guncelFirmaID];
             if(!p || !f || !f.bilgi) return;
-            if(f.bilgi.kilitli) return;
-
             if (p.tip !== 'istihdam' && document.getElementById('detailView').style.display !== 'none') {
                 const gBody = document.getElementById('giderTableBody');
                 if(gBody) {
@@ -1413,6 +1408,7 @@
             Object.entries(MASTER_DATA.projeler).forEach(([projeID, p]) => {
                 if(!p || typeof p !== 'object') return;
                 if(!p.tip) p.tip="standart";
+                p.kartRengi = projeRenginiDogrula(p.kartRengi, p.tip);
                 if(!p.firmalar || typeof p.firmalar !== 'object') p.firmalar={};
                 p.sutunlar = guvenliNesneDizisi(p.sutunlar);
                 if(p.sutunlar.length === 0) p.sutunlar=JSON.parse(JSON.stringify(varsayilanSutunlar));
@@ -1501,7 +1497,6 @@
                         f.krediTablolar = guvenliNesneDizisi(f.krediTablolar);
                         f.krediTablolar.forEach(tablo => { tablo.veriler = guvenliNesneDizisi(tablo.veriler); });
                     }
-                    if(f.bilgi.kilitli===undefined) f.bilgi.kilitli=false; 
                     if(f.bilgi.kimlikKilit===undefined) f.bilgi.kimlikKilit=false; 
                     if(f.bilgi.erkenOdeme!==undefined&&f.bilgi.erken_odeme===undefined) f.bilgi.erken_odeme=f.bilgi.erkenOdeme; 
                     if(f.bilgi.sira === undefined) f.bilgi.sira = idx;
@@ -1642,7 +1637,7 @@
             };
         }
         const getYeniFirma=(ad,tip="standart")=>{
-            const tb={adi:ad,durum:"AKTİF",limitKosgeb:0,erken_odeme:0,erkenDurum:'Alınmadı',erkenKilit:true,teminatTutar:0,teminatVade:'',teminatDurum:'Alınmadı',kilitli:false,kimlikKilit:false,projeNotu:"",manuelDestek:0,sira:999};
+            const tb={adi:ad,durum:"AKTİF",limitKosgeb:0,erken_odeme:0,erkenDurum:'Alınmadı',erkenKilit:true,teminatTutar:0,teminatVade:'',teminatDurum:'Alınmadı',kimlikKilit:false,projeNotu:"",manuelDestek:0,sira:999};
             if(tip==="istihdam") return {bilgi:tb,dosyalar:[],istihdamPersonelleri:{turk:[],gkasUksk:[]},istihdam:[
                 yeniIstihdamDonemi(1,["Şubat","Mart","Nisan","Mayıs"]), yeniIstihdamDonemi(2,["Ay 1","Ay 2","Ay 3","Ay 4"]),
                 yeniIstihdamDonemi(3,["Ay 1","Ay 2","Ay 3","Ay 4"]), yeniIstihdamDonemi(4,["Ay 1","Ay 2","Ay 3","Ay 4"])
@@ -1725,7 +1720,6 @@
             const okunmamis=GUNCEL_TEMINAT_BILDIRIMLERI.filter(b=>!bildirimOkunduMu(b)).length;
             ['teminatBildirimRozeti','teminatBildirimRozetiMaster'].forEach(id => { const el=document.getElementById(id); if(el) el.textContent=okunmamis ? String(okunmamis) : ''; });
             teminatBildirimleriniRender();
-            if(document.getElementById('portfolioView')?.style.display!=='none')gorevMerkeziniRender();
             if(otomatikAc && okunmamis>0) teminatBildirimModaliniAc();
         }
         function teminatBildirimModaliniAc() {
@@ -1951,34 +1945,42 @@
         function renderPortfoyView() {
             document.getElementById('masterView').style.display='none';document.getElementById('detailView').style.display='none';document.getElementById('portfolioView').style.display='block';
             uzmanRehberiOzetiniGuncelle();
-            gorevMerkeziniRender();
             const c = document.getElementById('projeKartlariKapsayici'); c.innerHTML='';
             Object.entries(MASTER_DATA.projeler).sort((a,b)=>a[1].ad.localeCompare(b[1].ad,'tr',{numeric:true})).forEach(([id,p])=>{
                 let isIst=p.tip==="istihdam";
-                let bgGrad = isIst ? "bg-gradient-to-br from-emerald-400 to-teal-500" : "bg-gradient-to-br from-indigo-500 to-violet-600";
-                let badgeBg = isIst ? "bg-emerald-50 text-emerald-600 border border-emerald-200" : "bg-indigo-50 text-indigo-600 border border-indigo-200";
+                const kartRengi=projeRenginiDogrula(p.kartRengi,p.tip);p.kartRengi=kartRengi;
                 let ic = isIst ? "fa-users" : "fa-layer-group";
                 
                 c.innerHTML+=`
-                <div class="bg-white border border-slate-200 rounded-3xl p-6 relative flex flex-col shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer group" onclick="projeyeGit('${id}')">
+                <div class="project-card bg-white rounded-3xl p-6 relative flex flex-col shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer group" style="background:linear-gradient(145deg, ${kartRengi}18 0%, #ffffff 48%);border-color:${kartRengi}55" onclick="projeyeGit('${id}')">
                     <div class="absolute top-5 right-5 flex gap-2 z-10">
+                        <label class="project-color-picker w-8 h-8 rounded-full bg-white hover:bg-slate-50 transition flex items-center justify-center shadow-sm border border-slate-100" style="color:${kartRengi}" title="Kart rengini değiştir" onclick="event.stopPropagation()">
+                            <input type="color" value="${kartRengi}" aria-label="${escapeHTML(p.ad)} kart rengini değiştir" onchange="projeRengiKaydet('${id}',this.value,event)">
+                            <i class="fa-solid fa-palette text-[11px]"></i>
+                        </label>
                         <button onclick="projeAdiDuzenle('${id}',event)" class="w-8 h-8 rounded-full bg-slate-50 hover:bg-indigo-50 text-slate-400 hover:text-indigo-600 transition flex items-center justify-center shadow-sm"><i class="fa-solid fa-pen text-[11px]"></i></button>
                         <button onclick="projeyiSil('${id}',event)" class="w-8 h-8 rounded-full bg-slate-50 hover:bg-rose-50 text-slate-400 hover:text-rose-500 transition flex items-center justify-center shadow-sm"><i class="fa-solid fa-trash text-[11px]"></i></button>
                     </div>
-                    <div class="w-16 h-16 rounded-2xl ${bgGrad} shadow-lg shadow-${isIst?'emerald':'indigo'}-500/30 flex items-center justify-center mb-6 transform group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
+                    <div class="w-16 h-16 rounded-2xl shadow-lg flex items-center justify-center mb-6 transform group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300" style="background:linear-gradient(135deg, ${kartRengi}, ${kartRengi}cc);box-shadow:0 12px 24px ${kartRengi}3d">
                         <i class="fa-solid ${ic} text-white text-2xl drop-shadow-sm"></i>
                     </div>
-                    <h2 class="text-xl font-black text-slate-800 mb-2 w-full truncate pr-16 group-hover:text-transparent group-hover:bg-clip-text group-hover:${bgGrad}">${p.ad}</h2>
+                    <h2 class="text-xl font-black text-slate-800 mb-2 w-full truncate pr-24" title="${escapeHTML(p.ad)}">${escapeHTML(p.ad)}</h2>
                     <div class="mt-auto pt-5 border-t border-slate-100 flex items-center justify-between">
-                        <span class="text-[10px] font-black uppercase tracking-widest ${badgeBg} px-2.5 py-1 rounded-lg shadow-sm">${isIst?"İSTİHDAM":"HARCAMA"}</span>
+                        <span class="text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg shadow-sm" style="background:${kartRengi}14;color:${kartRengi};border:1px solid ${kartRengi}45">${isIst?"İSTİHDAM":"HARCAMA"}</span>
                         <span class="text-xs font-bold text-slate-400 bg-slate-50 px-3 py-1 rounded-lg border border-slate-100"><i class="fa-solid fa-building mr-1 text-slate-300"></i> ${Object.keys(p.firmalar||{}).length} Firma</span>
                     </div>
                 </div>`;
             });
         }
 
-        function yeniAnaProjeEkle(){let ad=prompt("Proje Adı:");if(!ad)return;let tip=prompt("[1] Harcama\n[2] İstihdam");let id="PROJE_"+Date.now();MASTER_DATA.projeler[id]={ad:ad.toUpperCase(),tip:tip==="2"?"istihdam":"standart",firmalar:{},sutunlar:JSON.parse(JSON.stringify(varsayilanSutunlar))};if(tip==="2"){MASTER_DATA.projeler[id].sutunlar.splice(3,0,{id:'ist_hedef',ad:'HEDEF',width:'100px',calc:true});MASTER_DATA.projeler[id].sutunlar.splice(4,0,{id:'ist_gerceklesme',ad:'1. DÖNEM',width:'110px',calc:true});MASTER_DATA.projeler[id].sutunlar.splice(5,0,{id:'ist_g2',ad:'2. DÖNEM',width:'110px',calc:true});MASTER_DATA.projeler[id].sutunlar.splice(6,0,{id:'ist_g3',ad:'3. DÖNEM',width:'110px',calc:true});MASTER_DATA.projeler[id].sutunlar.splice(7,0,{id:'ist_g4',ad:'4. DÖNEM',width:'110px',calc:true});}yeniProjeKaydet(id).then(()=>showToast("Yeni proje oluşturuldu")).catch(()=>{delete MASTER_DATA.projeler[id];renderPortfoyView();});renderPortfoyView();}
+        function yeniAnaProjeEkle(){let ad=prompt("Proje Adı:");if(!ad)return;let tipSecimi=prompt("[1] Harcama\n[2] İstihdam"),projeTipi=tipSecimi==="2"?"istihdam":"standart",id="PROJE_"+Date.now();MASTER_DATA.projeler[id]={ad:ad.toUpperCase(),tip:projeTipi,kartRengi:varsayilanProjeRengi(projeTipi),firmalar:{},sutunlar:JSON.parse(JSON.stringify(varsayilanSutunlar))};if(projeTipi==="istihdam"){MASTER_DATA.projeler[id].sutunlar.splice(3,0,{id:'ist_hedef',ad:'HEDEF',width:'100px',calc:true});MASTER_DATA.projeler[id].sutunlar.splice(4,0,{id:'ist_gerceklesme',ad:'1. DÖNEM',width:'110px',calc:true});MASTER_DATA.projeler[id].sutunlar.splice(5,0,{id:'ist_g2',ad:'2. DÖNEM',width:'110px',calc:true});MASTER_DATA.projeler[id].sutunlar.splice(6,0,{id:'ist_g3',ad:'3. DÖNEM',width:'110px',calc:true});MASTER_DATA.projeler[id].sutunlar.splice(7,0,{id:'ist_g4',ad:'4. DÖNEM',width:'110px',calc:true});}yeniProjeKaydet(id).then(()=>showToast("Yeni proje oluşturuldu")).catch(()=>{delete MASTER_DATA.projeler[id];renderPortfoyView();});renderPortfoyView();}
         function projeAdiDuzenle(id,e){e.stopPropagation();let y=prompt("Yeni ad:",MASTER_DATA.projeler[id].ad);if(y){MASTER_DATA.projeler[id].ad=y.trim().toUpperCase();projeAyarlariKaydet(id).catch(()=>undefined);renderPortfoyView();}}
+        async function projeRengiKaydet(id,deger,e){
+            e?.stopPropagation();const proje=MASTER_DATA.projeler?.[id];if(!proje)return;
+            const onceki=proje.kartRengi;proje.kartRengi=projeRenginiDogrula(deger,proje.tip);renderPortfoyView();
+            try{await projeAyarlariKaydet(id);showToast('Proje kartı rengi kaydedildi');}
+            catch(error){proje.kartRengi=onceki;renderPortfoyView();showToast('Kart rengi kaydedilemedi','error');}
+        }
         async function projeyiSil(id, e) {
             e.stopPropagation();
             const proje = MASTER_DATA.projeler[id];
@@ -2225,18 +2227,18 @@
             document.querySelectorAll('[data-detail-panel]').forEach(panel=>panel.hidden=panel.dataset.detailPanel!==sekme);
             const tabloKapsayici=document.getElementById('standartTablolarKapsayici');if(tabloKapsayici&&MASTER_DATA.projeler?.[guncelProjeID]?.tip!=='istihdam')tabloKapsayici.style.display=['giderler','raporlar'].includes(sekme)?'grid':'none';
             document.querySelectorAll('#detaySekmeCubugu .detail-tab').forEach(btn=>btn.classList.toggle('is-active',btn.getAttribute('onclick')?.includes(`'${sekme}'`)));
+            if(sekme==='genel')requestAnimationFrame(()=>otomatikTextareaBoyutlandir(document.getElementById('genelFirmaAciklama')));
             if(kaydir)document.getElementById('detailHeader')?.scrollIntoView({behavior:'smooth',block:'start'});
         }
-        function detayDuzenlemeDurumunuYansit(kaliciKilit=false) {
+        function detayDuzenlemeDurumunuYansit() {
             const durum=document.getElementById('detayDuzenlemeDurumu'), duzenle=document.getElementById('btnDetayDuzenle'), kaydet=document.getElementById('btnDetayKaydet'), geri=document.getElementById('btnDetayGeriAl');
             if(durum){durum.className=`edit-state ${detayDuzenlemeAktif?'is-editing':''}`;durum.innerHTML=detayDuzenlemeAktif?`<i class="fa-solid fa-pen"></i>${detayDegisiklikVar?'Kaydedilmedi':'Düzenleme açık'}`:'<i class="fa-solid fa-eye"></i>Görüntüleme';}
-            if(duzenle){duzenle.disabled=kaliciKilit;duzenle.classList.toggle('opacity-50',kaliciKilit);duzenle.innerHTML=detayDuzenlemeAktif?'<i class="fa-solid fa-check mr-2"></i>Düzenlemeyi bitir':'<i class="fa-solid fa-pen mr-2"></i>Düzenle';}
+            if(duzenle){duzenle.disabled=false;duzenle.classList.remove('opacity-50');duzenle.innerHTML=detayDuzenlemeAktif?'<i class="fa-solid fa-check mr-2"></i>Düzenlemeyi bitir':'<i class="fa-solid fa-pen mr-2"></i>Düzenle';}
             [kaydet,geri].forEach(btn=>{if(btn){btn.classList.toggle('hidden',!detayDuzenlemeAktif);btn.disabled=!detayDegisiklikVar;btn.classList.toggle('opacity-50',!detayDegisiklikVar);}});
         }
-        function detayDegisiklikIsaretle(){if(!detayDuzenlemeAktif)return;detayDegisiklikVar=true;detayDuzenlemeDurumunuYansit(false);}
+        function detayDegisiklikIsaretle(){if(!detayDuzenlemeAktif)return;detayDegisiklikVar=true;detayDuzenlemeDurumunuYansit();}
         async function toggleDetayDuzenleme(){
             const f=MASTER_DATA.projeler?.[guncelProjeID]?.firmalar?.[guncelFirmaID];if(!f)return;
-            if(f.bilgi?.kilitli){showToast('Önce firma kilidini açın.','info');return;}
             if(detayDuzenlemeAktif){await detayDegisiklikleriniKaydet(true);return;}
             detayGeriAlYedegi=cloneData(f);detayDuzenlemeAktif=true;detayDegisiklikVar=false;renderTables();
         }
@@ -2279,14 +2281,11 @@
         }
 
         function yeniFirmaEkle(){let ad=prompt("Yeni Firma Adı:");if(ad){let p=MASTER_DATA.projeler[guncelProjeID],firmaID="FIRM_"+Date.now();p.firmalar[firmaID]=getYeniFirma(ad,p.tip);firmaKaydet(guncelProjeID,firmaID).then(()=>showToast("Firma eklendi")).catch(()=>{delete p.firmalar[firmaID];renderMasterView();});renderMasterView();}}
-        function toggleDetayKilit(){const f=MASTER_DATA.projeler[guncelProjeID].firmalar[guncelFirmaID];if(detayDegisiklikVar){showToast('Önce değişiklikleri kaydedin veya geri alın.','info');return;}f.bilgi.kilitli=!f.bilgi.kilitli;if(f.bilgi.kilitli)detayDuzenlemeAktif=false;firmaKaydet(guncelProjeID,guncelFirmaID).catch(()=>undefined);renderTables();}
-        
-        function limitleriKaydet(){const b=MASTER_DATA.projeler[guncelProjeID].firmalar[guncelFirmaID].bilgi;if(b.kilitli)return;b.projeNotu=document.getElementById('genelFirmaAciklama').value;b.erken_odeme=unformat(document.getElementById('detayErkenOdeme').value);b.erkenDurum=document.getElementById('detayErkenDurum').value;b.teminatTutar=unformat(document.getElementById('detayTeminatTutar').value);b.teminatVade=document.getElementById('detayTeminatTarih').value;b.teminatDurum=document.getElementById('detayTeminatDurum').value;document.getElementById('detayErkenOdeme').value=formatMoney(b.erken_odeme);document.getElementById('detayTeminatTutar').value=formatMoney(b.teminatTutar);teminatBildirimleriniGuncelle(false);otomatikKaydet(true);}
+        function limitleriKaydet(){const b=MASTER_DATA.projeler[guncelProjeID].firmalar[guncelFirmaID].bilgi;b.projeNotu=document.getElementById('genelFirmaAciklama').value;b.erken_odeme=unformat(document.getElementById('detayErkenOdeme').value);b.erkenDurum=document.getElementById('detayErkenDurum').value;b.teminatTutar=unformat(document.getElementById('detayTeminatTutar').value);b.teminatVade=document.getElementById('detayTeminatTarih').value;b.teminatDurum=document.getElementById('detayTeminatDurum').value;document.getElementById('detayErkenOdeme').value=formatMoney(b.erken_odeme);document.getElementById('detayTeminatTutar').value=formatMoney(b.teminatTutar);teminatBildirimleriniGuncelle(false);otomatikKaydet(true);}
         
         function oneriUygula(didx, aidx, val) {
             if(!guncelProjeID || !guncelFirmaID) return;
             const f=MASTER_DATA.projeler[guncelProjeID].firmalar[guncelFirmaID];
-            if(f.bilgi.kilitli) return;
             f.istihdam[didx].aylar[aidx].f_gun = val;
             renderIstihdamTables();
             istihdamVeriKaydet(true);
@@ -2297,7 +2296,7 @@
             return proje?.tip==='istihdam' && (ad.includes('FOSTER II İSTİHDAM DP') || ad.includes('FOSTER KOBİ FİNANSMAN DESTEĞİ'));
         }
         function istihdamDOMVerisiniOku() {
-            const f=MASTER_DATA.projeler?.[guncelProjeID]?.firmalar?.[guncelFirmaID]; if(!f||f.bilgi.kilitli)return f;
+            const f=MASTER_DATA.projeler?.[guncelProjeID]?.firmalar?.[guncelFirmaID]; if(!f)return f;
             istihdamPersonelleriniYapilandir(f);
             const aciklama=document.getElementById('ist_aciklama');
             if(aciklama)f.bilgi.istihdamAciklama=aciklama.value;
@@ -2318,14 +2317,14 @@
             return f;
         }
         function istihdamPersoneliEkle(grup) {
-            const f=istihdamDOMVerisiniOku();if(!f||f.bilgi.kilitli||!detayDuzenlemeAktif||!['turk','gkasUksk'].includes(grup))return;
+            const f=istihdamDOMVerisiniOku();if(!f||!detayDuzenlemeAktif||!['turk','gkasUksk'].includes(grup))return;
             f.istihdamPersonelleri[grup].push(yeniIstihdamPersoneli());
             f.bilgi[grup==='turk'?'personelTurk':'personelYabanci']=String(f.istihdamPersonelleri[grup].length);
             renderIstihdamTables();detayDegisiklikIsaretle();
         }
         async function istihdamPersoneliSil(grup,pidx) {
             const f=istihdamDOMVerisiniOku(), liste=f?.istihdamPersonelleri?.[grup], personel=liste?.[pidx];
-            if(!f||f.bilgi.kilitli||!personel)return;
+            if(!f||!personel)return;
             if(detayDegisiklikVar){showToast('Silmeden önce değişiklikleri kaydedin veya geri alın.','info');return;}
             if(!confirm(`“${personel.adSoyad||`${pidx+1}. personel`}” kaydı Çöp Kutusu'na taşınsın mı?`))return;
             const projeID=guncelProjeID, firmaID=guncelFirmaID, kalan=liste.filter((_,index)=>index!==pidx), alan=grup==='turk'?'personelTurk':'personelYabanci';
@@ -2371,7 +2370,7 @@
             </section>`;
         }
         function istihdamVeriKaydet(force = false, kaydetmeyeZorla = false){
-            const f=istihdamDOMVerisiniOku();if(!f||f.bilgi.kilitli)return;
+            const f=istihdamDOMVerisiniOku();if(!f)return;
             renderIstihdamTables();
             if(detayDuzenlemeAktif&&!kaydetmeyeZorla){detayDegisiklikIsaretle();return Promise.resolve();}
             clearTimeout(kayitZamanlayici);kayitZamanlayici=null;
@@ -2380,7 +2379,7 @@
         }
         async function istihdamHedefBasliginiGuncelle(alan,deger) {
             const p=MASTER_DATA.projeler?.[guncelProjeID], f=istihdamDOMVerisiniOku();
-            if(!p||!f||f.bilgi.kilitli||!Object.prototype.hasOwnProperty.call(varsayilanIstihdamHedefBasliklari,alan))return;
+            if(!p||!f||!Object.prototype.hasOwnProperty.call(varsayilanIstihdamHedefBasliklari,alan))return;
             const temizBaslik=(deger??'').toString().trim();
             p.istihdamHedefBasliklari={...varsayilanIstihdamHedefBasliklari,...(p.istihdamHedefBasliklari||{})};
             p.istihdamHedefBasliklari[alan]=temizBaslik||varsayilanIstihdamHedefBasliklari[alan];
@@ -2391,17 +2390,17 @@
         }
         function istihdamHedefBasliginiDuzenle(alan) {
             const p=MASTER_DATA.projeler?.[guncelProjeID], f=p?.firmalar?.[guncelFirmaID];
-            if(!p||!f||f.bilgi?.kilitli||!detayDuzenlemeAktif)return;
+            if(!p||!f||!detayDuzenlemeAktif)return;
             const mevcut=p.istihdamHedefBasliklari?.[alan]||varsayilanIstihdamHedefBasliklari[alan],yeni=prompt('Tüm dönem tablolarında kullanılacak hedef başlığı:',mevcut);
             if(yeni!==null)istihdamHedefBasliginiGuncelle(alan,yeni);
         }
         function istihdamDonemiEkle() {
-            const p=MASTER_DATA.projeler?.[guncelProjeID], f=istihdamDOMVerisiniOku();if(!manuelIstihdamDuzenlemeAktif(p)||!f||f.bilgi.kilitli||!detayDuzenlemeAktif)return;
+            const p=MASTER_DATA.projeler?.[guncelProjeID], f=istihdamDOMVerisiniOku();if(!manuelIstihdamDuzenlemeAktif(p)||!f||!detayDuzenlemeAktif)return;
             const no=f.istihdam.length+1, donem=yeniIstihdamDonemi(no,[1,2,3,4].map(i=>`Ay ${i}`));donem.altBaslik='';f.istihdam.push(donem);
             renderIstihdamTables();detayDegisiklikIsaretle();
         }
         async function istihdamDonemiSil(didx) {
-            const p=MASTER_DATA.projeler?.[guncelProjeID], f=istihdamDOMVerisiniOku();if(!manuelIstihdamDuzenlemeAktif(p)||!f||f.bilgi.kilitli||!f.istihdam[didx])return;
+            const p=MASTER_DATA.projeler?.[guncelProjeID], f=istihdamDOMVerisiniOku();if(!manuelIstihdamDuzenlemeAktif(p)||!f||!f.istihdam[didx])return;
             if(detayDegisiklikVar){showToast('Silmeden önce değişiklikleri kaydedin veya geri alın.','info');return;}
             const donem=f.istihdam[didx];if(!confirm(`“${donem.ad||'Dönem'}” tablosu Çöp Kutusu'na taşınsın mı?`))return;
             const projeID=guncelProjeID,firmaID=guncelFirmaID,kalan=f.istihdam.filter((_,index)=>index!==didx);
@@ -2409,11 +2408,11 @@
             catch(error){console.error(error);showToast('Dönem tablosu silinemedi; veri korunuyor','error');}
         }
         function istihdamAyiEkle(didx) {
-            const p=MASTER_DATA.projeler?.[guncelProjeID], f=istihdamDOMVerisiniOku(), donem=f?.istihdam?.[didx];if(!manuelIstihdamDuzenlemeAktif(p)||!donem||f.bilgi.kilitli||!detayDuzenlemeAktif)return;
+            const p=MASTER_DATA.projeler?.[guncelProjeID], f=istihdamDOMVerisiniOku(), donem=f?.istihdam?.[didx];if(!manuelIstihdamDuzenlemeAktif(p)||!donem||!detayDuzenlemeAktif)return;
             donem.aylar.push({id:`ist_ay_${uID()}`,ay:`Ay ${donem.aylar.length+1}`,t_gun:0,y_gun:0,f_gun:0});renderIstihdamTables();detayDegisiklikIsaretle();
         }
         async function istihdamAyiSil(didx,aidx) {
-            const p=MASTER_DATA.projeler?.[guncelProjeID], f=istihdamDOMVerisiniOku(), donem=f?.istihdam?.[didx];if(!manuelIstihdamDuzenlemeAktif(p)||!donem||f.bilgi.kilitli||donem.aylar.length<=1)return;
+            const p=MASTER_DATA.projeler?.[guncelProjeID], f=istihdamDOMVerisiniOku(), donem=f?.istihdam?.[didx];if(!manuelIstihdamDuzenlemeAktif(p)||!donem||donem.aylar.length<=1)return;
             if(detayDegisiklikVar){showToast('Silmeden önce değişiklikleri kaydedin veya geri alın.','info');return;}
             const ay=donem.aylar[aidx];if(!ay||!confirm(`“${ay.ay||'Ay'}” satırı Çöp Kutusu'na taşınsın mı?`))return;
             const projeID=guncelProjeID,firmaID=guncelFirmaID,kalan=donem.aylar.filter((_,index)=>index!==aidx);
@@ -2434,7 +2433,7 @@
 
         function renderIstihdamTables() {
             const p = MASTER_DATA.projeler[guncelProjeID], f = p.firmalar[guncelFirmaID], 
-                  kil = f.bilgi.kilitli === true || !detayDuzenlemeAktif, 
+                  kil = !detayDuzenlemeAktif, 
                   manuel = manuelIstihdamDuzenlemeAktif(p), cont = document.getElementById('istihdamTablolariKapsayici');
             
             if (!f.istihdam) return;
@@ -2590,10 +2589,9 @@
         }
 
         function renderTables() {
-            const p=MASTER_DATA.projeler[guncelProjeID], f=p.firmalar[guncelFirmaID], kaliciKilit=f.bilgi.kilitli===true, kil=kaliciKilit||!detayDuzenlemeAktif, ig=p.ad.includes("İŞ GELİŞTİRME");
-            document.getElementById('btnGlobalKilit').innerHTML=kaliciKilit?`<i class="fa-solid fa-lock text-rose-500 mr-2"></i>Firma kilitli`:`<i class="fa-solid fa-lock-open text-emerald-500 mr-2"></i>Firma kilidi açık`;
-            detayDuzenlemeDurumunuYansit(kaliciKilit);
-            document.getElementById('genelFirmaAciklama').value=f.bilgi.projeNotu||''; kil?document.getElementById('genelFirmaAciklama').setAttribute('readonly',true):document.getElementById('genelFirmaAciklama').removeAttribute('readonly');
+            const p=MASTER_DATA.projeler[guncelProjeID], f=p.firmalar[guncelFirmaID], kil=!detayDuzenlemeAktif, ig=p.ad.includes("İŞ GELİŞTİRME");
+            detayDuzenlemeDurumunuYansit();
+            const genelNotAlani=document.getElementById('genelFirmaAciklama');genelNotAlani.value=f.bilgi.projeNotu||'';kil?genelNotAlani.setAttribute('readonly',true):genelNotAlani.removeAttribute('readonly');requestAnimationFrame(()=>otomatikTextareaBoyutlandir(genelNotAlani));
             
             if(p.tip==="istihdam"){document.getElementById('istihdamModulu').style.display='block';document.getElementById('standartOzetKartlari').style.display='none';document.getElementById('standartTablolarKapsayici').style.display='none';document.getElementById('krediKapsayiciBolumu').style.display='none';if(document.getElementById('kutuDosyaBtn'))document.getElementById('kutuDosyaBtn').style.display=kil?'none':'block';const manuelAraclar=document.getElementById('istihdamManuelAraclar');if(manuelAraclar){manuelAraclar.classList.toggle('hidden',!manuelIstihdamDuzenlemeAktif(p));manuelAraclar.classList.toggle('flex',manuelIstihdamDuzenlemeAktif(p));}const tabloBtn=document.getElementById('kutuIstihdamTabloBtn');if(tabloBtn)tabloBtn.style.display=kil?'none':'';renderIstihdamTables();detaySekmeleriniHazirla(p.tip);return;}
             else{document.getElementById('istihdamModulu').style.display='none';document.getElementById('standartOzetKartlari').style.display='grid';document.getElementById('standartTablolarKapsayici').style.display='grid';document.getElementById('krediKapsayiciBolumu').style.display='block';}
@@ -2827,7 +2825,7 @@
         }
 
         function yeniKrediTablosuEkle() {
-            if(!guncelProjeID || !guncelFirmaID) return; const f = MASTER_DATA.projeler[guncelProjeID].firmalar[guncelFirmaID]; if(f.bilgi.kilitli||!detayDuzenlemeAktif) return;
+            if(!guncelProjeID || !guncelFirmaID) return; const f = MASTER_DATA.projeler[guncelProjeID].firmalar[guncelFirmaID]; if(!detayDuzenlemeAktif) return;
             if(!f.krediTablolar) f.krediTablolar = [];
             f.krediTablolar.push({ id: "kt_" + uID(), baslik: "Yeni Finansman Tablosu", veriler: [{ id: uID(), tarih: new Date().toLocaleDateString('tr-TR'), anapara: 0, faiz: 0, destek: 0, not: "-", durum: "Ödenmedi" }] });
             renderTables(); otomatikKaydet(true);
@@ -2873,9 +2871,9 @@
             if(ap) { ap.innerHTML=''; }
         }
         
-        function satirEkle(tp,id=null){const f=MASTER_DATA.projeler[guncelProjeID].firmalar[guncelFirmaID];if(f.bilgi.kilitli||!detayDuzenlemeAktif)return;if(tp==='gider')f.giderler.push({id:uID(),ad:"",miktar:"",birim:"",birimFiyat:0,tutar:0,fatura:0,gerceklesme:"Bekliyor",oran:75});if(tp==='rapor'){let st=f.raporlar.length>0?f.raporlar[f.raporlar.length-1].tarih:'';f.raporlar.push({id:uID(),no:"",aciklama:"",tarih:ucAyEkle(st),durum:"Bekliyor"});}if(tp==='kredi'){let tb=f.krediTablolar.find(t=>t.id===id);let st=tb.veriler.length>0?tb.veriler[tb.veriler.length-1].tarih:'';tb.veriler.push({id:uID(),tarih:ucAyEkle(st),anapara:0,faiz:0,destek:0,not:"",durum:"Ödenmedi"});}renderTables();otomatikKaydet(true);}
+        function satirEkle(tp,id=null){const f=MASTER_DATA.projeler[guncelProjeID].firmalar[guncelFirmaID];if(!detayDuzenlemeAktif)return;if(tp==='gider')f.giderler.push({id:uID(),ad:"",miktar:"",birim:"",birimFiyat:0,tutar:0,fatura:0,gerceklesme:"Bekliyor",oran:75});if(tp==='rapor'){let st=f.raporlar.length>0?f.raporlar[f.raporlar.length-1].tarih:'';f.raporlar.push({id:uID(),no:"",aciklama:"",tarih:ucAyEkle(st),durum:"Bekliyor"});}if(tp==='kredi'){let tb=f.krediTablolar.find(t=>t.id===id);let st=tb.veriler.length>0?tb.veriler[tb.veriler.length-1].tarih:'';tb.veriler.push({id:uID(),tarih:ucAyEkle(st),anapara:0,faiz:0,destek:0,not:"",durum:"Ödenmedi"});}renderTables();otomatikKaydet(true);}
         async function satirSil(tp,sid,tid=null){
-            const projeID=guncelProjeID,firmaID=guncelFirmaID,f=MASTER_DATA.projeler?.[projeID]?.firmalar?.[firmaID];if(!f||f.bilgi.kilitli)return;
+            const projeID=guncelProjeID,firmaID=guncelFirmaID,f=MASTER_DATA.projeler?.[projeID]?.firmalar?.[firmaID];if(!f)return;
             if(detayDegisiklikVar){showToast('Silmeden önce değişiklikleri kaydedin veya geri alın.','info');return;}
             const turler={dosya:{alan:'dosyalar',kategori:'dosyalar',etiket:'Dosya kaydı'},gider:{alan:'giderler',kategori:'giderler',etiket:'Harcama kalemi'},rapor:{alan:'raporlar',kategori:'raporlar',etiket:'Rapor satırı'}};
             let bilgi=turler[tp],liste,indeks,kayit,aktifYol,copEk={};
@@ -2903,7 +2901,7 @@
             const projeID = guncelProjeID;
             const firmaID = guncelFirmaID;
             const firma = MASTER_DATA.projeler?.[projeID]?.firmalar?.[firmaID];
-            if(!firma || firma.bilgi?.kilitli) return;
+            if(!firma) return;
             if(detayDegisiklikVar){showToast('Silmeden önce değişiklikleri kaydedin veya geri alın.','info');return;}
 
             const tablolar = Array.isArray(firma.krediTablolar) ? firma.krediTablolar : [];
@@ -3271,7 +3269,7 @@
         function giderPanodanYapistir(e) {
             const ilkHedef=e.target?.closest?.('input,select,td'), giderGovdesi=ilkHedef?.closest?.('#giderTableBody');
             if(!ilkHedef||!giderGovdesi||!guncelProjeID||!guncelFirmaID)return false;
-            const f=MASTER_DATA.projeler[guncelProjeID]?.firmalar?.[guncelFirmaID];if(!f||f.bilgi.kilitli)return false;
+            const f=MASTER_DATA.projeler[guncelProjeID]?.firmalar?.[guncelFirmaID];if(!f)return false;
             const hedef=(ilkHedef.matches?.('input,select')?ilkHedef:ilkHedef.querySelector?.('input,select'));if(!hedef)return false;
             const pano=e.clipboardData||window.clipboardData, metin=pano?.getData('text/plain')||pano?.getData('text')||'';
             if(!metin.includes('\t')&&!metin.includes('\n')&&!metin.includes('\r'))return false;
@@ -3283,7 +3281,7 @@
         }
 
         document.addEventListener('paste', function(e) {
-            const t=e.target; if(!guncelProjeID||!guncelFirmaID)return; const f=MASTER_DATA.projeler[guncelProjeID].firmalar[guncelFirmaID]; if(f&&f.bilgi.kilitli)return;
+            const t=e.target; if(!guncelProjeID||!guncelFirmaID)return; const f=MASTER_DATA.projeler[guncelProjeID].firmalar[guncelFirmaID];
             if(giderPanodanYapistir(e))return;
             if(t.tagName==='INPUT'&&t.closest('.kredi-body')){const pst=(e.clipboardData||window.clipboardData).getData('text');if(pst.includes('\t')||pst.includes('\n')){e.preventDefault();const tD=t.closest('[data-tabloid]'),tb=f.krediTablolar.find(x=>x.id===tD.dataset.tabloid),sI=tb.veriler.findIndex(v=>v.id===t.closest('tr').dataset.id);let bK=0;if(t.classList.contains('k-ana'))bK=1;else if(t.classList.contains('k-faiz'))bK=2;else if(t.classList.contains('k-destek'))bK=3;else if(t.classList.contains('k-not'))bK=4;const pr=pst.split(/\r?\n/).filter(r=>r.trim()!=='');let currI=sI;pr.forEach(rS=>{const cs=rS.split('\t');if(currI>=tb.veriler.length){let sT=tb.veriler.length>0?tb.veriler[tb.veriler.length-1].tarih:'';tb.veriler.push({id:uID(),tarih:ucAyEkle(sT),anapara:0,faiz:0,destek:0,not:"",durum:"Ödenmedi"});}const hv=tb.veriler[currI];cs.forEach((cv,cI)=>{let isK=bK+cI;if(isK===0)hv.tarih=cv.trim();else if(isK===1)hv.anapara=unformat(cv);else if(isK===2)hv.faiz=unformat(cv);else if(isK===3)hv.destek=unformat(cv);else if(isK===4)hv.not=cv.trim();});currI++;});renderTables();otomatikKaydet(true);showToast(pr.length+" Satır Aktarıldı");}}
         }, true);
